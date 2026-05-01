@@ -363,6 +363,8 @@ class FFmpegService {
         ? '.mp3'
         : inputPath.toLowerCase().endsWith('.opus')
         ? '.opus'
+        : inputPath.toLowerCase().endsWith('.mp4')
+        ? '.mp4'
         : '.flac';
   }
 
@@ -428,6 +430,24 @@ class FFmpegService {
         if (fallbackResult.success) {
           tempOutput = fallbackOutput;
           result = fallbackResult;
+        }
+      }
+
+      // Second fallback: use .mp4 (mp4 muxer) for codecs not supported by
+      // the ipod muxer (e.g. eac3/Dolby Digital Plus, mha1/Dolby Atmos).
+      if (!result.success &&
+          (preferredExt == '.flac' || preferredExt == '.m4a')) {
+        final mp4FallbackOutput = _buildOutputPath(inputPath, '.mp4');
+        final mp4FallbackResult = await _execute(
+          buildDecryptCommand(
+            mp4FallbackOutput,
+            mapAudioOnly: false,
+            key: keyCandidate,
+          ),
+        );
+        if (mp4FallbackResult.success) {
+          tempOutput = mp4FallbackOutput;
+          result = mp4FallbackResult;
         }
       }
 
@@ -1291,6 +1311,80 @@ class FFmpegService {
   }) async {
     final tempDir = await getTemporaryDirectory();
     final tempOutput = _nextTempEmbedPath(tempDir.path, '.mp3');
+
+    // Try with -c:a copy first (fastest, preserves original codec)
+    var result = await _runMp3Embed(
+      mp3Path: mp3Path,
+      tempOutput: tempOutput,
+      coverPath: coverPath,
+      metadata: metadata,
+      preserveMetadata: preserveMetadata,
+      audioCodec: 'copy',
+    );
+
+    if (result.success) {
+      return await _finalizeMp3Embed(mp3Path, tempOutput);
+    }
+
+    // If copy failed (e.g. AAC/Opus in .mp3 container), re-encode to real MP3
+    final output = result.output;
+    if (output.contains('Invalid audio stream') ||
+        output.contains('incorrect codec parameters')) {
+      _log.w('MP3 copy failed (codec mismatch), re-encoding with libmp3lame');
+
+      // Clean up failed temp file
+      try {
+        final tempFile = File(tempOutput);
+        if (await tempFile.exists()) await tempFile.delete();
+      } catch (_) {}
+
+      final reencodeOutput = _nextTempEmbedPath(tempDir.path, '.mp3');
+      result = await _runMp3Embed(
+        mp3Path: mp3Path,
+        tempOutput: reencodeOutput,
+        coverPath: coverPath,
+        metadata: metadata,
+        preserveMetadata: preserveMetadata,
+        audioCodec: 'libmp3lame',
+        audioBitrate: '192k', // AAC 128kbps ≈ MP3 192kbps equivalent
+      );
+
+      if (result.success) {
+        return await _finalizeMp3Embed(mp3Path, reencodeOutput);
+      }
+
+      // Clean up re-encode temp file
+      try {
+        final tempFile = File(reencodeOutput);
+        if (await tempFile.exists()) await tempFile.delete();
+      } catch (_) {}
+
+      _log.e('MP3 re-encode also failed: ${result.output}');
+      return null;
+    }
+
+    // Clean up temp file for other failures
+    try {
+      final tempFile = File(tempOutput);
+      if (await tempFile.exists()) await tempFile.delete();
+    } catch (e) {
+      _log.w('Failed to cleanup temp MP3 file: $e');
+    }
+
+    _log.e('MP3 Metadata/Cover embed failed: ${result.output}');
+    return null;
+  }
+
+  /// Build and execute FFmpeg arguments for MP3 metadata embedding.
+  static Future<FFmpegResult> _runMp3Embed({
+    required String mp3Path,
+    required String tempOutput,
+    String? coverPath,
+    Map<String, String>? metadata,
+    bool preserveMetadata = false,
+    required String audioCodec,
+    String? audioBitrate,
+  }) async {
     final arguments = <String>['-v', 'error', '-hide_banner', '-i', mp3Path];
 
     if (coverPath != null) {
@@ -1321,7 +1415,13 @@ class FFmpegService {
 
     arguments
       ..add('-c:a')
-      ..add('copy');
+      ..add(audioCodec);
+
+    if (audioBitrate != null) {
+      arguments
+        ..add('-b:a')
+        ..add(audioBitrate);
+    }
 
     if (metadata != null) {
       _appendMappedMetadataToArguments(arguments, _convertToId3Tags(metadata));
@@ -1333,44 +1433,36 @@ class FFmpegService {
       ..add(tempOutput)
       ..add('-y');
 
-    _log.d('Executing FFmpeg MP3 embed command');
-    final result = await _executeWithArguments(arguments);
+    _log.d('Executing FFmpeg MP3 embed command (codec: $audioCodec)');
+    return await _executeWithArguments(arguments);
+  }
 
-    if (result.success) {
-      try {
-        final tempFile = File(tempOutput);
-        final originalFile = File(mp3Path);
-
-        if (await tempFile.exists()) {
-          if (await originalFile.exists()) {
-            await originalFile.delete();
-          }
-          await tempFile.copy(mp3Path);
-          await tempFile.delete();
-
-          _log.d('MP3 metadata embedded successfully');
-          return mp3Path;
-        } else {
-          _log.e('Temp MP3 output file not found: $tempOutput');
-          return null;
-        }
-      } catch (e) {
-        _log.e('Failed to replace MP3 file after metadata embed: $e');
-        return null;
-      }
-    }
-
+  /// Finalize MP3 embed by replacing the original file with the temp output.
+  static Future<String?> _finalizeMp3Embed(
+    String mp3Path,
+    String tempOutput,
+  ) async {
     try {
       final tempFile = File(tempOutput);
+      final originalFile = File(mp3Path);
+
       if (await tempFile.exists()) {
+        if (await originalFile.exists()) {
+          await originalFile.delete();
+        }
+        await tempFile.copy(mp3Path);
         await tempFile.delete();
+
+        _log.d('MP3 metadata embedded successfully');
+        return mp3Path;
+      } else {
+        _log.e('Temp MP3 output file not found: $tempOutput');
+        return null;
       }
     } catch (e) {
-      _log.w('Failed to cleanup temp MP3 file: $e');
+      _log.e('Failed to replace MP3 file after metadata embed: $e');
+      return null;
     }
-
-    _log.e('MP3 Metadata/Cover embed failed: ${result.output}');
-    return null;
   }
 
   static Future<String?> embedMetadataToOpus({

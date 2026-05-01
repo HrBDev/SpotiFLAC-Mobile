@@ -299,7 +299,7 @@ class MainActivity: FlutterFragmentActivity() {
 
     private fun mimeTypeForExt(ext: String?): String {
         return when (normalizeExt(ext)) {
-            ".m4a" -> "audio/mp4"
+            ".m4a", ".mp4" -> "audio/mp4"
             ".mp3" -> "audio/mpeg"
             ".opus" -> "audio/ogg"
             ".flac" -> "audio/flac"
@@ -314,7 +314,7 @@ class MainActivity: FlutterFragmentActivity() {
 
         val safeName = sanitizeFilename(name)
         val lower = safeName.lowercase(Locale.ROOT)
-        val knownExts = listOf(".flac", ".m4a", ".mp3", ".opus", ".lrc")
+        val knownExts = listOf(".flac", ".m4a", ".mp4", ".mp3", ".opus", ".lrc")
         for (knownExt in knownExts) {
             if (lower.endsWith(knownExt)) {
                 return safeName.dropLast(knownExt.length) + normalizedExt
@@ -724,6 +724,7 @@ class MainActivity: FlutterFragmentActivity() {
     private fun extFromFileName(name: String): String {
         return when {
             name.endsWith(".m4a") -> ".m4a"
+            name.endsWith(".mp4") -> ".mp4"
             name.endsWith(".mp3") -> ".mp3"
             name.endsWith(".opus") -> ".opus"
             name.endsWith(".flac") -> ".flac"

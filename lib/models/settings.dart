@@ -85,6 +85,9 @@ class AppSettings {
   final String
   lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
 
+  final bool
+  deduplicateDownloads; // Skip downloading tracks already present in history
+
   const AppSettings({
     this.defaultService = '',
     this.audioQuality = 'LOSSLESS',
@@ -148,6 +151,7 @@ class AppSettings {
     this.lyricsMultiPersonWordByWord = false,
     this.musixmatchLanguage = '',
     this.lastSeenVersion = '',
+    this.deduplicateDownloads = true,
   });
 
   AppSettings copyWith({
@@ -210,6 +214,7 @@ class AppSettings {
     bool? lyricsMultiPersonWordByWord,
     String? musixmatchLanguage,
     String? lastSeenVersion,
+    bool? deduplicateDownloads,
   }) {
     return AppSettings(
       defaultService: defaultService ?? this.defaultService,
@@ -288,6 +293,7 @@ class AppSettings {
           lyricsMultiPersonWordByWord ?? this.lyricsMultiPersonWordByWord,
       musixmatchLanguage: musixmatchLanguage ?? this.musixmatchLanguage,
       lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
+      deduplicateDownloads: deduplicateDownloads ?? this.deduplicateDownloads,
     );
   }
 

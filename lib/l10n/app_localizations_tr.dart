@@ -12,23 +12,23 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appName => 'SpotiFLAC';
 
   @override
-  String get navHome => 'Ana Sayfa';
+  String get navHome => 'Ana sayfa';
 
   @override
-  String get navLibrary => 'Kitaplık';
+  String get navLibrary => 'Kitaplığın';
 
   @override
   String get navSettings => 'Ayarlar';
 
   @override
-  String get navStore => 'Mağaza';
+  String get navStore => 'Depo';
 
   @override
-  String get homeTitle => 'Ana Sayfa';
+  String get homeTitle => 'Ana sayfa';
 
   @override
   String get homeSubtitle =>
-      'Bir Spotify bağlantısı yapıştırın veya şarkı arayın';
+      'Desteklenen bir URL yapıştırın veya isme göre arayın';
 
   @override
   String get homeEmptyTitle => 'No search providers yet';
@@ -38,10 +38,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get homeSupports =>
-      'Desteklenenler: Şarkı, Albüm, Çalma Listesi, Sanatçı bağlantıları';
+      'Desteklenen linkler: Şarkı, Albüm, Çalma Listesi, Sanatçı linkleri';
 
   @override
-  String get homeRecent => 'Son Arananlar';
+  String get homeRecent => 'En son';
 
   @override
   String get historyFilterAll => 'Tümü';
@@ -53,7 +53,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get historyFilterSingles => 'Single\'lar';
 
   @override
-  String get historySearchHint => 'Geçmişte ara...';
+  String get historySearchHint => 'Arama geçmişi...';
 
   @override
   String get settingsTitle => 'Ayarlar';
@@ -78,20 +78,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get downloadAskQualitySubtitle =>
-      'Her indirmede kalite seçme ekranını göster';
+      'Her indirmeden önce kalite seçim ekranını göster';
 
   @override
-  String get downloadFilenameFormat => 'Dosya Adı Formatı';
+  String get downloadFilenameFormat => 'Dosya adı formatı';
 
   @override
-  String get downloadSingleFilenameFormat => 'Single Filename Format';
+  String get downloadSingleFilenameFormat => 'Single Dosya Adı Formatı';
 
   @override
   String get downloadSingleFilenameFormatDescription =>
-      'Filename pattern for singles and EPs. Uses the same tags as the album format.';
+      'Single ve EP\'ler için dosya adı örneği. Albüm formatıyla aynı etiketleri kullanır.';
 
   @override
-  String get downloadFolderOrganization => 'Klasör Düzeni Seçimi';
+  String get downloadFolderOrganization => 'Dosya Organizasyonu';
 
   @override
   String get appearanceTitle => 'Görünüm';
@@ -106,14 +106,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appearanceThemeDark => 'Koyu';
 
   @override
-  String get appearanceDynamicColor => 'Dinamik Renkler';
+  String get appearanceDynamicColor => 'Dinamik Renk';
 
   @override
   String get appearanceDynamicColorSubtitle =>
-      'Uygulama renklerini duvar kağıdınızdan alır';
+      'Duvar kağıdının renklerini kullan';
 
   @override
-  String get appearanceHistoryView => 'Geçmiş Görünümü';
+  String get appearanceHistoryView => 'Geçmiş Düzeni';
 
   @override
   String get appearanceHistoryViewList => 'Liste';
@@ -125,15 +125,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get optionsTitle => 'Seçenekler';
 
   @override
-  String get optionsPrimaryProvider => 'Ana Sağlayıcı';
+  String get optionsPrimaryProvider => 'Ana Kaynek';
 
   @override
   String get optionsPrimaryProviderSubtitle =>
-      'Şarkı adıyla arama yaparken kullanılacak servis.';
+      'Şarkı ismi aratılırken kullanılan kaynak.';
 
   @override
   String optionsUsingExtension(String extensionName) {
-    return 'Şu anki eklenti: $extensionName';
+    return 'Kullanılan eklenti: $extensionName';
   }
 
   @override
@@ -145,76 +145,77 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get optionsSwitchBack =>
-      'Geçerli eklentiyi bırakmak için aşağıdan başka bir sağlayıcı seçin';
+      'Dahili kaynaklara dönmek için Deezer veya Spotify\'a tıkla';
 
   @override
-  String get optionsAutoFallback => 'Otomatik Geçiş';
+  String get optionsAutoFallback => 'Diğerlerini dene';
 
   @override
   String get optionsAutoFallbackSubtitle =>
-      'İndirme başarısız olursa otomatik olarak diğer servisleri dener';
+      'İndirme başarısız olursa diğer hizmetleri dene';
 
   @override
-  String get optionsUseExtensionProviders => 'Eklenti Sağlayıcılarını Kullan';
+  String get optionsUseExtensionProviders => 'Eklenti sağlayıcılarını kullan';
 
   @override
-  String get optionsUseExtensionProvidersOn =>
-      'İndirme için önce eklentiler denenecek';
+  String get optionsUseExtensionProvidersOn => 'Eklentiler ilk denenecek';
 
   @override
-  String get optionsUseExtensionProvidersOff => 'Eklentiler kapalı';
+  String get optionsUseExtensionProvidersOff =>
+      'Sadece dahili sağlayıcıları kullan';
 
   @override
-  String get optionsEmbedLyrics => 'Şarkı Sözlerini Gömer';
+  String get optionsEmbedLyrics => 'Şarkı Sözlerini Göm';
 
   @override
   String get optionsEmbedLyricsSubtitle =>
-      'Senkronize şarkı sözlerini FLAC dosyalarının içine gömer';
+      'Senkronize şarkı sözlerini FLAC dosyalarına göm';
 
   @override
-  String get optionsMaxQualityCover => 'En Yüksek Kalite Albüm Kapağı';
+  String get optionsMaxQualityCover => 'En Yüksek Kapak Kalitesi';
 
   @override
   String get optionsMaxQualityCoverSubtitle =>
-      'Albüm kapağını bulunabilen en yüksek çözünürlükte indirir';
+      'En yüksek kalitedeki albüm kapaklarını indir';
 
   @override
   String get optionsReplayGain => 'ReplayGain';
 
   @override
   String get optionsReplayGainSubtitleOn =>
-      'Scan loudness and embed ReplayGain tags (EBU R128)';
+      'Ses yüksekliğini tara ve ReplayGain etiketlerini göm (EBU R128)';
 
   @override
   String get optionsReplayGainSubtitleOff =>
-      'Disabled: no loudness normalization tags';
+      'Devre dışı: Ses normalleştirme etiketi yok';
 
   @override
-  String get optionsArtistTagMode => 'Artist Tag Mode';
+  String get optionsArtistTagMode => 'Sanatçı Etiketi Modu';
 
   @override
   String get optionsArtistTagModeDescription =>
-      'Choose how multiple artists are written into embedded tags.';
+      'Birden fazla sanatçının gömülü etiketlere nasıl yazılacağını seçin.';
 
   @override
-  String get optionsArtistTagModeJoined => 'Single joined value';
+  String get optionsArtistTagModeJoined => 'Birleşik tek değer';
 
   @override
   String get optionsArtistTagModeJoinedSubtitle =>
-      'Write one ARTIST value like \"Artist A, Artist B\" for maximum player compatibility.';
+      'Maksimum oynatıcı uyumluluğu için \'Sanatçı A, Sanatçı B\' şeklinde tek bir SANATÇI değeri yazın.';
 
   @override
-  String get optionsArtistTagModeSplitVorbis => 'Split tags for FLAC/Opus';
+  String get optionsArtistTagModeSplitVorbis =>
+      'FLAC/Opus için ayrılmış etiketler';
 
   @override
   String get optionsArtistTagModeSplitVorbisSubtitle =>
-      'Write one artist tag per artist for FLAC and Opus; MP3 and M4A stay joined.';
+      'FLAC ve Opus için her sanatçıya ayrı bir etiket yazın; MP3 ve M4A birleşik kalır.';
 
   @override
-  String get optionsConcurrentDownloads => 'Eşzamanlı İndirmeler';
+  String get optionsConcurrentDownloads => 'Eş Zamanlı İndirmeler';
 
   @override
-  String get optionsConcurrentSequential => 'Sırayla (Tek tek)';
+  String get optionsConcurrentSequential => 'Sıralı (Birer birer)';
 
   @override
   String optionsConcurrentParallel(int count) {
@@ -223,81 +224,79 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get optionsConcurrentWarning =>
-      'Aynı anda çok fazla indirme yapmak kısıtlamaya takılmanıza neden olabilir';
+      'Aynı anda birden fazla indirme sınırlamaya takılabilir';
 
   @override
-  String get optionsExtensionStore => 'Eklenti Mağazası';
+  String get optionsExtensionStore => 'Eklenti Deposu';
 
   @override
   String get optionsExtensionStoreSubtitle =>
-      'Gezinme çubuğunda Mağaza sekmesini göster';
+      'Gezinme menüsünde Depo sekmesini göster';
 
   @override
-  String get optionsCheckUpdates => 'Güncellemeleri Kontrol Et';
+  String get optionsCheckUpdates => 'Güncelleştirmeleri Denetle';
 
   @override
-  String get optionsCheckUpdatesSubtitle =>
-      'Yeni bir sürüm çıktığında haber ver';
+  String get optionsCheckUpdatesSubtitle => 'Yeni sürüm çıktığında bildir';
 
   @override
   String get optionsUpdateChannel => 'Güncelleme Kanalı';
 
   @override
-  String get optionsUpdateChannelStable => 'Sadece kararlı sürümler';
+  String get optionsUpdateChannelStable => 'Sadece stabil sürümler';
 
   @override
-  String get optionsUpdateChannelPreview =>
-      'Ön izleme (Beta) sürümlerini de al';
+  String get optionsUpdateChannelPreview => 'Önizleme sürümlerini al';
 
   @override
   String get optionsUpdateChannelWarning =>
-      'Beta sürümler hatalar içerebilir veya tamamlanmamış özellikler barındırabilir';
+      'Önizleme sürümleri hatalar veya tamamlanmamış özellikler içerebilir';
 
   @override
   String get optionsClearHistory => 'İndirme Geçmişini Temizle';
 
   @override
   String get optionsClearHistorySubtitle =>
-      'İndirilen tüm şarkıları geçmişten siler';
+      'İndirilen bütün şarkıları geçmişten temizle';
 
   @override
-  String get optionsDetailedLogging => 'Detaylı Hata Ayıklama (Log)';
+  String get optionsDetailedLogging => 'Detaylı Günlükleme';
 
   @override
-  String get optionsDetailedLoggingOn => 'Arka planda detaylı kayıt tutuluyor';
+  String get optionsDetailedLoggingOn => 'Detaylı günlük kayıt ediliyor';
 
   @override
-  String get optionsDetailedLoggingOff => 'Hata bildirimi yapacaksanız açın';
+  String get optionsDetailedLoggingOff => 'Hata bildirmek için aç';
 
   @override
-  String get optionsSpotifyCredentials => 'Spotify API Kimlik Bilgileri';
+  String get optionsSpotifyCredentials => 'Spotify Kimlik Bilgileri';
 
   @override
   String optionsSpotifyCredentialsConfigured(String clientId) {
-    return 'İstemci Kimliği (Client ID): $clientId...';
+    return 'Client ID: $clientId...';
   }
 
   @override
   String get optionsSpotifyCredentialsRequired =>
-      'Gerekli - ayarlamak için dokunun';
+      'Zorunlu - değiştirmek için tıkla';
 
   @override
   String get optionsSpotifyWarning =>
-      'Spotify, kendi API kimlik bilgilerinizi kullanmanızı gerektirir. developer.spotify.com adresinden ücretsiz alabilirsiniz.';
+      'Spotify\'ın senin API kimlik bilgilerine ihtiyacı var. Onları developer.spotify.com\'dan alabilirsin';
 
   @override
   String get optionsSpotifyDeprecationWarning =>
-      'Spotify API\'sindeki değişiklikler nedeniyle Spotify araması 3 Mart 2026\'da kullanımdan kaldırılacak. Lütfen Deezer\'a geçin.';
+      'Spotify API değişiklikleri nedeniyle Spotify araması 3 Mart 2026 tarihinde kullanımdan kaldırılacaktır. Lütfen Deezer\'a geçiş yapın.';
 
   @override
   String get extensionsTitle => 'Eklentiler';
 
   @override
-  String get extensionsDisabled => 'Devre dışı';
+  String get extensionsDisabled => 'Devre Dışı';
 
   @override
   String extensionsVersion(String version) {
-    return 'Sürüm $version';
+    return 'Versiyon $version';
   }
 
   @override
@@ -309,16 +308,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get extensionsUninstall => 'Kaldır';
 
   @override
-  String get storeTitle => 'Eklenti Mağazası';
+  String get storeTitle => 'Uzantı Deposu';
 
   @override
-  String get storeSearch => 'Eklentilerde ara...';
+  String get storeSearch => 'Eklenti ara...';
 
   @override
-  String get storeInstall => 'Yükle';
+  String get storeInstall => 'Kur';
 
   @override
-  String get storeInstalled => 'Yüklü';
+  String get storeInstalled => 'Kuruldu';
 
   @override
   String get storeUpdate => 'Güncelle';
@@ -330,23 +329,23 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aboutContributors => 'Katkıda Bulunanlar';
 
   @override
-  String get aboutMobileDeveloper => 'Mobil sürüm geliştiricisi';
+  String get aboutMobileDeveloper => 'Mobil versiyon geliştiricisi';
 
   @override
-  String get aboutOriginalCreator => 'Orijinal SpotiFLAC\'ın yaratıcısı';
+  String get aboutOriginalCreator => 'Orijinal SpotiFLAC\'ın kurucusu';
 
   @override
   String get aboutLogoArtist =>
-      'Uygulamanın harika logosunu tasarlayan yetenekli sanatçı!';
+      'Uygulama logomuzu yaratmış yetenekli sanatçımız!';
 
   @override
   String get aboutTranslators => 'Çevirmenler';
 
   @override
-  String get aboutSpecialThanks => 'Özel Teşekkürler';
+  String get aboutSpecialThanks => 'Özel teşekkür';
 
   @override
-  String get aboutLinks => 'Bağlantılar';
+  String get aboutLinks => 'Linkler';
 
   @override
   String get aboutMobileSource => 'Mobil kaynak kodu';
@@ -362,14 +361,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get aboutReportIssueSubtitle =>
-      'Karşılaştığınız sorunları bize iletin';
+      'Karşılaştığın herhangi bir problemi bildir';
 
   @override
   String get aboutFeatureRequest => 'Özellik isteği';
 
   @override
   String get aboutFeatureRequestSubtitle =>
-      'Uygulama için yeni özellikler önerin';
+      'Uygulama için yeni özellikler isteyin';
 
   @override
   String get aboutTelegramChannel => 'Telegram Kanalı';
@@ -378,49 +377,49 @@ class AppLocalizationsTr extends AppLocalizations {
   String get aboutTelegramChannelSubtitle => 'Duyurular ve güncellemeler';
 
   @override
-  String get aboutTelegramChat => 'Telegram Topluluğu';
+  String get aboutTelegramChat => 'Telegram Grubu';
 
   @override
-  String get aboutTelegramChatSubtitle => 'Diğer kullanıcılarla sohbet edin';
+  String get aboutTelegramChatSubtitle => 'Diğer kullanıcılarla sohbet et';
 
   @override
-  String get aboutSocial => 'Sosyal Medya';
+  String get aboutSocial => 'Sosyal ağlar';
 
   @override
-  String get aboutApp => 'Uygulama Bilgisi';
+  String get aboutApp => 'Uygulama';
 
   @override
-  String get aboutVersion => 'Sürüm';
+  String get aboutVersion => 'Versiyon';
 
   @override
   String get aboutBinimumDesc =>
-      'QQDL ve HiFi API\'nin yaratıcısı. Bu API olmasaydı Tidal indirmeleri var olamazdı!';
+      'QQDL ve HiFi API\'ın kurucusu. Bu API olmadan, Tidal indirmeleri olmazdı!';
 
   @override
   String get aboutSachinsenalDesc =>
-      'Orijinal HiFi projesinin kurucusu. Tidal entegrasyonunun temel taşı!';
+      'Orijinal HiFi projesi kurucusu. Tidal entegrasyonun temeli!';
 
   @override
   String get aboutSjdonadoDesc =>
-      'I Don\'t Have Spotify (IDHS) projesinin yaratıcısı. Günü kurtaran bağlantı çözümleyicimiz!';
+      'I Don\'t Have Spotify (IDHS) yaratıcısı. Günü kurtaran yedek bağlantı çözücü!';
 
   @override
   String get aboutDabMusic => 'DAB Music';
 
   @override
   String get aboutDabMusicDesc =>
-      'En iyi Qobuz yayın API\'si. Hi-Res indirmeler onlar olmadan mümkün olamazdı!';
+      'En iyi Qobuz streaming API\'ı. Yüksek kalite indirmeler bunun sayesinde!';
 
   @override
   String get aboutSpotiSaver => 'SpotiSaver';
 
   @override
   String get aboutSpotiSaverDesc =>
-      'Tidal Hi-Res FLAC altyapısı. Kayıpsız ses deneyiminin kilit parçası!';
+      'Tidal Hi-Res FLAC akış uç noktaları. Kayıpsız ses yapbozunun kilit bir parçası!';
 
   @override
   String get aboutAppDescription =>
-      'Spotify şarkılarını Tidal ve Qobuz üzerinden kayıpsız kalitede indirin.';
+      'Spotify parçalarını Tidal ve Qobuz aracılığıyla kayıpsız kalitede indirin.';
 
   @override
   String get artistAlbums => 'Albümler';
@@ -440,7 +439,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get trackMetadataService => 'Sağlayıcı';
+  String get trackMetadataService => 'Hizmet';
 
   @override
   String get trackMetadataPlay => 'Oynat';
@@ -458,35 +457,35 @@ class AppLocalizationsTr extends AppLocalizations {
   String get setupSkip => 'Şimdilik atla';
 
   @override
-  String get setupStorageAccessRequired => 'Depolama İzni Gerekli';
+  String get setupStorageAccessRequired => 'Depolama Erişimi Gerekli';
 
   @override
   String get setupStorageAccessMessageAndroid11 =>
-      'Android 11 ve üzeri, müzikleri seçtiğiniz klasöre kaydedebilmek için \'Tüm dosyalara erişim\' izni gerektirir.';
+      'Android 11 ve sonrasında şarkıların seçili klasörünüze kaydedilebilmesi için \"Bütün dosyalara eriş\" iznine ihtiyaç var.';
 
   @override
   String get setupOpenSettings => 'Ayarları Aç';
 
   @override
   String get setupPermissionDeniedMessage =>
-      'İzin reddedildi. Devam etmek için lütfen gerekli izinleri verin.';
+      'İzin reddedildi. Devam etmek için lütfen bütün izinleri verin.';
 
   @override
   String setupPermissionRequired(String permissionType) {
-    return '$permissionType İzni Gerekli';
+    return '$permissionType İzni Zorunlu';
   }
 
   @override
   String setupPermissionRequiredMessage(String permissionType) {
-    return 'En iyi deneyim için $permissionType iznine ihtiyacımız var. Bunu daha sonra Ayarlar\'dan değiştirebilirsiniz.';
+    return 'En iyi deneyim için $permissionType izni zorunludur. Bunu ayarlardan daha sonra değiştirebilirsiniz.';
   }
 
   @override
-  String get setupUseDefaultFolder => 'Varsayılan Klasör Kullanılsın mı?';
+  String get setupUseDefaultFolder => 'Varsayılan Klasörü Kullan?';
 
   @override
   String get setupNoFolderSelected =>
-      'Hiçbir klasör seçilmedi. İndirilenler için cihazınızdaki varsayılan Müzik klasörü kullanılsın mı?';
+      'Klasör seçilmedi. Varsayılan \"Music\" klasörünü kullanmak ister misiniz?';
 
   @override
   String get setupUseDefault => 'Varsayılanı Kullan';
@@ -496,33 +495,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get setupDownloadLocationIosMessage =>
-      'iOS\'te indirilen dosyalar uygulamanın Belgeler klasörüne kaydedilir. Bunlara Dosyalar uygulaması üzerinden erişebilirsiniz.';
+      'iOS\'ta indirilenler uygulamanın \"Documents\" dosyasına kaydedilir. Onlara Dosyalar uygulamasından erişebilirsiniz.';
 
   @override
-  String get setupAppDocumentsFolder => 'Uygulama Belgeleri Klasörü';
+  String get setupAppDocumentsFolder => 'Uygulama Belgeler Klasörü';
 
   @override
   String get setupAppDocumentsFolderSubtitle =>
-      'Önerilen - Dosyalar uygulamasıyla erişilebilir';
+      'Tavsiye edilen - Dosyalar uygulamasından erişilebilir';
 
   @override
   String get setupChooseFromFiles => 'Dosyalar\'dan Seç';
 
   @override
-  String get setupChooseFromFilesSubtitle =>
-      'iCloud veya başka bir konum seçin';
+  String get setupChooseFromFilesSubtitle => 'iCloud veya başka konum seç';
 
   @override
   String get setupIosEmptyFolderWarning =>
-      'iOS Kısıtlaması: Boş klasörler seçilemez. Lütfen içinde en az bir dosya olan bir klasör seçin.';
+      'iOS\'un sınırlaması: Boş klasörler seçilemiyor. İçinde en az bir dosya bulunan bir klasör seçin.';
 
   @override
   String get setupIcloudNotSupported =>
-      'iCloud Drive desteklenmiyor. Lütfen uygulamanın Belgeler klasörünü kullanın.';
+      'iCloud Drive desteklenmiyor. Lütfen uygulama Belgeler klasörünü kullanın.';
 
   @override
-  String get setupDownloadInFlac =>
-      'Spotify müziklerini FLAC formatında indirin';
+  String get setupDownloadInFlac => 'Spotify şarkılarını FLAC olarak indirin';
 
   @override
   String get setupStorageGranted => 'Depolama İzni Verildi!';
@@ -532,43 +529,43 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get setupStorageDescription =>
-      'İndirdiğiniz şarkıları kaydedebilmemiz için SpotiFLAC\'ın depolama iznine ihtiyacı var.';
+      'SpotiFLAC\'ın şarkılarınızı kaydetmek için depolama iznine ihtiyacı var.';
 
   @override
   String get setupNotificationGranted => 'Bildirim İzni Verildi!';
 
   @override
-  String get setupNotificationEnable => 'Bildirimleri Aç';
+  String get setupNotificationEnable => 'Bildirimleri Etkinleştir';
 
   @override
-  String get setupFolderChoose => 'İndirme Klasörü Seç';
+  String get setupFolderChoose => 'İndirilecek Klasörü Seç';
 
   @override
   String get setupFolderDescription =>
-      'İndirilen şarkıların nereye kaydedileceğini seçin.';
+      'İndirdiğin şarkıların kaydedileceği klasörü seç.';
 
   @override
   String get setupSelectFolder => 'Klasör Seç';
 
   @override
-  String get setupEnableNotifications => 'Bildirimleri Aç';
+  String get setupEnableNotifications => 'Bildirimleri Etkinleştir';
 
   @override
   String get setupNotificationBackgroundDescription =>
-      'İndirme durumları ve tamamlanan şarkılar hakkında anında bildirim alın. Bu, uygulama arka plandayken süreci takip etmenizi kolaylaştırır.';
+      'İndirmelerin durumu hakkında bildirim al. Bunu açmak uygulama arka plandayken indirmelerinizi takip etmenizi sağlar.';
 
   @override
   String get setupSkipForNow => 'Şimdilik atla';
 
   @override
-  String get setupNext => 'İleri';
+  String get setupNext => 'Sıradaki';
 
   @override
-  String get setupGetStarted => 'Hadi Başlayalım';
+  String get setupGetStarted => 'Başla';
 
   @override
   String get setupAllowAccessToManageFiles =>
-      'Lütfen sonraki ekranda \"Tüm dosyaları yönetme erişimine izin ver\" seçeneğini açın.';
+      'Lütfen bir sonraki ekranda \"Bütün dosyalara eriş\" iznini sağlayın.';
 
   @override
   String get setupLanguageTitle => 'Choose Language';
@@ -590,35 +587,35 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dialogDelete => 'Sil';
 
   @override
-  String get dialogRetry => 'Yeniden Dene';
+  String get dialogRetry => 'Yeniden dene';
 
   @override
   String get dialogClear => 'Temizle';
 
   @override
-  String get dialogDone => 'Bitti';
+  String get dialogDone => 'Tamamlandı';
 
   @override
-  String get dialogImport => 'İçe Aktar';
+  String get dialogImport => 'İçe aktar';
 
   @override
   String get dialogDownload => 'İndir';
 
   @override
-  String get dialogDiscard => 'Değişiklikleri Sil';
+  String get dialogDiscard => 'Vazgeç';
 
   @override
   String get dialogRemove => 'Kaldır';
 
   @override
-  String get dialogUninstall => 'Sil';
+  String get dialogUninstall => 'Kaldır';
 
   @override
-  String get dialogDiscardChanges => 'Değişiklikler İptal Edilsin mi?';
+  String get dialogDiscardChanges => 'Değişiklikleri İptal Et?';
 
   @override
   String get dialogUnsavedChanges =>
-      'Kaydedilmemiş değişiklikleriniz var. Çıkmak istediğinize emin misiniz?';
+      'Kaydedilmeyen değişiklikler mevcut. Bu değişiklikleri iptal etmek istiyor musunuz?';
 
   @override
   String get dialogClearAll => 'Tümünü Temizle';
@@ -628,14 +625,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dialogRemoveExtensionMessage =>
-      'Bu eklentiyi kaldırmak istediğinize emin misiniz? Bu işlem geri alınamaz.';
+      'Bu eklentiyi kaldırmak istediğine emin misin? Bu işlem geri alınamaz.';
 
   @override
-  String get dialogUninstallExtension => 'Eklentiyi Sil?';
+  String get dialogUninstallExtension => 'Eklentiyi Kaldır?';
 
   @override
   String dialogUninstallExtensionMessage(String extensionName) {
-    return '$extensionName eklentisini silmek istediğinize emin misiniz?';
+    return '$extensionName eklentisini kaldırmak istediğine emin misin?';
   }
 
   @override
@@ -643,28 +640,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dialogClearHistoryMessage =>
-      'Tüm indirme geçmişinizi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.';
+      'Tüm indirme geçmişini temizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz.';
 
   @override
-  String get dialogDeleteSelectedTitle => 'Seçilenleri Sil';
+  String get dialogDeleteSelectedTitle => 'Seçileni Sil';
 
   @override
   String dialogDeleteSelectedMessage(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkı',
-      one: 'şarkı',
+      other: 'şarkıyı',
+      one: 'şarkıyı',
     );
-    return 'Geçmişten $count $_temp0 silinsin mi?\n\nBu işlem, indirilen dosyaları cihazınızdan da tamamen silecek.';
+    return '$count $_temp0 geçmişten silmeye emin misiniz?\n\nBu işlem seçilenleri cihazınızdan da silecektir.';
   }
 
   @override
-  String get dialogImportPlaylistTitle => 'Çalma Listesi İçe Aktar';
+  String get dialogImportPlaylistTitle => 'Çalma listesini içe aktar';
 
   @override
   String dialogImportPlaylistMessage(int count) {
-    return 'CSV dosyasında $count şarkı bulundu. İndirme sırasına eklensin mi?';
+    return 'CSV\'de $count şarkı bulundu. İndirme kuyruğuna ekle?';
   }
 
   @override
@@ -674,17 +671,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String snackbarAddedToQueue(String trackName) {
-    return '\"$trackName\" indirme sırasına eklendi';
+    return '\"$trackName\" kuyruğa eklendi';
   }
 
   @override
   String snackbarAddedTracksToQueue(int count) {
-    return '$count şarkı indirme sırasına eklendi';
+    return '$count şarkı kuyruğa eklendi';
   }
 
   @override
   String snackbarAlreadyDownloaded(String trackName) {
-    return '\"$trackName\" zaten inmiş durumda';
+    return '\"$trackName\" zaten indirilmiş';
   }
 
   @override
@@ -696,10 +693,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get snackbarHistoryCleared => 'Geçmiş temizlendi';
 
   @override
-  String get snackbarCredentialsSaved => 'API bilgileri kaydedildi';
+  String get snackbarCredentialsSaved => 'Kimlik bilgileri kaydedildi';
 
   @override
-  String get snackbarCredentialsCleared => 'API bilgileri silindi';
+  String get snackbarCredentialsCleared => 'Kimlik bilgileri temizlendi';
 
   @override
   String snackbarDeletedTracks(int count) {
@@ -714,65 +711,65 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String snackbarCannotOpenFile(String error) {
-    return 'Dosya açılamıyor: $error';
+    return 'Dosya açılamadı: $error';
   }
 
   @override
   String get snackbarFillAllFields => 'Lütfen tüm alanları doldurun';
 
   @override
-  String get snackbarViewQueue => 'Sırayı Gör';
+  String get snackbarViewQueue => 'Kuyruğu Görüntüle';
 
   @override
   String snackbarUrlCopied(String platform) {
-    return '$platform bağlantısı panoya kopyalandı';
+    return '$platform Bağlantı panoya kopyalandı';
   }
 
   @override
   String get snackbarFileNotFound => 'Dosya bulunamadı';
 
   @override
-  String get snackbarSelectExtFile => 'Lütfen bir .spotiflac-ext dosyası seçin';
+  String get snackbarSelectExtFile => 'Lütfen .spotiflac-ext dosyasını seçin';
 
   @override
   String get snackbarProviderPrioritySaved => 'Sağlayıcı önceliği kaydedildi';
 
   @override
   String get snackbarMetadataProviderSaved =>
-      'Veri sağlayıcı önceliği kaydedildi';
+      'Meta veri sağlayıcı önceliği kaydedildi';
 
   @override
   String snackbarExtensionInstalled(String extensionName) {
-    return '$extensionName başarıyla yüklendi.';
+    return '$extensionName yüklendi.';
   }
 
   @override
   String snackbarExtensionUpdated(String extensionName) {
-    return '$extensionName başarıyla güncellendi.';
+    return '$extensionName güncellendi.';
   }
 
   @override
-  String get snackbarFailedToInstall => 'Eklenti yüklenemedi';
+  String get snackbarFailedToInstall => 'Eklenti yüklenirken hata oluştu';
 
   @override
-  String get snackbarFailedToUpdate => 'Eklenti güncellenemedi';
+  String get snackbarFailedToUpdate => 'Eklenti güncellenirken hata oluştu';
 
   @override
-  String get errorRateLimited => 'Hız Sınırına Takıldınız';
+  String get errorRateLimited => 'Aşırı istek gönderildi';
 
   @override
   String get errorRateLimitedMessage =>
-      'Çok fazla istek gönderdiniz. Yeniden arama yapmadan önce lütfen biraz bekleyin.';
+      'Çok fazla istek. Lütfen arama yapmadan önce biraz bekleyin.';
 
   @override
-  String get errorNoTracksFound => 'Şarkı bulunamadı';
+  String get errorNoTracksFound => 'Parça bulunamadı';
 
   @override
-  String get errorUrlNotRecognized => 'Bağlantı algılanamadı';
+  String get errorUrlNotRecognized => 'Bağlantı tanınamadı';
 
   @override
   String get errorUrlNotRecognizedMessage =>
-      'Bu bağlantı desteklenmiyor. Bağlantının doğru olduğundan ve gerekli eklentinin yüklü olduğundan emin olun.';
+      'Bu bağlantı desteklenmiyor. URL\'nin doğru olduğundan ve uyumlu bir uzantının yüklü olduğundan emin olun.';
 
   @override
   String get errorUrlFetchFailed =>
@@ -780,29 +777,29 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String errorMissingExtensionSource(String item) {
-    return '$item yüklenemiyor: Eklenti kaynağı eksik';
+    return '$item yüklenemedi: Eksik eklenti kaynağı';
   }
 
   @override
   String get actionPause => 'Duraklat';
 
   @override
-  String get actionResume => 'Devam Et';
+  String get actionResume => 'Devam et';
 
   @override
-  String get actionCancel => 'İptal';
+  String get actionCancel => 'Vazgeç';
 
   @override
   String get actionSelectAll => 'Tümünü Seç';
 
   @override
-  String get actionDeselect => 'Seçimi Kaldır';
+  String get actionDeselect => 'Seçimi kaldır';
 
   @override
-  String get actionRemoveCredentials => 'API Bilgilerini Sil';
+  String get actionRemoveCredentials => 'Özellikleri kaldır';
 
   @override
-  String get actionSaveCredentials => 'API Bilgilerini Kaydet';
+  String get actionSaveCredentials => 'Özellikleri kaydet';
 
   @override
   String selectionSelected(int count) {
@@ -810,18 +807,18 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get selectionAllSelected => 'Tüm şarkılar seçildi';
+  String get selectionAllSelected => 'Tüm parçalar seçildi';
 
   @override
-  String get selectionSelectToDelete => 'Silinecek şarkıları seçin';
+  String get selectionSelectToDelete => 'Silinecek parçaları seçin';
 
   @override
   String progressFetchingMetadata(int current, int total) {
-    return 'Veriler alınıyor... $current/$total';
+    return 'Meta verileri alınıyor... $current/$total';
   }
 
   @override
-  String get progressReadingCsv => 'CSV dosyası okunuyor...';
+  String get progressReadingCsv => 'CSV okunuyor...';
 
   @override
   String get searchSongs => 'Şarkılar';
@@ -842,10 +839,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get searchSortDefault => 'Varsayılan';
 
   @override
-  String get searchSortTitleAZ => 'Şarkı Adı (A-Z)';
+  String get searchSortTitleAZ => 'Başlık (A-Z)';
 
   @override
-  String get searchSortTitleZA => 'Şarkı Adı (Z-A)';
+  String get searchSortTitleZA => 'Başlık (Z-A)';
 
   @override
   String get searchSortArtistAZ => 'Sanatçı (A-Z)';
@@ -854,39 +851,39 @@ class AppLocalizationsTr extends AppLocalizations {
   String get searchSortArtistZA => 'Sanatçı (Z-A)';
 
   @override
-  String get searchSortDurationShort => 'Süre (Önce kısalar)';
+  String get searchSortDurationShort => 'Süre (en kısa)';
 
   @override
-  String get searchSortDurationLong => 'Süre (Önce uzunlar)';
+  String get searchSortDurationLong => 'Süre (en uzun)';
 
   @override
-  String get searchSortDateOldest => 'Çıkış Tarihi (Önce eskiler)';
+  String get searchSortDateOldest => 'Yayın Tarihi (En eski)';
 
   @override
-  String get searchSortDateNewest => 'Çıkış Tarihi (Önce yeniler)';
+  String get searchSortDateNewest => 'Yayın Tarihi (En yeni)';
 
   @override
   String get tooltipPlay => 'Oynat';
 
   @override
-  String get filenameFormat => 'Dosya Adı Formatı';
+  String get filenameFormat => 'Dosya adı formatı';
 
   @override
   String get filenameShowAdvancedTags => 'Gelişmiş etiketleri göster';
 
   @override
   String get filenameShowAdvancedTagsDescription =>
-      'Boşluk doldurma ve tarih formatları için gelişmiş dosya adı etiketlerini açar';
+      'Parça numarası tamamlama ve tarih desenleri için biçimlendirilmiş etiketleri etkinleştir';
 
   @override
-  String get folderOrganizationNone => 'Düzen yok';
+  String get folderOrganizationNone => 'Organizasyon yok';
 
   @override
   String get folderOrganizationByPlaylist => 'Çalma Listesine Göre';
 
   @override
   String get folderOrganizationByPlaylistSubtitle =>
-      'Her çalma listesi için ayrı bir klasör oluşturur';
+      'Her çalma listesi için ayrı klasör';
 
   @override
   String get folderOrganizationByArtist => 'Sanatçıya Göre';
@@ -895,48 +892,47 @@ class AppLocalizationsTr extends AppLocalizations {
   String get folderOrganizationByAlbum => 'Albüme Göre';
 
   @override
-  String get folderOrganizationByArtistAlbum => 'Sanatçı / Albüm';
+  String get folderOrganizationByArtistAlbum => 'Sanatçı/Albüm';
 
   @override
   String get folderOrganizationDescription =>
-      'İndirilen dosyaları klasörlere düzenler';
+      'İndirilenleri klasörlerle organize et';
 
   @override
   String get folderOrganizationNoneSubtitle =>
-      'Tüm dosyalar tek bir klasöre atılır';
+      'Her şey indirilen dosyasına kaydedilecek';
 
   @override
   String get folderOrganizationByArtistSubtitle =>
-      'Her sanatçı için ayrı klasör oluşturur';
+      'Her sanatçı için ayrı klasör';
 
   @override
-  String get folderOrganizationByAlbumSubtitle =>
-      'Her albüm için ayrı klasör oluşturur';
+  String get folderOrganizationByAlbumSubtitle => 'Her albüm için ayrı klasör';
 
   @override
   String get folderOrganizationByArtistAlbumSubtitle =>
-      'İç içe Sanatçı ve Albüm klasörleri oluşturur';
+      'Sanatçı klasörlerinin içinde Albüm klasörleri';
 
   @override
-  String get updateAvailable => 'Güncelleme Var';
+  String get updateAvailable => 'Güncelleme Mevcut';
 
   @override
   String get updateLater => 'Daha Sonra';
 
   @override
-  String get updateStartingDownload => 'İndirme başlatılıyor...';
+  String get updateStartingDownload => 'İndirme başlıyor...';
 
   @override
   String get updateDownloadFailed => 'İndirme başarısız';
 
   @override
-  String get updateFailedMessage => 'Güncelleme dosyası indirilemedi';
+  String get updateFailedMessage => 'Güncelleme indirilemedi';
 
   @override
-  String get updateNewVersionReady => 'Uygulamanın yeni bir sürümü hazır';
+  String get updateNewVersionReady => 'Yeni bir sürüm hazır';
 
   @override
-  String get updateCurrent => 'Mevcut';
+  String get updateCurrent => 'Şimdiki';
 
   @override
   String get updateNew => 'Yeni';
@@ -945,73 +941,73 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updateDownloading => 'İndiriliyor...';
 
   @override
-  String get updateWhatsNew => 'Neler Yeni?';
+  String get updateWhatsNew => 'Yenilikler';
 
   @override
-  String get updateDownloadInstall => 'İndir ve Yükle';
+  String get updateDownloadInstall => 'İndir & Yükle';
 
   @override
-  String get updateDontRemind => 'Bir daha hatırlatma';
+  String get updateDontRemind => 'Bir daha sorma';
 
   @override
-  String get providerPriorityTitle => 'Sağlayıcı Önceliği';
+  String get providerPriorityTitle => 'İndirme hizmetleri öncelik sırası';
 
   @override
   String get providerPriorityDescription =>
-      'İndirme sağlayıcılarını sürükleyip sıralayın. Uygulama, şarkıları indirirken sağlayıcıları yukarıdan aşağıya doğru dener.';
+      'İndirme hizmetlerini sıralamak için kaydır. Uygulama şarkı indirirken hizmetleri yukarıdan aşağıya doğru deneyecektir.';
 
   @override
   String get providerPriorityInfo =>
-      'Bir şarkı ilk sağlayıcıda bulunamazsa, uygulama otomatik olarak listedeki bir sonrakini dener.';
+      'Eğer bir şarkı ilk hizmette mevcut değilse uygulama otomatik olarak bir sonrakini deneyecektir.';
 
   @override
-  String get providerPriorityFallbackExtensionsTitle => 'Extension Fallback';
+  String get providerPriorityFallbackExtensionsTitle => 'Uzantı Yedeği';
 
   @override
   String get providerPriorityFallbackExtensionsDescription =>
-      'Choose which installed download extensions can be used during automatic fallback.';
+      'Otomatik yedekleme sırasında hangi yüklü indirme uzantılarının kullanılabileceğini seçin. Yerleşik sağlayıcılar hâlâ yukarıdaki öncelik sırasını takip eder.';
 
   @override
   String get providerPriorityFallbackExtensionsHint =>
-      'Only enabled extensions with download-provider capability are listed here.';
+      'Burada yalnızca indirme sağlayıcısı yeteneğine sahip olan ve etkinleştirilmiş uzantılar listelenir.';
 
   @override
-  String get providerBuiltIn => 'Yerleşik';
+  String get providerBuiltIn => 'Dahili';
 
   @override
   String get providerExtension => 'Eklenti';
 
   @override
-  String get metadataProviderPriorityTitle => 'Arama Kaynağı Önceliği';
+  String get metadataProviderPriorityTitle => 'Meta Veri Önceliği';
 
   @override
   String get metadataProviderPriorityDescription =>
-      'Arama kaynaklarını sürükleyip sıralayın. Uygulama, şarkı ararken ve veri çekerken kaynakları yukarıdan aşağıya doğru dener.';
+      'Meta veri sağlayıcılarını yeniden sıralamak için sürükleyin. Uygulama, parça ararken ve meta verileri alırken sağlayıcıları yukarıdan aşağıya doğru deneyecektir.';
 
   @override
   String get metadataProviderPriorityInfo =>
-      'Deezer\'da hız sınırı yoktur, bu yüzden ana kaynak olarak kullanılması tavsiye edilir. Spotify, çok fazla istekte bulunduğunuzda kısıtlama yapabilir.';
+      'Deezer\'da istek sınırı yoktur ve birincil olarak önerilir. Spotify, çok sayıda istekten sonra hız sınırlaması uygulayabilir.';
 
   @override
-  String get metadataNoRateLimits => 'Hız sınırı yok';
+  String get metadataNoRateLimits => 'İstek sınırı yok';
 
   @override
-  String get metadataMayRateLimit => 'Hız sınırı yapabilir';
+  String get metadataMayRateLimit => 'Hız sınırlaması uygulanabilir';
 
   @override
-  String get logTitle => 'Hata Kayıtları (Log)';
+  String get logTitle => 'Kayıtlar';
 
   @override
   String get logCopied => 'Kayıtlar panoya kopyalandı';
 
   @override
-  String get logSearchHint => 'Kayıtlarda ara...';
+  String get logSearchHint => 'Kayıtları Ara...';
 
   @override
   String get logFilterLevel => 'Seviye';
 
   @override
-  String get logFilterSection => 'Filtrele';
+  String get logFilterSection => 'Filtre';
 
   @override
   String get logShareLogs => 'Kayıtları paylaş';
@@ -1020,21 +1016,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get logClearLogs => 'Kayıtları temizle';
 
   @override
-  String get logClearLogsTitle => 'Kayıtları Temizle';
+  String get logClearLogsTitle => 'Kayıtları temizle';
 
   @override
   String get logClearLogsMessage =>
-      'Tüm hata kayıtlarını silmek istediğinize emin misiniz?';
+      'Tüm kayıtları temizlemek istediğinize emin misiniz?';
 
   @override
-  String get logFilterBySeverity => 'Önem derecesine göre filtrele';
+  String get logFilterBySeverity => 'Günlükleri önem derecesine göre filtrele';
 
   @override
   String get logNoLogsYet => 'Henüz kayıt yok';
 
   @override
   String get logNoLogsYetSubtitle =>
-      'Uygulamayı kullandıkça teknik kayıtlar burada görünecek';
+      'Uygulamayı kullandıkça günlükler burada görünecektir';
 
   @override
   String logEntriesFiltered(int count) {
@@ -1047,20 +1043,20 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get credentialsTitle => 'Spotify API Bilgileri';
+  String get credentialsTitle => 'Spotify Kimlik Bilgileri';
 
   @override
   String get credentialsDescription =>
-      'Kendi Spotify uygulamanızın kota limitlerini kullanmak için İstemci Kimliği (Client ID) ve Gizli Anahtarınızı (Client Secret) girin.';
+      'Kendi Spotify uygulama kotanızı kullanmak için Client ID ve Secret girin.';
 
   @override
-  String get credentialsClientId => 'Client ID (İstemci Kimliği)';
+  String get credentialsClientId => 'Client ID';
 
   @override
   String get credentialsClientIdHint => 'Client ID yapıştır';
 
   @override
-  String get credentialsClientSecret => 'Client Secret (Gizli Anahtar)';
+  String get credentialsClientSecret => 'Client Secret';
 
   @override
   String get credentialsClientSecretHint => 'Client Secret yapıştır';
@@ -1069,13 +1065,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get channelStable => 'Kararlı';
 
   @override
-  String get channelPreview => 'Beta (Ön İzleme)';
+  String get channelPreview => 'Önizleme';
 
   @override
   String get sectionSearchSource => 'Arama Kaynağı';
 
   @override
-  String get sectionDownload => 'İndirme';
+  String get sectionDownload => 'İndir';
 
   @override
   String get sectionPerformance => 'Performans';
@@ -1084,13 +1080,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sectionApp => 'Uygulama';
 
   @override
-  String get sectionData => 'Veri Yönetimi';
+  String get sectionData => 'Veri';
 
   @override
-  String get sectionDebug => 'Hata Ayıklama';
+  String get sectionDebug => 'Hata ayıklama';
 
   @override
-  String get sectionService => 'Servisler';
+  String get sectionService => 'Servis';
 
   @override
   String get sectionAudioQuality => 'Ses Kalitesi';
@@ -1099,44 +1095,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String get sectionFileSettings => 'Dosya Ayarları';
 
   @override
-  String get sectionLyrics => 'Şarkı Sözleri';
+  String get sectionLyrics => 'Şarkı sözleri';
 
   @override
-  String get lyricsMode => 'Şarkı Sözü Formatı';
+  String get lyricsMode => 'Şarkı Sözü Modu';
 
   @override
   String get lyricsModeDescription =>
-      'Şarkı sözlerinin nasıl kaydedileceğini seçin';
+      'Şarkı sözlerinin indirmelerinizle birlikte nasıl kaydedileceğini seçin';
 
   @override
   String get lyricsModeEmbed => 'Dosyaya göm';
 
   @override
   String get lyricsModeEmbedSubtitle =>
-      'Şarkı sözleri FLAC dosyasının içine işlenir';
+      'Şarkı sözleri FLAC meta verilerinin içinde saklanır';
 
   @override
   String get lyricsModeExternal => 'Harici .lrc dosyası';
 
   @override
   String get lyricsModeExternalSubtitle =>
-      'Bazı müzik çalarlar için şarkının yanına ayrı bir .lrc dosyası açar';
+      'Samsung Music gibi oynatıcılar için ayrı .lrc dosyası';
 
   @override
   String get lyricsModeBoth => 'Her ikisi de';
 
   @override
   String get lyricsModeBothSubtitle =>
-      'Hem dosyaya gömer hem de .lrc dosyası olarak kaydeder';
+      'Hem göm hem de .lrc dosyası olarak kaydet';
 
   @override
-  String get sectionColor => 'Renkler';
+  String get sectionColor => 'Renk';
 
   @override
   String get sectionTheme => 'Tema';
 
   @override
-  String get sectionLayout => 'Tasarım';
+  String get sectionLayout => 'Düzen';
 
   @override
   String get sectionLanguage => 'Dil';
@@ -1145,29 +1141,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appearanceLanguage => 'Uygulama Dili';
 
   @override
-  String get settingsAppearanceSubtitle => 'Temalar, renkler, görünümler';
+  String get settingsAppearanceSubtitle => 'Tema, renkler, görünüm';
 
   @override
-  String get settingsDownloadSubtitle =>
-      'İndirme servisi, ses kalitesi, dosya adı düzeni';
+  String get settingsDownloadSubtitle => 'Servis, kalite, dosya adı formatı';
 
   @override
   String get settingsOptionsSubtitle =>
-      'İndirme limitleri, şarkı sözleri, güncellemeler';
+      'Yedekleme, sözler, kapak resmi, güncellemeler';
 
   @override
-  String get settingsExtensionsSubtitle =>
-      'Yeni müzik kaynakları ve eklentileri yönetin';
+  String get settingsExtensionsSubtitle => 'İndirme sağlayıcılarını yönet';
 
   @override
   String get settingsLogsSubtitle =>
-      'Sorun tespiti için uygulama kayıtlarına göz atın';
+      'Hata ayıklama için uygulama günlüklerini görüntüle';
 
   @override
   String get loadingSharedLink => 'Paylaşılan bağlantı yükleniyor...';
 
   @override
-  String get pressBackAgainToExit => 'Çıkmak için tekrar geri dokunun';
+  String get pressBackAgainToExit => 'Çıkmak için tekrar geri basın';
 
   @override
   String downloadAllCount(int count) {
@@ -1179,8 +1173,8 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count şarkı',
-      one: '1 şarkı',
+      other: '$count parça',
+      one: '1 parça',
     );
     return '$_temp0';
   }
@@ -1189,37 +1183,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get trackCopyFilePath => 'Dosya yolunu kopyala';
 
   @override
-  String get trackRemoveFromDevice => 'Cihazdan sil';
+  String get trackRemoveFromDevice => 'Cihazdan kaldır';
 
   @override
-  String get trackLoadLyrics => 'Sözleri Yükle';
+  String get trackLoadLyrics => 'Şarkı Sözlerini Yükle';
 
   @override
-  String get trackMetadata => 'Şarkı Künyesi';
+  String get trackMetadata => 'Meta Veri';
 
   @override
   String get trackFileInfo => 'Dosya Bilgisi';
 
   @override
-  String get trackLyrics => 'Sözler';
+  String get trackLyrics => 'Şarkı Sözleri';
 
   @override
   String get trackFileNotFound => 'Dosya bulunamadı';
 
   @override
-  String get trackOpenInDeezer => 'Deezer\'da Aç';
+  String get trackOpenInDeezer => 'Deezer\'da aç';
 
   @override
-  String get trackOpenInSpotify => 'Spotify\'da Aç';
+  String get trackOpenInSpotify => 'Spotify\'da aç';
 
   @override
-  String get trackTrackName => 'Şarkı Adı';
+  String get trackTrackName => 'Parça adı';
 
   @override
   String get trackArtist => 'Sanatçı';
 
   @override
-  String get trackAlbumArtist => 'Albüm Sanatçısı';
+  String get trackAlbumArtist => 'Albüm sanatçısı';
 
   @override
   String get trackAlbum => 'Albüm';
@@ -1237,57 +1231,57 @@ class AppLocalizationsTr extends AppLocalizations {
   String get trackAudioQuality => 'Ses kalitesi';
 
   @override
-  String get trackReleaseDate => 'Çıkış tarihi';
+  String get trackReleaseDate => 'Yayın tarihi';
 
   @override
   String get trackGenre => 'Tür';
 
   @override
-  String get trackLabel => 'Plak Şirketi';
+  String get trackLabel => 'Etiket / Müzik Şirketi';
 
   @override
   String get trackCopyright => 'Telif Hakkı';
 
   @override
-  String get trackDownloaded => 'İndirilme tarihi';
+  String get trackDownloaded => 'İndirildi';
 
   @override
-  String get trackCopyLyrics => 'Sözleri kopyala';
+  String get trackCopyLyrics => 'Şarkı sözlerini kopyala';
 
   @override
-  String get trackLyricsNotAvailable => 'Bu şarkının sözleri bulunamadı';
+  String get trackLyricsNotAvailable => 'Bu parça için şarkı sözü mevcut değil';
 
   @override
-  String get trackLyricsNotInFile => 'No lyrics found in this file';
+  String get trackLyricsNotInFile => 'Bu dosyada şarkı sözü bulunamadı';
 
   @override
-  String get trackFetchOnlineLyrics => 'Fetch from Online';
+  String get trackFetchOnlineLyrics => 'İnternetten Getir';
 
   @override
   String get trackLyricsTimeout =>
-      'Zaman aşımına uğradı. Lütfen daha sonra tekrar deneyin.';
+      'İstek zaman aşımına uğradı. Daha sonra tekrar deneyin.';
 
   @override
   String get trackLyricsLoadFailed => 'Şarkı sözleri yüklenemedi';
 
   @override
-  String get trackEmbedLyrics => 'Şarkı Sözlerini Gömer';
+  String get trackEmbedLyrics => 'Şarkı Sözlerini Göm';
 
   @override
-  String get trackLyricsEmbedded => 'Şarkı sözleri dosyaya başarıyla eklendi';
+  String get trackLyricsEmbedded => 'Şarkı sözleri başarıyla gömüldü';
 
   @override
-  String get trackInstrumental => 'Enstrümantal parça (Sözsüz)';
+  String get trackInstrumental => 'Enstrümantal parça';
 
   @override
   String get trackCopiedToClipboard => 'Panoya kopyalandı';
 
   @override
-  String get trackDeleteConfirmTitle => 'Cihazdan silinsin mi?';
+  String get trackDeleteConfirmTitle => 'Cihazdan kaldırılsın mı?';
 
   @override
   String get trackDeleteConfirmMessage =>
-      'Bu işlem indirdiğiniz dosyayı tamamen silecek ve geçmişinizden kaldıracak.';
+      'Bu işlem, indirilen dosyayı kalıcı olarak silecek ve geçmişinizden kaldıracaktır.';
 
   @override
   String get dateToday => 'Bugün';
@@ -1314,16 +1308,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get storeFilterAll => 'Tümü';
 
   @override
-  String get storeFilterMetadata => 'Şarkı Verisi';
+  String get storeFilterMetadata => 'Meta Veri';
 
   @override
-  String get storeFilterDownload => 'İndirme';
+  String get storeFilterDownload => 'İndir';
 
   @override
-  String get storeFilterUtility => 'Araçlar';
+  String get storeFilterUtility => 'Araç';
 
   @override
-  String get storeFilterLyrics => 'Şarkı Sözü';
+  String get storeFilterLyrics => 'Şarkı Sözleri';
 
   @override
   String get storeFilterIntegration => 'Entegrasyon';
@@ -1332,82 +1326,81 @@ class AppLocalizationsTr extends AppLocalizations {
   String get storeClearFilters => 'Filtreleri temizle';
 
   @override
-  String get storeAddRepoTitle => 'Eklenti Deposu (Repository) Ekle';
+  String get storeAddRepoTitle => 'Uzantı Deposu Ekle';
 
   @override
   String get storeAddRepoDescription =>
-      'Eklentilere göz atmak ve yüklemek için içinde registry.json dosyası olan bir GitHub depo bağlantısı girin.';
+      'Uzantılara göz atmak ve yüklemek için registry.json dosyası içeren bir GitHub depo URL\'si girin.';
 
   @override
-  String get storeRepoUrlLabel => 'Depo Bağlantısı (URL)';
+  String get storeRepoUrlLabel => 'Depo URL\'si';
 
   @override
-  String get storeRepoUrlHint => 'https://github.com/kullaniciadi/depo';
+  String get storeRepoUrlHint => 'https://github.com/user/repo';
 
   @override
   String get storeRepoUrlHelper =>
-      'Örn: https://github.com/spoti/extensions-repo';
+      'örn. https://github.com/user/extensions-repo';
 
   @override
-  String get storeAddRepoButton => 'Depoyu Ekle';
+  String get storeAddRepoButton => 'Depo Ekle';
 
   @override
   String get storeChangeRepoTooltip => 'Depoyu değiştir';
 
   @override
-  String get storeRepoDialogTitle => 'Eklenti Deposu';
+  String get storeRepoDialogTitle => 'Uzantı Deposu';
 
   @override
   String get storeRepoDialogCurrent => 'Mevcut depo:';
 
   @override
-  String get storeNewRepoUrlLabel => 'Yeni Depo Bağlantısı';
+  String get storeNewRepoUrlLabel => 'Yeni Depo URL\'si';
 
   @override
-  String get storeLoadError => 'Mağaza yüklenemedi';
+  String get storeLoadError => 'Depo yüklenemedi';
 
   @override
-  String get storeEmptyNoExtensions => 'Kullanılabilir eklenti yok';
+  String get storeEmptyNoExtensions => 'Uygun uzantı yok';
 
   @override
-  String get storeEmptyNoResults => 'Aramanıza uygun eklenti bulunamadı';
+  String get storeEmptyNoResults => 'Uzantı bulunamadı';
 
   @override
   String get extensionDefaultProvider => 'Varsayılan (Deezer)';
 
   @override
-  String get extensionDefaultProviderSubtitle =>
-      'Uygulamanın kendi aramasını kullan';
+  String get extensionDefaultProviderSubtitle => 'Yerleşik aramayı kullan';
 
   @override
-  String get extensionAuthor => 'Geliştirici';
+  String get extensionAuthor => 'Oluşturan';
 
   @override
-  String get extensionId => 'Kimlik (ID)';
+  String get extensionId => 'ID';
 
   @override
   String get extensionError => 'Hata';
 
   @override
-  String get extensionCapabilities => 'Yetenekler';
+  String get extensionCapabilities => 'Özellikler';
 
   @override
-  String get extensionMetadataProvider => 'Şarkı Verisi (Metadata) Kaynağı';
+  String get extensionMetadataProvider => 'Meta Veri Sağlayıcı';
 
   @override
-  String get extensionDownloadProvider => 'İndirme Sağlayıcısı';
+  String get extensionDownloadProvider => 'İndirme Sağlayıcı';
 
   @override
-  String get extensionLyricsProvider => 'Şarkı Sözü Sağlayıcısı';
+  String get extensionLyricsProvider => 'Şarkı Sözü Sağlayıcı';
 
   @override
-  String get extensionUrlHandler => 'Bağlantı Okuyucu';
+  String get extensionUrlHandler => 'URL İşleyici';
 
   @override
   String get extensionQualityOptions => 'Kalite Seçenekleri';
 
   @override
-  String get extensionPostProcessingHooks => 'İndirme Sonrası İşlemler';
+  String get extensionPostProcessingHooks => 'Son İşlem Kancaları';
 
   @override
   String get extensionPermissions => 'İzinler';
@@ -1416,103 +1409,102 @@ class AppLocalizationsTr extends AppLocalizations {
   String get extensionSettings => 'Ayarlar';
 
   @override
-  String get extensionRemoveButton => 'Eklentiyi Kaldır';
+  String get extensionRemoveButton => 'Uzantıyı Kaldır';
 
   @override
-  String get extensionUpdated => 'Son Güncelleme';
+  String get extensionUpdated => 'Güncellendi';
 
   @override
   String get extensionMinAppVersion => 'Minimum Uygulama Sürümü';
 
   @override
-  String get extensionCustomTrackMatching => 'Özel Eşleştirme Algoritması';
+  String get extensionCustomTrackMatching => 'Özel Parça Eşleştirme';
 
   @override
-  String get extensionPostProcessing => 'İşlem Sonrası Özellikleri';
+  String get extensionPostProcessing => 'Son İşlem';
 
   @override
   String extensionHooksAvailable(int count) {
-    return '$count özel kanca (hook) mevcut';
+    return '$count kanca kullanılabilir';
   }
 
   @override
   String extensionPatternsCount(int count) {
-    return '$count bağlantı kalıbı';
+    return '$count desen';
   }
 
   @override
   String extensionStrategy(String strategy) {
-    return 'Eşleştirme Stratejisi: $strategy';
+    return 'Strateji: $strategy';
   }
 
   @override
   String get extensionsProviderPrioritySection => 'Sağlayıcı Önceliği';
 
   @override
-  String get extensionsInstalledSection => 'Yüklü Eklentiler';
+  String get extensionsInstalledSection => 'Kurulu uzantılar';
 
   @override
-  String get extensionsNoExtensions => 'Henüz eklenti yüklenmemiş';
+  String get extensionsNoExtensions => 'Hiçbir eklenti kurulmamış';
 
   @override
   String get extensionsNoExtensionsSubtitle =>
-      'Yeni müzik kaynakları eklemek için .spotiflac-ext dosyalarını yükleyin';
+      'Yeni sağlayıcılar eklemek için .spotiflac-ext dosyalarını yükleyin';
 
   @override
-  String get extensionsInstallButton => 'Eklenti Yükle';
+  String get extensionsInstallButton => 'Uzantı Yükle';
 
   @override
   String get extensionsInfoTip =>
-      'Eklentiler yeni veri ve indirme kaynakları ekleyebilir. Lütfen eklentileri sadece güvendiğiniz kaynaklardan yükleyin.';
+      'Uzantılar yeni meta veri ve indirme sağlayıcıları ekleyebilir. Yalnızca güvenilir kaynaklardan gelen uzantıları yükleyin.';
 
   @override
-  String get extensionsInstalledSuccess => 'Eklenti başarıyla yüklendi';
+  String get extensionsInstalledSuccess => 'Uzantı başarıyla yüklendi';
 
   @override
   String get extensionsDownloadPriority => 'İndirme Önceliği';
 
   @override
   String get extensionsDownloadPrioritySubtitle =>
-      'İndirme servislerinin deneneceği sırayı belirleyin';
+      'İndirme servisi sırasını ayarla';
 
   @override
-  String get extensionsFallbackTitle => 'Fallback Extensions';
+  String get extensionsFallbackTitle => 'Yedekleme Uzantıları';
 
   @override
   String get extensionsFallbackSubtitle =>
-      'Choose which installed download extensions can be used as fallback';
+      'Hangi yüklü indirme uzantılarının yedekleme olarak kullanılabileceğini seçin';
 
   @override
   String get extensionsNoDownloadProvider =>
-      'İndirme sağlayıcısı barındıran bir eklenti yok';
+      'İndirme sağlayıcısı olan uzantı yok';
 
   @override
-  String get extensionsMetadataPriority => 'Arama Kaynağı Önceliği';
+  String get extensionsMetadataPriority => 'Meta Veri Önceliği';
 
   @override
   String get extensionsMetadataPrioritySubtitle =>
-      'Arama ve veri kaynaklarının sırasını belirleyin';
+      'Arama ve meta veri kaynağı sırasını ayarla';
 
   @override
   String get extensionsNoMetadataProvider =>
-      'Şarkı verisi (metadata) barındıran bir eklenti yok';
+      'Meta veri sağlayıcısı içeren uzantı bulunamadı';
 
   @override
-  String get extensionsSearchProvider => 'Arama Servisi';
+  String get extensionsSearchProvider => 'Arama Sağlayıcısı';
 
   @override
-  String get extensionsNoCustomSearch =>
-      'Özel arama özelliği olan bir eklenti yok';
+  String get extensionsNoCustomSearch => 'Özel arama içeren uzantı bulunamadı';
 
   @override
   String get extensionsSearchProviderDescription =>
-      'Şarkı aramak için kullanılacak servisi seçin';
+      'Parça aramak için hangi servisin kullanılacağını seçin';
 
   @override
   String get extensionsCustomSearch => 'Özel arama';
 
   @override
-  String get extensionsErrorLoading => 'Eklenti yüklenirken hata oluştu';
+  String get extensionsErrorLoading => 'Uzantı yüklenirken hata oluştu';
 
   @override
   String get qualityFlacLossless => 'FLAC Kayıpsız';
@@ -1521,121 +1513,122 @@ class AppLocalizationsTr extends AppLocalizations {
   String get qualityFlacLosslessSubtitle => '16-bit / 44.1kHz';
 
   @override
-  String get qualityHiResFlac => 'Hi-Res FLAC (Yüksek Çözünürlüklü)';
+  String get qualityHiResFlac => 'Hi-Res FLAC';
 
   @override
   String get qualityHiResFlacSubtitle => '24-bit / 96kHz\'e kadar';
 
   @override
-  String get qualityHiResFlacMax => 'Hi-Res FLAC Maksimum';
+  String get qualityHiResFlacMax => 'Hi-Res FLAC Max';
 
   @override
   String get qualityHiResFlacMaxSubtitle => '24-bit / 192kHz\'e kadar';
 
   @override
-  String get downloadLossy320 => 'Kayıplı (Lossy) 320kbps';
+  String get downloadLossy320 => 'Kayıplı 320kbps';
 
   @override
-  String get downloadLossyFormat => 'Kayıplı Formatı';
+  String get downloadLossyFormat => 'Kayıplı Format';
 
   @override
-  String get downloadLossy320Format => 'Kayıplı (Lossy) 320kbps Formatı';
+  String get downloadLossy320Format => 'Kayıplı 320kbps Formatı';
 
   @override
   String get downloadLossy320FormatDesc =>
-      'Tidal\'dan 320kbps kalitesinde indirirken kullanılacak formatı seçin. Orijinal AAC yayını seçtiğiniz formata dönüştürülecektir.';
+      'Tidal 320kbps kayıplı indirmeler için çıktı formatını seçin. Orijinal AAC akışı seçtiğiniz formata dönüştürülecektir.';
 
   @override
   String get downloadLossyMp3 => 'MP3 320kbps';
 
   @override
-  String get downloadLossyMp3Subtitle => 'En iyi uyumluluk, şarkı başı ~10MB';
+  String get downloadLossyMp3Subtitle =>
+      'En iyi uyumluluk, parça başına ~10 Mb';
 
   @override
   String get downloadLossyOpus256 => 'Opus 256kbps';
 
   @override
   String get downloadLossyOpus256Subtitle =>
-      'En iyi Opus kalitesi, şarkı başı ~8MB';
+      'En iyi Opus kalitesi, parça başına ~8 Mb';
 
   @override
   String get downloadLossyOpus128 => 'Opus 128kbps';
 
   @override
-  String get downloadLossyOpus128Subtitle => 'En küçük boyut, şarkı başı ~4MB';
+  String get downloadLossyOpus128Subtitle =>
+      'En küçük boyut, parça başına ~4 Mb';
 
   @override
   String get qualityNote =>
-      'Gerçek kalite, şarkının serviste hangi kalitede bulunduğuna bağlıdır.';
+      'Gerçek kalite, parçanın servisteki uygunluğuna bağlıdır';
 
   @override
   String get downloadAskBeforeDownload => 'İndirmeden Önce Sor';
 
   @override
-  String get downloadDirectory => 'İndirme Klasörü';
+  String get downloadDirectory => 'İndirme Dizini';
 
   @override
-  String get downloadSeparateSinglesFolder => 'Single\'ları Ayrı Klasöre Koy';
+  String get downloadSeparateSinglesFolder => 'Ayrı Single Klasörü';
 
   @override
-  String get downloadAlbumFolderStructure => 'Albüm Klasörü Düzeni';
+  String get downloadAlbumFolderStructure => 'Albüm Klasör Yapısı';
 
   @override
   String get downloadUseAlbumArtistForFolders =>
-      'Klasörler için Albüm Sanatçısını Kullan';
+      'Klasörler için Albüm Sanatçısı\'nı kullan';
 
   @override
   String get downloadUsePrimaryArtistOnly =>
-      'Klasörlerde Sadece Ana Sanatçı (Düetleri Gizle)';
+      'Klasörler için yalnızca birincil sanatçıyı kullan';
 
   @override
   String get downloadUsePrimaryArtistOnlyEnabled =>
-      'Konuk sanatçılar klasör adından silinir (Örn: Justin Bieber, Quavo → Justin Bieber)';
+      'Düet sanatçıları klasör adından kaldırılır (örn. Justin Bieber, Quavo → Justin Bieber)';
 
   @override
   String get downloadUsePrimaryArtistOnlyDisabled =>
-      'Klasör adına tüm sanatçılar yazılır';
+      'Klasör adı için tam sanatçı dizesi kullanılır';
 
   @override
-  String get downloadSelectQuality => 'Kaliteyi Seçin';
+  String get downloadSelectQuality => 'Kalite seçin';
 
   @override
-  String get downloadFrom => 'İndirme Kaynağı:';
+  String get downloadFrom => 'İndirme Kaynağı';
 
   @override
-  String get appearanceAmoledDark => 'AMOLED Koyu (Tam Siyah)';
+  String get appearanceAmoledDark => 'AMOLED Koyu';
 
   @override
-  String get appearanceAmoledDarkSubtitle =>
-      'Tamamen siyah arka plan (OLED ekranlar için)';
+  String get appearanceAmoledDarkSubtitle => 'Saf siyah arka plan';
 
   @override
   String get queueClearAll => 'Tümünü Temizle';
 
   @override
   String get queueClearAllMessage =>
-      'Tüm indirme sırasını temizlemek istediğinize emin misiniz?';
+      'Tüm indirmeleri temizlemek istediğinizden emin misiniz?';
 
   @override
   String get settingsAutoExportFailed =>
-      'Başarısız İndirmeleri Otomatik Dışa Aktar';
+      'Başarısız indirmeleri otomatik dışa aktar';
 
   @override
   String get settingsAutoExportFailedSubtitle =>
-      'İndirilemeyen şarkıların listesini TXT dosyası olarak kaydeder';
+      'Başarısız indirmeleri otomatik olarak TXT dosyasına kaydet';
 
   @override
-  String get settingsDownloadNetwork => 'İndirme İçin Kullanılacak Ağ';
+  String get settingsDownloadNetwork => 'İndirme Ağı';
 
   @override
-  String get settingsDownloadNetworkAny => 'Wi-Fi + Mobil Veri';
+  String get settingsDownloadNetworkAny => 'WiFi + Mobil Veri';
 
   @override
-  String get settingsDownloadNetworkWifiOnly => 'Sadece Wi-Fi';
+  String get settingsDownloadNetworkWifiOnly => 'Yalnızca WiFi';
 
   @override
   String get settingsDownloadNetworkSubtitle =>
-      'Sadece Wi-Fi seçildiğinde, mobil verideyken indirmeler otomatik duraklatılır.';
+      'İndirmeler için hangi ağın kullanılacağını seçin. Yalnızca WiFi olarak ayarlandığında, mobil veriye geçildiğinde indirmeler duraklatılır.';
 
   @override
   String get albumFolderArtistAlbum => 'Sanatçı / Albüm';
@@ -1652,7 +1645,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Albümler/Sanatçı Adı/[2005] Albüm Adı/';
 
   @override
-  String get albumFolderAlbumOnly => 'Sadece Albüm';
+  String get albumFolderAlbumOnly => 'Yalnızca Albüm';
 
   @override
   String get albumFolderAlbumOnlySubtitle => 'Albümler/Albüm Adı/';
@@ -1664,19 +1657,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get albumFolderYearAlbumSubtitle => 'Albümler/[2005] Albüm Adı/';
 
   @override
-  String get albumFolderArtistAlbumSingles => 'Sanatçı / Albüm + Single\'lar';
+  String get albumFolderArtistAlbumSingles => 'Sanatçı / Albüm + Singlelar';
 
   @override
   String get albumFolderArtistAlbumSinglesSubtitle =>
-      'Sanatçı/Albüm/ ve Sanatçı/Single\'lar/';
+      'Sanatçı/Albüm/ ve Sanatçı/Singlelar/';
 
   @override
   String get albumFolderArtistAlbumFlat =>
-      'Sanatçı / Albüm (Single\'lar ayrı klasörsüz)';
+      'Sanatçı / Albüm (Singlelar alt klasörsüz)';
 
   @override
   String get albumFolderArtistAlbumFlatSubtitle =>
-      'Sanatçı/Albüm/ ve Sanatçı/sarki.flac';
+      'Sanatçı/Albüm/ ve Sanatçı/şarkı.flac';
 
   @override
   String get downloadedAlbumDeleteSelected => 'Seçilenleri Sil';
@@ -1686,10 +1679,10 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkı',
-      one: 'şarkı',
+      other: 'parça',
+      one: 'parça',
     );
-    return 'Bu albümden $count $_temp0 silinsin mi?\n\nBu işlem, dosyaları cihazınızdan da tamamen silecek.';
+    return 'Bu albümden $count $_temp0 parça silinsin mi?\n\nBu işlem dosyaları depolama alanından da kalıcı olarak silecektir.';
   }
 
   @override
@@ -1698,24 +1691,24 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get downloadedAlbumAllSelected => 'Tüm şarkılar seçildi';
+  String get downloadedAlbumAllSelected => 'Tüm parçalar seçildi';
 
   @override
-  String get downloadedAlbumTapToSelect => 'Seçmek için şarkılara dokunun';
+  String get downloadedAlbumTapToSelect => 'Seçmek için parçalara dokunun';
 
   @override
   String downloadedAlbumDeleteCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Şarkıyı',
-      one: 'Şarkıyı',
+      other: 'parçayı',
+      one: 'parçayı',
     );
-    return '$count $_temp0 Sil';
+    return '$count $_temp0 sil';
   }
 
   @override
-  String get downloadedAlbumSelectToDelete => 'Silinecek şarkıları seçin';
+  String get downloadedAlbumSelectToDelete => 'Silinecek parçaları seçin';
 
   @override
   String downloadedAlbumDiscHeader(int discNumber) {
@@ -1735,7 +1728,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get recentTypePlaylist => 'Çalma Listesi';
 
   @override
-  String get recentEmpty => 'Henüz yeni bir arama yok';
+  String get recentEmpty => 'Henüz son kullanılan öğe yok';
 
   @override
   String get recentShowAllDownloads => 'Tüm İndirmeleri Göster';
@@ -1746,30 +1739,30 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get discographyDownload => 'Tüm Diskografiyi İndir';
+  String get discographyDownload => 'Diskografiyi İndir';
 
   @override
   String get discographyDownloadAll => 'Tümünü İndir';
 
   @override
   String discographyDownloadAllSubtitle(int count, int albumCount) {
-    return '$albumCount albüm/single üzerinden toplam $count şarkı';
+    return '$albumCount yayından $count parça';
   }
 
   @override
-  String get discographyAlbumsOnly => 'Sadece Albümler';
+  String get discographyAlbumsOnly => 'Yalnızca Albümler';
 
   @override
   String discographyAlbumsOnlySubtitle(int count, int albumCount) {
-    return '$albumCount albümden toplam $count şarkı';
+    return '$albumCount albümden $count parça';
   }
 
   @override
-  String get discographySinglesOnly => 'Sadece Single\'lar ve EP\'ler';
+  String get discographySinglesOnly => 'Yalnızca Single\'lar ve EP\'ler';
 
   @override
   String discographySinglesOnlySubtitle(int count, int albumCount) {
-    return '$albumCount single üzerinden toplam $count şarkı';
+    return '$albumCount tekliden $count parça';
   }
 
   @override
@@ -1777,14 +1770,14 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get discographySelectAlbumsSubtitle =>
-      'İstediğiniz albümleri veya single\'ları kendiniz seçin';
+      'Belirli albümleri veya single\'ları seçin';
 
   @override
-  String get discographyFetchingTracks => 'Şarkılar alınıyor...';
+  String get discographyFetchingTracks => 'Parçalar getiriliyor...';
 
   @override
   String discographyFetchingAlbum(int current, int total) {
-    return 'Alınıyor: $current / $total...';
+    return '$total üzerinden $current getiriliyor...';
   }
 
   @override
@@ -1797,19 +1790,19 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String discographyAddedToQueue(int count) {
-    return '$count şarkı indirme sırasına eklendi';
+    return '$count parça kuyruğa eklendi';
   }
 
   @override
   String discographySkippedDownloaded(int added, int skipped) {
-    return '$added şarkı eklendi, zaten inmiş olan $skipped şarkı atlandı';
+    return '$added eklendi, $skipped zaten indirilmiş';
   }
 
   @override
-  String get discographyNoAlbums => 'Bu sanatçıya ait albüm bulunamadı';
+  String get discographyNoAlbums => 'Kullanılabilir albüm yok';
 
   @override
-  String get discographyFailedToFetch => 'Bazı albümler yüklenemedi';
+  String get discographyFailedToFetch => 'Bazı albümler getirilemedi';
 
   @override
   String get sectionStorageAccess => 'Depolama Erişimi';
@@ -1818,38 +1811,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get allFilesAccess => 'Tüm Dosyalara Erişim';
 
   @override
-  String get allFilesAccessEnabledSubtitle =>
-      'Cihazdaki herhangi bir klasöre yazabilir';
+  String get allFilesAccessEnabledSubtitle => 'Herhangi bir klasöre yazabilir';
 
   @override
   String get allFilesAccessDisabledSubtitle =>
-      'Sadece medya klasörleriyle sınırlı';
+      'Yalnızca medya klasörleriyle sınırlı';
 
   @override
   String get allFilesAccessDescription =>
-      'Özel klasörlere kaydederken yazma hatası alıyorsanız bunu açın. Android 13 ve sonrasında bazı klasörlere erişim varsayılan olarak kısıtlanmıştır.';
+      'Özel klasörlere kaydederken yazma hatalarıyla karşılaşırsanız bunu etkinleştirin. Android 13 ve üzeri, varsayılan olarak belirli dizinlere erişimi kısıtlar.';
 
   @override
   String get allFilesAccessDeniedMessage =>
-      'İzin reddedildi. Lütfen sistem ayarlarından \'Tüm dosyalara erişim\' iznini manuel olarak verin.';
+      'İzin reddedildi. Lütfen sistem ayarlarından \'Tüm dosyalara erişim\' iznini manuel olarak etkinleştirin.';
 
   @override
   String get allFilesAccessDisabledMessage =>
-      'Tüm Dosyalara Erişim devre dışı. Uygulama sınırlı depolama izniyle çalışacak.';
+      'Tüm Dosyalara Erişim devre dışı bırakıldı. Uygulama kısıtlı depolama erişimi kullanacak.';
 
   @override
   String get settingsLocalLibrary => 'Yerel Kitaplık';
 
   @override
   String get settingsLocalLibrarySubtitle =>
-      'Telefonunuzdaki müzikleri tarayıp kopyaları bulun';
+      'Müziği tara ve kopyaları tespit et';
 
   @override
-  String get settingsCache => 'Önbellek ve Depolama';
+  String get settingsCache => 'Depolama ve Önbellek';
 
   @override
   String get settingsCacheSubtitle =>
-      'Boyutu görüntüleyin ve gereksiz dosyaları temizleyin';
+      'Boyutu görüntüle ve önbelleğe alınmış verileri temizle';
 
   @override
   String get libraryTitle => 'Yerel Kitaplık';
@@ -1858,91 +1850,90 @@ class AppLocalizationsTr extends AppLocalizations {
   String get libraryScanSettings => 'Tarama Ayarları';
 
   @override
-  String get libraryEnableLocalLibrary => 'Yerel Kitaplık Taramasını Aç';
+  String get libraryEnableLocalLibrary => 'Yerel Kitaplığı Etkinleştir';
 
   @override
   String get libraryEnableLocalLibrarySubtitle =>
-      'İndirme yaparken elinizde olan şarkıları takip eder';
+      'Mevcut müziğinizi tarayın ve takip edin';
 
   @override
-  String get libraryFolder => 'Taranacak Klasör';
+  String get libraryFolder => 'Kitaplık Klasörü';
 
   @override
   String get libraryFolderHint => 'Klasör seçmek için dokunun';
 
   @override
-  String get libraryShowDuplicateIndicator => 'Kopya İndikatörünü Göster';
+  String get libraryShowDuplicateIndicator => 'Kopya Belirtecini Göster';
 
   @override
   String get libraryShowDuplicateIndicatorSubtitle =>
-      'Zaten indirmiş olduğunuz şarkıların yanında belirteç gösterir';
+      'Mevcut parçalar aranırken göster';
 
   @override
   String get libraryAutoScan => 'Otomatik Tarama';
 
   @override
   String get libraryAutoScanSubtitle =>
-      'Cihazınıza yeni eklenen müzikleri otomatik olarak bulur';
+      'Kitaplığınızı yeni dosyalar için otomatik olarak tarayın';
 
   @override
   String get libraryAutoScanOff => 'Kapalı';
 
   @override
-  String get libraryAutoScanOnOpen => 'Uygulama her açıldığında';
+  String get libraryAutoScanOnOpen => 'Her uygulama açılışında';
 
   @override
-  String get libraryAutoScanDaily => 'Günde bir';
+  String get libraryAutoScanDaily => 'Günlük';
 
   @override
-  String get libraryAutoScanWeekly => 'Haftada bir';
+  String get libraryAutoScanWeekly => 'Haftalık';
 
   @override
-  String get libraryActions => 'İşlemler';
+  String get libraryActions => 'Eylemler';
 
   @override
   String get libraryScan => 'Kitaplığı Tara';
 
   @override
-  String get libraryScanSubtitle => 'Klasördeki müzik dosyalarını tarar';
+  String get libraryScanSubtitle => 'Ses dosyaları için tara';
 
   @override
-  String get libraryScanSelectFolderFirst =>
-      'Lütfen önce taranacak bir klasör seçin';
+  String get libraryScanSelectFolderFirst => 'Önce bir klasör seçin';
 
   @override
   String get libraryCleanupMissingFiles => 'Eksik Dosyaları Temizle';
 
   @override
   String get libraryCleanupMissingFilesSubtitle =>
-      'Artık cihazınızda olmayan dosyaların kayıtlarını kaldırır';
+      'Eski dosya kalıntılarını temizleyin';
 
   @override
-  String get libraryClear => 'Kitaplığı Temizle';
+  String get libraryClear => 'Kitaplığı temizle';
 
   @override
-  String get libraryClearSubtitle => 'Taranmış tüm şarkı kayıtlarını sıfırlar';
+  String get libraryClearSubtitle => 'Taranan tüm parçaları sil';
 
   @override
-  String get libraryClearConfirmTitle => 'Kitaplık Temizlensin mi?';
+  String get libraryClearConfirmTitle => 'Kütüphaneyi temizle';
 
   @override
   String get libraryClearConfirmMessage =>
-      'Uygulamanın kaydettiği tüm taranmış şarkı verileri silinecek. (Gerçek müzik dosyalarınız SİLİNMEYECEK).';
+      'Bu işlem, kitaplığınızdaki tüm taranmış parçaları siler. Asıl müzik dosyalarınız silinmez.';
 
   @override
-  String get libraryAbout => 'Yerel Kitaplık Hakkında';
+  String get libraryAbout => 'Yerel Kütüphane Hakkında';
 
   @override
   String get libraryAboutDescription =>
-      'İndirme yaparken kopyaları (zaten inmiş olanları) tespit etmek için mevcut müzik arşivinizi tarar. FLAC, M4A, MP3, Opus ve OGG formatlarını destekler. Bilgiler şarkı dosyalarının kendi etiketlerinden (ID3 tag vb.) okunur.';
+      'İndirme işlemi sırasında mevcut müzik koleksiyonunuzu tarayarak yinelenen dosyaları tespit eder. FLAC, M4A, MP3, Opus ve OGG formatlarını destekler. Varsa, meta veriler dosya etiketlerinden okunur.';
 
   @override
   String libraryTracksUnit(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkı',
-      one: 'şarkı',
+      other: 'tracks',
+      one: 'track',
     );
     return '$_temp0';
   }
@@ -1960,82 +1951,82 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String libraryLastScanned(String time) {
-    return 'Son tarama: $time';
+    return 'Last scanned: $time';
   }
 
   @override
-  String get libraryLastScannedNever => 'Hiç taranmadı';
+  String get libraryLastScannedNever => 'Never';
 
   @override
-  String get libraryScanning => 'Taranıyor...';
+  String get libraryScanning => 'Scanning...';
 
   @override
   String get libraryScanFinalizing => 'Finalizing library...';
 
   @override
   String libraryScanProgress(String progress, int total) {
-    return '%$progress (Toplam $total dosya)';
+    return '$progress% of $total files';
   }
 
   @override
-  String get libraryInLibrary => 'Cihazda Var';
+  String get libraryInLibrary => 'In Library';
 
   @override
   String libraryRemovedMissingFiles(int count) {
-    return 'Cihazda olmayan $count dosyanın kaydı temizlendi';
+    return 'Removed $count missing files from library';
   }
 
   @override
-  String get libraryCleared => 'Kitaplık kayıtları temizlendi';
+  String get libraryCleared => 'Library cleared';
 
   @override
-  String get libraryStorageAccessRequired => 'Depolama İzni Gerekli';
+  String get libraryStorageAccessRequired => 'Storage Access Required';
 
   @override
   String get libraryStorageAccessMessage =>
-      'Müzik kitaplığınızı taramak için SpotiFLAC\'ın depolama iznine ihtiyacı var. Lütfen ayarlardan izin verin.';
+      'SpotiFLAC needs storage access to scan your music library. Please grant permission in settings.';
 
   @override
-  String get libraryFolderNotExist => 'Seçilen klasör artık mevcut değil';
+  String get libraryFolderNotExist => 'Selected folder does not exist';
 
   @override
-  String get librarySourceDownloaded => 'İndirildi';
+  String get librarySourceDownloaded => 'Downloaded';
 
   @override
-  String get librarySourceLocal => 'Cihazdan';
+  String get librarySourceLocal => 'Local';
 
   @override
-  String get libraryFilterAll => 'Tümü';
+  String get libraryFilterAll => 'All';
 
   @override
-  String get libraryFilterDownloaded => 'Uygulama İle İndirilenler';
+  String get libraryFilterDownloaded => 'Downloaded';
 
   @override
-  String get libraryFilterLocal => 'Yerel Dosyalar';
+  String get libraryFilterLocal => 'Local';
 
   @override
   String get libraryFilterTitle => 'Filtreler';
 
   @override
-  String get libraryFilterReset => 'Sıfırla';
+  String get libraryFilterReset => 'Reset';
 
   @override
-  String get libraryFilterApply => 'Uygula';
+  String get libraryFilterApply => 'Apply';
 
   @override
-  String get libraryFilterSource => 'Kaynak';
+  String get libraryFilterSource => 'Source';
 
   @override
-  String get libraryFilterQuality => 'Kalite';
+  String get libraryFilterQuality => 'Quality';
 
   @override
-  String get libraryFilterQualityHiRes => 'Hi-Res (24-bit)';
+  String get libraryFilterQualityHiRes => 'Hi-Res (24bit)';
 
   @override
-  String get libraryFilterQualityCD => 'CD Kalitesi (16-bit)';
+  String get libraryFilterQualityCD => 'CD (16bit)';
 
   @override
-  String get libraryFilterQualityLossy => 'Kayıplı (Lossy)';
+  String get libraryFilterQualityLossy => 'Lossy';
 
   @override
   String get libraryFilterFormat => 'Format';
@@ -2059,13 +2050,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get libraryFilterMetadataMissingAlbumArtist => 'Missing album artist';
 
   @override
-  String get libraryFilterSort => 'Sıralama';
+  String get libraryFilterSort => 'Sort';
 
   @override
-  String get libraryFilterSortLatest => 'En Yeniler';
+  String get libraryFilterSortLatest => 'Latest';
 
   @override
-  String get libraryFilterSortOldest => 'En Eskiler';
+  String get libraryFilterSortOldest => 'Oldest';
 
   @override
   String get libraryFilterSortAlbumAsc => 'Album (A-Z)';
@@ -2080,15 +2071,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get libraryFilterSortGenreDesc => 'Genre (Z-A)';
 
   @override
-  String get timeJustNow => 'Az önce';
+  String get timeJustNow => 'Just now';
 
   @override
   String timeMinutesAgo(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count dakika önce',
-      one: '1 dakika önce',
+      other: '$count minutes ago',
+      one: '1 minute ago',
     );
     return '$_temp0';
   }
@@ -2098,202 +2089,199 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count saat önce',
-      one: '1 saat önce',
+      other: '$count hours ago',
+      one: '1 hour ago',
     );
     return '$_temp0';
   }
 
   @override
-  String get tutorialWelcomeTitle => 'SpotiFLAC\'a Hoş Geldiniz!';
+  String get tutorialWelcomeTitle => 'Welcome to SpotiFLAC!';
 
   @override
   String get tutorialWelcomeDesc =>
-      'En sevdiğiniz müzikleri kayıpsız kalitede nasıl indireceğinizi öğrenelim. Bu kısa rehber size temelleri gösterecek.';
+      'En sevdiğiniz müzikleri kayıpsız kalitede nasıl indirebileceğinizi öğrenelim. Bu kısa eğitim size temel bilgileri gösterecek.';
 
   @override
   String get tutorialWelcomeTip1 =>
-      'Müzikleri bulmak için bir Spotify ya da Deezer bağlantısı yapıştırabilir veya adıyla arayabilirsiniz';
+      'Spotify, Deezer\'dan müzik indirin veya desteklenen herhangi bir URL\'yi yapıştırın';
 
   @override
   String get tutorialWelcomeTip2 =>
-      'Şarkıları Tidal, Qobuz veya Deezer altyapısıyla en yüksek kalitede (FLAC) indirin';
+      'Tidal, Qobuz veya Deezer\'dan FLAC kalitesinde ses alın';
 
   @override
   String get tutorialWelcomeTip3 =>
-      'Albüm kapağı, şarkı sözleri ve tüm şarkı verileri dosyanın içine otomatik olarak gömülür';
+      'Otomatik meta veri, kapak resmi ve şarkı sözü gömme';
 
   @override
-  String get tutorialSearchTitle => 'Müzik Bulmak Çok Kolay';
+  String get tutorialSearchTitle => 'Müzik Bulma';
 
   @override
   String get tutorialSearchDesc =>
-      'İstediğiniz müzikleri bulmanın iki basit yolu var.';
+      'İndirmek istediğiniz müziği bulmanın iki kolay yolu vardır.';
 
   @override
-  String get tutorialDownloadTitle => 'Müzikleri İndirme';
+  String get tutorialDownloadTitle => 'Müzik İndirme';
 
   @override
   String get tutorialDownloadDesc =>
-      'Şarkıları indirmek hızlı ve pürüzsüzdür. İşte süreç böyle işliyor:';
+      'Müzik indirmek basit ve hızlıdır. İşte nasıl çalıştığı.';
 
   @override
-  String get tutorialLibraryTitle => 'Kişisel Kitaplığınız';
+  String get tutorialLibraryTitle => 'Kitaplığınız';
 
   @override
   String get tutorialLibraryDesc =>
-      'İndirdiğiniz tüm müzikler Kitaplık sekmesinde düzenli bir şekilde tutulur.';
+      'İndirdiğiniz tüm müzikler Kitaplık sekmesinde düzenlenir.';
 
   @override
   String get tutorialLibraryTip1 =>
-      'İndirme ilerlemenizi ve sırayı Kitaplık sekmesinden takip edin';
+      'Kitaplık sekmesinden indirme ilerlemesini ve kuyruğu görüntüleyin';
 
   @override
   String get tutorialLibraryTip2 =>
-      'İndirdiğiniz şarkıyı favori müzik çalarınızda açmak için üzerine dokunun';
+      'Müzik çalarınızla oynatmak için herhangi bir parçaya dokunun';
 
   @override
   String get tutorialLibraryTip3 =>
-      'Daha rahat göz atmak için liste ve ızgara görünümleri arasında geçiş yapın';
+      'Daha iyi göz atmak için liste ve ızgara görünümü arasında geçiş yapın';
 
   @override
-  String get tutorialExtensionsTitle => 'Eklentilerle Güçlendirin';
+  String get tutorialExtensionsTitle => 'Uzantılar';
 
   @override
   String get tutorialExtensionsDesc =>
-      'Topluluğun geliştirdiği eklentilerle uygulamanın sınırlarını aşın.';
+      'Topluluk uzantılarıyla uygulamanın yeteneklerini artırın.';
 
   @override
   String get tutorialExtensionsTip1 =>
-      'İlginizi çekebilecek eklentileri keşfetmek için Mağaza sekmesine göz atın';
+      'Faydalı uzantıları keşfetmek için Depo sekmesine göz atın';
 
   @override
   String get tutorialExtensionsTip2 =>
-      'Uygulamaya yepyeni indirme ve arama kaynakları ekleyin';
+      'Yeni indirme sağlayıcıları veya arama kaynakları ekleyin';
 
   @override
   String get tutorialExtensionsTip3 =>
-      'Farklı şarkı sözü sağlayıcıları ve yepyeni özellikler kazanın';
+      'Şarkı sözleri, gelişmiş meta veriler ve daha fazla özellik edinin';
 
   @override
-  String get tutorialSettingsTitle => 'Deneyiminizi Kişiselleştirin';
+  String get tutorialSettingsTitle => 'Deneyiminizi Özelleştirin';
 
   @override
   String get tutorialSettingsDesc =>
-      'Uygulamanın nasıl davranacağını Ayarlar menüsünden zevkinize göre özelleştirin.';
+      'Uygulamayı Ayarlar\'dan tercihlerinize göre kişiselleştirin.';
 
   @override
   String get tutorialSettingsTip1 =>
-      'İndirme konumunu ve klasörleme biçimini değiştirin';
+      'İndirme konumunu ve klasör düzenini değiştirin';
 
   @override
   String get tutorialSettingsTip2 =>
-      'Varsayılan ses kalitesini ve indirme formatınızı belirleyin';
+      'Varsayılan ses kalitesi ve format tercihlerini ayarlayın';
 
   @override
-  String get tutorialSettingsTip3 =>
-      'Temayı, renkleri ve uygulamanın görünümünü ayarlayın';
+  String get tutorialSettingsTip3 => 'Customize app theme and appearance';
 
   @override
   String get tutorialReadyMessage =>
-      'İşte bu kadar! Artık favori müziklerinizi indirmeye hazırsınız.';
+      'You\'re all set! Start downloading your favorite music now.';
 
   @override
-  String get libraryForceFullScan => 'Tam Taramaya Zorla';
+  String get libraryForceFullScan => 'Force Full Scan';
 
   @override
-  String get libraryForceFullScanSubtitle =>
-      'Önbelleği yoksayarak klasördeki tüm dosyaları baştan tarar';
+  String get libraryForceFullScanSubtitle => 'Rescan all files, ignoring cache';
 
   @override
-  String get cleanupOrphanedDownloads => 'Geçersiz İndirmeleri Temizle';
+  String get cleanupOrphanedDownloads => 'Cleanup Orphaned Downloads';
 
   @override
   String get cleanupOrphanedDownloadsSubtitle =>
-      'Cihazdan silinmiş dosyalara ait eski geçmiş kayıtlarını kaldırır';
+      'Remove history entries for files that no longer exist';
 
   @override
   String cleanupOrphanedDownloadsResult(int count) {
-    return 'Geçmişten $count geçersiz kayıt kaldırıldı';
+    return 'Removed $count orphaned entries from history';
   }
 
   @override
-  String get cleanupOrphanedDownloadsNone =>
-      'Temizlenecek geçersiz kayıt bulunamadı';
+  String get cleanupOrphanedDownloadsNone => 'No orphaned entries found';
 
   @override
-  String get cacheTitle => 'Önbellek ve Depolama';
+  String get cacheTitle => 'Storage & Cache';
 
   @override
-  String get cacheSummaryTitle => 'Önbellek Özeti';
+  String get cacheSummaryTitle => 'Cache overview';
 
   @override
   String get cacheSummarySubtitle =>
-      'Önbelleği temizlemek indirdiğiniz müzik dosyalarını SİLMEZ.';
+      'Clearing cache will not remove downloaded music files.';
 
   @override
   String cacheEstimatedTotal(String size) {
-    return 'Tahmini önbellek kullanımı: $size';
+    return 'Estimated cache usage: $size';
   }
 
   @override
-  String get cacheSectionStorage => 'Önbelleğe Alınan Veriler';
+  String get cacheSectionStorage => 'Cached Data';
 
   @override
-  String get cacheSectionMaintenance => 'Bakım ve Temizlik';
+  String get cacheSectionMaintenance => 'Maintenance';
 
   @override
-  String get cacheAppDirectory => 'Uygulama Önbelleği';
+  String get cacheAppDirectory => 'App cache directory';
 
   @override
   String get cacheAppDirectoryDesc =>
-      'İnternet yanıtları, küçük resimler ve uygulamanın tuttuğu geçici dosyalar.';
+      'HTTP responses, WebView data, and other temporary app data.';
 
   @override
-  String get cacheTempDirectory => 'Geçici Klasör';
+  String get cacheTempDirectory => 'Temporary directory';
 
   @override
   String get cacheTempDirectoryDesc =>
-      'İndirme ve ses dönüştürme işlemleri sırasında oluşan artık dosyalar.';
+      'Temporary files from downloads and audio conversion.';
 
   @override
-  String get cacheCoverImage => 'Kapak Resmi Önbelleği';
+  String get cacheCoverImage => 'Cover image cache';
 
   @override
   String get cacheCoverImageDesc =>
-      'Önceden yüklenmiş albüm kapakları. Silinirse tekrar görüntülediğinizde yeniden indirilir.';
+      'Downloaded album and track cover art. Will re-download when viewed.';
 
   @override
-  String get cacheLibraryCover => 'Kitaplık Kapağı Önbelleği';
+  String get cacheLibraryCover => 'Library cover cache';
 
   @override
   String get cacheLibraryCoverDesc =>
-      'Yerel müzik dosyalarınızdan çıkarılmış kapaklar. Silinirse sonraki taramada yeniden oluşturulur.';
+      'Cover art extracted from local music files. Will re-extract on next scan.';
 
   @override
-  String get cacheExploreFeed => 'Keşfet Akışı Önbelleği';
+  String get cacheExploreFeed => 'Explore feed cache';
 
   @override
   String get cacheExploreFeedDesc =>
-      'Keşfet sekmesindeki (yeni çıkanlar vb.) içerikler. Silerseniz sayfayı açtığınızda yenilenir.';
+      'Explore tab content (new releases, trending). Will refresh on next visit.';
 
   @override
-  String get cacheTrackLookup => 'Şarkı Kimliği Önbelleği';
+  String get cacheTrackLookup => 'Track lookup cache';
 
   @override
   String get cacheTrackLookupDesc =>
-      'Spotify/Deezer ID eşleşmeleri. Temizlerseniz ilk birkaç aramanız biraz yavaşlayabilir.';
+      'Spotify/Deezer track ID lookups. Clearing may slow next few searches.';
 
   @override
   String get cacheCleanupUnusedDesc =>
-      'Artık cihazınızda var olmayan dosyaların geçmiş kayıtlarını ve kitaplık verilerini temizler.';
+      'Remove orphaned download history and library entries for missing files.';
 
   @override
-  String get cacheNoData => 'Veri yok';
+  String get cacheNoData => 'No cached data';
 
   @override
   String cacheSizeWithFiles(String size, int count) {
-    return '$size ($count dosya)';
+    return '$size in $count files';
   }
 
   @override
@@ -2303,70 +2291,68 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String cacheEntries(int count) {
-    return '$count kayıt';
+    return '$count entries';
   }
 
   @override
   String cacheClearSuccess(String target) {
-    return 'Temizlendi: $target';
+    return 'Cleared: $target';
   }
 
   @override
-  String get cacheClearConfirmTitle => 'Önbelleği Temizle?';
+  String get cacheClearConfirmTitle => 'Clear cache?';
 
   @override
   String cacheClearConfirmMessage(String target) {
-    return 'Sadece \"$target\" için olan önbellek silinecek. İndirdiğiniz hiçbir müzik dosyasına dokunulmayacak.';
+    return 'This will clear cached data for $target. Downloaded music files will not be deleted.';
   }
 
   @override
-  String get cacheClearAllConfirmTitle => 'Tüm Önbelleği Temizle?';
+  String get cacheClearAllConfirmTitle => 'Clear all cache?';
 
   @override
   String get cacheClearAllConfirmMessage =>
-      'Bu sayfadaki tüm önbellek kategorileri temizlenecek. İndirdiğiniz müzik dosyaları kesinlikle SİLİNMEYECEK.';
+      'This will clear all cache categories on this page. Downloaded music files will not be deleted.';
 
   @override
-  String get cacheClearAll => 'Tüm Önbelleği Temizle';
+  String get cacheClearAll => 'Clear all cache';
 
   @override
-  String get cacheCleanupUnused => 'Gereksiz Dosyaları Temizle';
+  String get cacheCleanupUnused => 'Cleanup unused data';
 
   @override
   String get cacheCleanupUnusedSubtitle =>
-      'Cihazda olmayan dosyalara ait geçmiş ve kitaplık kayıtlarını kaldırır';
+      'Remove orphaned download history and missing library entries';
 
   @override
   String cacheCleanupResult(int downloadCount, int libraryCount) {
-    return 'Temizlik Bitti: $downloadCount geçersiz geçmiş, $libraryCount eksik kitaplık kaydı kaldırıldı';
+    return 'Cleanup completed: $downloadCount orphaned downloads, $libraryCount missing library entries';
   }
 
   @override
-  String get cacheRefreshStats => 'Boyutları Yenile';
+  String get cacheRefreshStats => 'Refresh stats';
 
   @override
-  String get trackSaveCoverArt => 'Albüm Kapağını Kaydet';
+  String get trackSaveCoverArt => 'Save Cover Art';
 
   @override
-  String get trackSaveCoverArtSubtitle =>
-      'Albüm kapağını resim (.jpg) dosyası olarak dışa aktar';
+  String get trackSaveCoverArtSubtitle => 'Save album art as .jpg file';
 
   @override
-  String get trackSaveLyrics => 'Şarkı Sözlerini Kaydet (.lrc)';
+  String get trackSaveLyrics => 'Save Lyrics (.lrc)';
 
   @override
-  String get trackSaveLyricsSubtitle =>
-      'Şarkı sözlerini çekip .lrc dosyası olarak kaydeder';
+  String get trackSaveLyricsSubtitle => 'Fetch and save lyrics as .lrc file';
 
   @override
-  String get trackSaveLyricsProgress => 'Şarkı sözleri kaydediliyor...';
+  String get trackSaveLyricsProgress => 'Saving lyrics...';
 
   @override
-  String get trackReEnrich => 'Bilgileri İnternetten Güncelle (Re-enrich)';
+  String get trackReEnrich => 'Re-enrich';
 
   @override
   String get trackReEnrichOnlineSubtitle =>
-      'İnternetten şarkı verilerini (metadata) bulup dosyaya yeniden işler';
+      'Search metadata online and embed into file';
 
   @override
   String get trackReEnrichFieldsTitle => 'Fields to update';
@@ -2393,82 +2379,78 @@ class AppLocalizationsTr extends AppLocalizations {
   String get trackReEnrichSelectAll => 'Select All';
 
   @override
-  String get trackEditMetadata => 'Şarkı Bilgilerini Düzenle';
+  String get trackEditMetadata => 'Edit Metadata';
 
   @override
   String trackCoverSaved(String fileName) {
-    return 'Kapak resmi \"$fileName\" adıyla kaydedildi';
+    return 'Cover art saved to $fileName';
   }
 
   @override
-  String get trackCoverNoSource => 'Geçerli bir kapak resmi kaynağı bulunamadı';
+  String get trackCoverNoSource => 'No cover art source available';
 
   @override
   String trackLyricsSaved(String fileName) {
-    return 'Sözler \"$fileName\" adıyla kaydedildi';
+    return 'Lyrics saved to $fileName';
   }
 
   @override
-  String get trackReEnrichProgress =>
-      'Şarkı bilgileri (metadata) güncelleniyor...';
+  String get trackReEnrichProgress => 'Re-enriching metadata...';
 
   @override
-  String get trackReEnrichSearching =>
-      'İnternette şarkı bilgisi (metadata) aranıyor...';
+  String get trackReEnrichSearching => 'Searching metadata online...';
 
   @override
-  String get trackReEnrichSuccess =>
-      'Şarkı bilgileri dosyaya başarıyla işlendi';
+  String get trackReEnrichSuccess => 'Metadata re-enriched successfully';
 
   @override
-  String get trackReEnrichFfmpegFailed =>
-      'Sözleri (veya verileri) dosyaya yazarken hata oluştu';
+  String get trackReEnrichFfmpegFailed => 'FFmpeg metadata embed failed';
 
   @override
-  String get queueFlacAction => 'Bunu FLAC Olarak İndir';
+  String get queueFlacAction => 'Queue FLAC';
 
   @override
   String queueFlacConfirmMessage(int count) {
-    return 'Seçilen şarkılar için internette FLAC eşleşmesi aranacak ve indirme sırasına eklenecek.\n\nMevcut dosyalarınıza dokunulmayacak veya silinmeyecek.\n\nSadece yüksek oranda eşleşenler otomatik olarak sıraya eklenir.\n\n$count şarkı seçildi';
+    return 'Search online matches for the selected tracks and queue FLAC downloads.\n\nExisting files will not be modified or deleted.\n\nOnly high-confidence matches are queued automatically.\n\n$count selected';
   }
 
   @override
   String queueFlacFindingProgress(int current, int total) {
-    return 'FLAC eşleşmeleri aranıyor... ($current/$total)';
+    return 'Finding FLAC matches... ($current/$total)';
   }
 
   @override
   String get queueFlacNoReliableMatches =>
-      'Seçiminiz için internette güvenilir bir eşleşme bulunamadı';
+      'No reliable online matches found for the selection';
 
   @override
   String queueFlacQueuedWithSkipped(int addedCount, int skippedCount) {
-    return '$addedCount şarkı sıraya eklendi, $skippedCount şarkı eşleşmediği için atlandı';
+    return 'Added $addedCount tracks to queue, skipped $skippedCount';
   }
 
   @override
   String trackSaveFailed(String error) {
-    return 'İşlem başarısız: $error';
+    return 'Failed: $error';
   }
 
   @override
-  String get trackConvertFormat => 'Ses Formatını Dönüştür';
+  String get trackConvertFormat => 'Convert Format';
 
   @override
   String get trackConvertFormatSubtitle =>
-      'Dosyayı MP3, Opus, ALAC veya FLAC formatına çevirin';
+      'Convert to MP3, Opus, ALAC, or FLAC';
 
   @override
-  String get trackConvertTitle => 'Sesi Dönüştür';
+  String get trackConvertTitle => 'Convert Audio';
 
   @override
-  String get trackConvertTargetFormat => 'Hedef Format';
+  String get trackConvertTargetFormat => 'Target Format';
 
   @override
-  String get trackConvertBitrate => 'Bit Hızı (Kalite)';
+  String get trackConvertBitrate => 'Bitrate';
 
   @override
-  String get trackConvertConfirmTitle => 'Dönüşümü Onayla';
+  String get trackConvertConfirmTitle => 'Confirm Conversion';
 
   @override
   String trackConvertConfirmMessage(
@@ -2476,7 +2458,7 @@ class AppLocalizationsTr extends AppLocalizations {
     String targetFormat,
     String bitrate,
   ) {
-    return '$sourceFormat formatından $targetFormat formatına ($bitrate) dönüştürülsün mü?\n\nDönüşüm bittikten sonra orijinal dosya tamamen silinecektir.';
+    return 'Convert from $sourceFormat to $targetFormat at $bitrate?\n\nThe original file will be deleted after conversion.';
   }
 
   @override
@@ -2484,115 +2466,113 @@ class AppLocalizationsTr extends AppLocalizations {
     String sourceFormat,
     String targetFormat,
   ) {
-    return '$sourceFormat formatından $targetFormat formatına dönüştürülsün mü? (Kayıpsız format, kalite kaybı yaşanmaz)\n\nDönüşüm bittikten sonra orijinal dosya tamamen silinecektir.';
+    return 'Convert from $sourceFormat to $targetFormat? (Lossless — no quality loss)\n\nThe original file will be deleted after conversion.';
   }
 
   @override
   String get trackConvertLosslessHint =>
-      'Kayıpsız bir formata dönüştürülüyor (Kalite düşüşü olmaz)';
+      'Lossless conversion — no quality loss';
 
   @override
-  String get trackConvertConverting => 'Ses dönüştürülüyor...';
+  String get trackConvertConverting => 'Converting audio...';
 
   @override
   String trackConvertSuccess(String format) {
-    return 'Dosya başarıyla $format formatına çevrildi';
+    return 'Converted to $format successfully';
   }
 
   @override
-  String get trackConvertFailed => 'Dönüşüm işlemi başarısız oldu';
+  String get trackConvertFailed => 'Conversion failed';
 
   @override
-  String get cueSplitTitle => 'CUE Dosyasını Parçalara Böl';
+  String get cueSplitTitle => 'Split CUE Sheet';
 
   @override
-  String get cueSplitSubtitle =>
-      'Tek parça olan CUE+FLAC dosyasını ayrı şarkılara böler';
+  String get cueSplitSubtitle => 'Split CUE+FLAC into individual tracks';
 
   @override
   String cueSplitAlbum(String album) {
-    return 'Albüm: $album';
+    return 'Album: $album';
   }
 
   @override
   String cueSplitArtist(String artist) {
-    return 'Sanatçı: $artist';
+    return 'Artist: $artist';
   }
 
   @override
   String cueSplitTrackCount(int count) {
-    return '$count şarkı var';
+    return '$count tracks';
   }
 
   @override
-  String get cueSplitConfirmTitle => 'CUE Dosyasını Böl';
+  String get cueSplitConfirmTitle => 'Split CUE Album';
 
   @override
   String cueSplitConfirmMessage(String album, int count) {
-    return '\"$album\" albümünü $count ayrı FLAC dosyasına bölmek istiyor musunuz?\n\nYeni dosyalar orijinal dosyanın bulunduğu klasöre kaydedilecektir.';
+    return 'Split \"$album\" into $count individual FLAC files?\n\nFiles will be saved to the same directory.';
   }
 
   @override
   String cueSplitSplitting(int current, int total) {
-    return 'CUE dosyası ayrıştırılıyor... ($current/$total)';
+    return 'Splitting CUE sheet... ($current/$total)';
   }
 
   @override
   String cueSplitSuccess(int count) {
-    return 'Dosya başarıyla $count şarkıya bölündü';
+    return 'Split into $count tracks successfully';
   }
 
   @override
-  String get cueSplitFailed => 'CUE bölme işlemi başarısız';
+  String get cueSplitFailed => 'CUE split failed';
 
   @override
-  String get cueSplitNoAudioFile =>
-      'Bu CUE ile eşleşen bir ses dosyası bulunamadı';
+  String get cueSplitNoAudioFile => 'Audio file not found for this CUE sheet';
 
   @override
-  String get cueSplitButton => 'Şarkılara Böl';
+  String get cueSplitButton => 'Split into Tracks';
 
   @override
-  String get actionCreate => 'Oluştur';
+  String get actionCreate => 'Create';
 
   @override
-  String get collectionFoldersTitle => 'Klasörlerim';
+  String get collectionFoldersTitle => 'My folders';
 
   @override
-  String get collectionWishlist => 'İstek Listesi';
+  String get collectionWishlist => 'Wishlist';
 
   @override
-  String get collectionLoved => 'Favoriler';
+  String get collectionLoved => 'Loved';
 
   @override
   String get collectionFavoriteArtists => 'Favorite Artists';
 
   @override
-  String get collectionPlaylists => 'Çalma Listeleri';
+  String get collectionPlaylists => 'Playlists';
 
   @override
-  String get collectionPlaylist => 'Çalma Listesi';
+  String get collectionPlaylist => 'Playlist';
 
   @override
-  String get collectionAddToPlaylist => 'Çalma listesine ekle';
+  String get collectionAddToPlaylist => 'Add to playlist';
 
   @override
-  String get collectionCreatePlaylist => 'Yeni çalma listesi oluştur';
+  String get collectionCreatePlaylist => 'Create playlist';
 
   @override
-  String get collectionNoPlaylistsYet => 'Henüz listeniz yok';
+  String get collectionNoPlaylistsYet => 'No playlists yet';
 
   @override
   String get collectionNoPlaylistsSubtitle =>
-      'Müziklerinizi kategorize etmek için bir çalma listesi oluşturun';
+      'Create a playlist to start categorizing tracks';
 
   @override
   String collectionPlaylistTracks(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count şarkı',
-      one: '1 şarkı',
+      other: '$count tracks',
+      one: '1 track',
     );
     return '$_temp0';
   }
@@ -2610,54 +2590,53 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String collectionAddedToPlaylist(String playlistName) {
-    return '\"$playlistName\" listesine eklendi';
+    return 'Added to \"$playlistName\"';
   }
 
   @override
   String collectionAlreadyInPlaylist(String playlistName) {
-    return 'Zaten \"$playlistName\" listesinde var';
+    return 'Already in \"$playlistName\"';
   }
 
   @override
-  String get collectionPlaylistCreated => 'Çalma listesi oluşturuldu';
+  String get collectionPlaylistCreated => 'Playlist created';
 
   @override
-  String get collectionPlaylistNameHint => 'Çalma listesi adı';
+  String get collectionPlaylistNameHint => 'Playlist name';
 
   @override
-  String get collectionPlaylistNameRequired =>
-      'Lütfen liste için bir isim girin';
+  String get collectionPlaylistNameRequired => 'Playlist name is required';
 
   @override
-  String get collectionRenamePlaylist => 'Yeniden adlandır';
+  String get collectionRenamePlaylist => 'Rename playlist';
 
   @override
-  String get collectionDeletePlaylist => 'Listeyi sil';
+  String get collectionDeletePlaylist => 'Delete playlist';
 
   @override
   String collectionDeletePlaylistMessage(String playlistName) {
-    return '\"$playlistName\" listesini ve içindeki tüm şarkıları silmek istiyor musunuz?';
+    return 'Delete \"$playlistName\" and all tracks inside it?';
   }
 
   @override
-  String get collectionPlaylistDeleted => 'Çalma listesi silindi';
+  String get collectionPlaylistDeleted => 'Playlist deleted';
 
   @override
-  String get collectionPlaylistRenamed => 'Çalma listesi adı değiştirildi';
+  String get collectionPlaylistRenamed => 'Playlist renamed';
 
   @override
-  String get collectionWishlistEmptyTitle => 'İstek Listeniz boş';
+  String get collectionWishlistEmptyTitle => 'Wishlist is empty';
 
   @override
   String get collectionWishlistEmptySubtitle =>
-      'Daha sonra indirmek istediğiniz şarkıların yanındaki (+) simgesine dokunun';
+      'Tap + on tracks to save what you want to download later';
 
   @override
-  String get collectionLovedEmptyTitle => 'Favori klasörünüz boş';
+  String get collectionLovedEmptyTitle => 'Loved folder is empty';
 
   @override
   String get collectionLovedEmptySubtitle =>
-      'Sevdiğiniz şarkıları burada toplamak için kalp ikonuna dokunun';
+      'Tap love on tracks to keep your favorites';
 
   @override
   String get collectionFavoriteArtistsEmptyTitle => 'No favorite artists yet';
@@ -2667,41 +2646,41 @@ class AppLocalizationsTr extends AppLocalizations {
       'Tap the heart on an artist page to keep them here';
 
   @override
-  String get collectionPlaylistEmptyTitle => 'Bu çalma listesi boş';
+  String get collectionPlaylistEmptyTitle => 'Playlist is empty';
 
   @override
   String get collectionPlaylistEmptySubtitle =>
-      'Buraya eklemek için istediğiniz şarkının üzerindeki (+) butonuna basılı tutun';
+      'Long-press + on any track to add it here';
 
   @override
-  String get collectionRemoveFromPlaylist => 'Çalma listesinden çıkar';
+  String get collectionRemoveFromPlaylist => 'Remove from playlist';
 
   @override
-  String get collectionRemoveFromFolder => 'Klasörden çıkar';
+  String get collectionRemoveFromFolder => 'Remove from folder';
 
   @override
   String collectionRemoved(String trackName) {
-    return '\"$trackName\" listeden çıkarıldı';
+    return '\"$trackName\" removed';
   }
 
   @override
   String collectionAddedToLoved(String trackName) {
-    return '\"$trackName\" Favoriler klasörüne eklendi';
+    return '\"$trackName\" added to Loved';
   }
 
   @override
   String collectionRemovedFromLoved(String trackName) {
-    return '\"$trackName\" Favorilerinizden çıkarıldı';
+    return '\"$trackName\" removed from Loved';
   }
 
   @override
   String collectionAddedToWishlist(String trackName) {
-    return '\"$trackName\" İstek Listenize eklendi';
+    return '\"$trackName\" added to Wishlist';
   }
 
   @override
   String collectionRemovedFromWishlist(String trackName) {
-    return '\"$trackName\" İstek Listenizden çıkarıldı';
+    return '\"$trackName\" removed from Wishlist';
   }
 
   @override
@@ -2715,16 +2694,16 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get trackOptionAddToLoved => 'Favorilere Ekle';
+  String get trackOptionAddToLoved => 'Add to Loved';
 
   @override
-  String get trackOptionRemoveFromLoved => 'Favorilerden Çıkar';
+  String get trackOptionRemoveFromLoved => 'Remove from Loved';
 
   @override
-  String get trackOptionAddToWishlist => 'İstek Listesine Ekle';
+  String get trackOptionAddToWishlist => 'Add to Wishlist';
 
   @override
-  String get trackOptionRemoveFromWishlist => 'İstek Listesinden Çıkar';
+  String get trackOptionRemoveFromWishlist => 'Remove from Wishlist';
 
   @override
   String get artistOptionAddToFavorites => 'Add to Favorite Artists';
@@ -2733,42 +2712,41 @@ class AppLocalizationsTr extends AppLocalizations {
   String get artistOptionRemoveFromFavorites => 'Remove from Favorite Artists';
 
   @override
-  String get collectionPlaylistChangeCover => 'Kapak resmini değiştir';
+  String get collectionPlaylistChangeCover => 'Change cover image';
 
   @override
-  String get collectionPlaylistRemoveCover => 'Kapak resmini kaldır';
+  String get collectionPlaylistRemoveCover => 'Remove cover image';
 
   @override
   String selectionShareCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkıyı',
-      one: 'şarkıyı',
+      other: 'tracks',
+      one: 'track',
     );
-    return '$count $_temp0 paylaş';
+    return 'Share $count $_temp0';
   }
 
   @override
-  String get selectionShareNoFiles => 'Paylaşılabilir bir dosya bulunamadı';
+  String get selectionShareNoFiles => 'No shareable files found';
 
   @override
   String selectionConvertCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkıyı',
-      one: 'şarkıyı',
+      other: 'tracks',
+      one: 'track',
     );
-    return '$count $_temp0 dönüştür';
+    return 'Convert $count $_temp0';
   }
 
   @override
-  String get selectionConvertNoConvertible =>
-      'Dönüştürülebilir formatta bir şarkı seçilmedi';
+  String get selectionConvertNoConvertible => 'No convertible tracks selected';
 
   @override
-  String get selectionBatchConvertConfirmTitle => 'Toplu Dönüştürme';
+  String get selectionBatchConvertConfirmTitle => 'Batch Convert';
 
   @override
   String selectionBatchConvertConfirmMessage(
@@ -2779,10 +2757,10 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkıyı',
-      one: 'şarkıyı',
+      other: 'tracks',
+      one: 'track',
     );
-    return '$count $_temp0 $format formatına ($bitrate) dönüştürmek istiyor musunuz?\n\nDönüşüm işlemi bittikten sonra orijinal dosyalar tamamen silinecektir.';
+    return 'Convert $count $_temp0 to $format at $bitrate?\n\nOriginal files will be deleted after conversion.';
   }
 
   @override
@@ -2790,345 +2768,349 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'şarkıyı',
-      one: 'şarkıyı',
+      other: 'tracks',
+      one: 'track',
     );
-    return '$count $_temp0 $format formatına dönüştürmek istiyor musunuz? (Kayıpsız işlem — kalite kaybı olmaz)\n\nDönüşüm işlemi bittikten sonra orijinal dosyalar tamamen silinecektir.';
+    return 'Convert $count $_temp0 to $format? (Lossless — no quality loss)\n\nOriginal files will be deleted after conversion.';
   }
 
   @override
   String selectionBatchConvertProgress(int current, int total) {
-    return 'Dönüştürülüyor: $current / $total...';
+    return 'Converting $current of $total...';
   }
 
   @override
   String selectionBatchConvertSuccess(int success, int total, String format) {
-    return '$total şarkıdan $success tanesi $format formatına dönüştürüldü';
+    return 'Converted $success of $total tracks to $format';
   }
 
   @override
   String downloadedAlbumDownloadedCount(int count) {
-    return '$count tanesi indirildi';
+    return '$count downloaded';
   }
 
   @override
   String get downloadUseAlbumArtistForFoldersAlbumSubtitle =>
-      'Sanatçı klasörleri için Albüm Sanatçısı adı kullanılır';
+      'Artist folders use Album Artist when available';
 
   @override
   String get downloadUseAlbumArtistForFoldersTrackSubtitle =>
-      'Sanatçı klasörleri için sadece Şarkı Sanatçısı adı kullanılır';
+      'Artist folders use Track Artist only';
 
   @override
-  String get lyricsProvidersTitle => 'Şarkı Sözü Sağlayıcıları';
+  String get lyricsProvidersTitle => 'Lyrics Providers';
 
   @override
   String get lyricsProvidersDescription =>
-      'Şarkı sözü kaynaklarını açıp kapatın veya sıralamalarını değiştirin. Uygulama sözleri bulana kadar sağlayıcıları yukarıdan aşağıya doğru sırayla dener.';
+      'Enable, disable and reorder lyrics sources. Providers are tried top-to-bottom until lyrics are found.';
 
   @override
   String get lyricsProvidersInfoText =>
-      'Mağazadan yüklediğiniz eklentiler her zaman varsayılan yerleşik sağlayıcılardan önce çalışır. En az bir sağlayıcı her zaman açık kalmalıdır.';
+      'Extension lyrics providers always run before built-in providers. At least one provider must remain enabled.';
 
   @override
   String lyricsProvidersEnabledSection(int count) {
-    return 'Açık ($count)';
+    return 'Enabled ($count)';
   }
 
   @override
   String lyricsProvidersDisabledSection(int count) {
-    return 'Kapalı ($count)';
+    return 'Disabled ($count)';
   }
 
   @override
   String get lyricsProvidersAtLeastOne =>
-      'En az bir sağlayıcı her zaman açık kalmalıdır';
+      'At least one provider must remain enabled';
 
   @override
-  String get lyricsProvidersSaved =>
-      'Şarkı sözü sağlayıcılarının sıralaması kaydedildi';
+  String get lyricsProvidersSaved => 'Lyrics provider priority saved';
 
   @override
   String get lyricsProvidersDiscardContent =>
-      'Kaydedilmemiş değişiklikleriniz iptal edilecek.';
+      'You have unsaved changes that will be lost.';
 
   @override
-  String get lyricsProviderLrclibDesc =>
-      'Açık kaynaklı, senkronize şarkı sözü veritabanı';
+  String get lyricsProviderLrclibDesc => 'Open-source synced lyrics database';
 
   @override
   String get lyricsProviderNeteaseDesc =>
-      'NetEase Cloud Music (Özellikle Asya müzikleri için ideal)';
+      'NetEase Cloud Music (good for Asian songs)';
 
   @override
   String get lyricsProviderMusixmatchDesc =>
-      'En geniş şarkı sözü arşivi (Çok dilli)';
+      'Largest lyrics database (multi-language)';
 
   @override
   String get lyricsProviderAppleMusicDesc =>
-      'Kelime kelime akan senkronize sözler (Proxy üzerinden)';
+      'Word-by-word synced lyrics (via proxy)';
 
   @override
   String get lyricsProviderQqMusicDesc =>
-      'QQ Music (Özellikle Çince şarkılar için, Proxy üzerinden)';
+      'QQ Music (good for Chinese songs, via proxy)';
 
   @override
-  String get lyricsProviderExtensionDesc => 'Eklenti ile sağlanan kaynak';
+  String get lyricsProviderExtensionDesc => 'Extension provider';
 
   @override
-  String get safMigrationTitle => 'Depolama Sistem Güncellemesi';
+  String get safMigrationTitle => 'Storage Update Required';
 
   @override
   String get safMigrationMessage1 =>
-      'SpotiFLAC artık indirme işlemleri için Android\'in yeni Depolama Erişim Çerçevesi\'ni (SAF) kullanıyor. Bu sayede Android 10 ve üzeri sürümlerdeki \"izin reddedildi\" hataları ortadan kalkıyor.';
+      'SpotiFLAC now uses Android Storage Access Framework (SAF) for downloads. This fixes \"permission denied\" errors on Android 10+.';
 
   @override
   String get safMigrationMessage2 =>
-      'Yeni depolama sistemine geçiş yapmak için lütfen indirme klasörünüzü tekrar seçin.';
+      'Please select your download folder again to switch to the new storage system.';
 
   @override
-  String get safMigrationSuccess =>
-      'İndirme klasörü başarıyla yeni (SAF) moda geçirildi';
+  String get safMigrationSuccess => 'Download folder updated to SAF mode';
 
   @override
-  String get settingsDonate => 'Bağış Yap';
+  String get settingsDonate => 'Donate';
 
   @override
-  String get settingsDonateSubtitle =>
-      'SpotiFLAC-Mobile gelişimine destek olun';
+  String get settingsDonateSubtitle => 'Support SpotiFLAC-Mobile development';
 
   @override
-  String get tooltipLoveAll => 'Tümünü Favorilere Ekle';
+  String get tooltipLoveAll => 'Love All';
 
   @override
-  String get tooltipAddToPlaylist => 'Çalma Listesine Ekle';
+  String get tooltipAddToPlaylist => 'Add to Playlist';
 
   @override
   String snackbarRemovedTracksFromLoved(int count) {
-    return '$count şarkı Favoriler\'den çıkarıldı';
+    return 'Removed $count tracks from Loved';
   }
 
   @override
   String snackbarAddedTracksToLoved(int count) {
-    return '$count şarkı Favoriler\'e eklendi';
+    return 'Added $count tracks to Loved';
   }
 
   @override
-  String get dialogDownloadAllTitle => 'Tümünü İndir';
+  String get dialogDownloadAllTitle => 'Download All';
 
   @override
   String dialogDownloadAllMessage(int count) {
-    return 'Bu listedeki $count şarkı indirilsin mi?';
+    return 'Download $count tracks?';
   }
 
   @override
-  String get homeSkipAlreadyDownloaded => 'Daha önce inmiş olan şarkıları atla';
+  String get homeSkipAlreadyDownloaded => 'Skip already downloaded songs';
 
   @override
-  String get homeGoToAlbum => 'Albüme Git';
+  String get homeGoToAlbum => 'Go to Album';
 
   @override
-  String get homeAlbumInfoUnavailable => 'Albüm bilgisine ulaşılamıyor';
+  String get homeAlbumInfoUnavailable => 'Album info not available';
 
   @override
-  String get snackbarLoadingCueSheet => 'CUE dosyası yükleniyor...';
+  String get snackbarLoadingCueSheet => 'Loading CUE sheet...';
 
   @override
-  String get snackbarMetadataSaved =>
-      'Şarkı verileri dosyaya başarıyla kaydedildi';
+  String get snackbarMetadataSaved => 'Metadata saved successfully';
 
   @override
-  String get snackbarFailedToEmbedLyrics => 'Şarkı sözleri dosyaya eklenemedi';
+  String get snackbarFailedToEmbedLyrics => 'Failed to embed lyrics';
 
   @override
-  String get snackbarFailedToWriteStorage =>
-      'Değişiklikler asıl dosyaya yazılamadı';
+  String get snackbarFailedToWriteStorage => 'Failed to write back to storage';
 
   @override
   String snackbarError(String error) {
-    return 'Hata: $error';
+    return 'Error: $error';
   }
 
   @override
-  String get snackbarNoActionDefined =>
-      'Bu buton için henüz bir işlev tanımlanmamış';
+  String get snackbarNoActionDefined => 'No action defined for this button';
 
   @override
-  String get noTracksFoundForAlbum => 'Bu albümün içinde hiç şarkı bulunamadı';
+  String get noTracksFoundForAlbum => 'No tracks found for this album';
 
   @override
   String get downloadLocationSubtitle =>
-      'İndirdiğiniz dosyaların cihazınızda nasıl tutulacağını seçin.';
+      'Choose storage mode for downloaded files.';
 
   @override
-  String get storageModeAppFolder => 'Uygulama Klasörü';
+  String get storageModeAppFolder => 'App folder (non-SAF)';
 
   @override
-  String get storageModeAppFolderSubtitle =>
-      'Telefonunuzdaki varsayılan Müzik klasörünü kullanır';
+  String get storageModeAppFolderSubtitle => 'Use default Music/SpotiFLAC path';
 
   @override
-  String get storageModeSaf => 'SAF ile Özel Klasör (Önerilen)';
+  String get storageModeSaf => 'SAF folder';
 
   @override
   String get storageModeSafSubtitle =>
-      'Android dosya seçicisi ile cihazınızdan dilediğiniz klasörü seçin';
+      'Pick folder via Android Storage Access Framework';
 
   @override
-  String get downloadFilenameDescription =>
-      'Şarkıların cihazınızda hangi dosya adıyla kaydedileceğini özelleştirin.';
+  String downloadFilenameDescription(
+    Object album,
+    Object artist,
+    Object date,
+    Object disc,
+    Object title,
+    Object track,
+    Object year,
+  ) {
+    return 'Customize how your files are named.';
+  }
 
   @override
-  String get downloadFilenameInsertTag => 'Eklemek için dokunun:';
+  String get downloadFilenameInsertTag => 'Tap to insert tag:';
 
   @override
-  String get downloadSeparateSinglesEnabled =>
-      'Sanatçı klasörünün içinde Single\'ları ayrı bir klasöre ayırır';
+  String get downloadSeparateSinglesEnabled => 'Albums/ and Singles/ folders';
 
   @override
-  String get downloadSeparateSinglesDisabled =>
-      'Single\'lar ile albümler aynı yerde durur';
+  String get downloadSeparateSinglesDisabled => 'All files in same structure';
 
   @override
-  String get downloadArtistNameFilters => 'Sanatçı Adı Filtreleri';
+  String get downloadArtistNameFilters => 'Artist Name Filters';
 
   @override
   String get downloadCreatePlaylistSourceFolder =>
-      'Çalma Listeleri İçin Ana Klasör Oluştur';
+      'Create playlist source folder';
 
   @override
   String get downloadCreatePlaylistSourceFolderEnabled =>
-      'Çalma listesi indirildiğinde en dışa \'Çalma Listesi Adı\' isimli bir klasör oluşturur ve içini normal düzeninize göre dizer.';
+      'Playlist downloads use Playlist/ plus your normal folder structure.';
 
   @override
   String get downloadCreatePlaylistSourceFolderDisabled =>
-      'Çalma listesindeki şarkılar da diğerleri gibi doğrudan albüm ve sanatçı klasörlerinize atılır.';
+      'Playlist downloads use the normal folder structure only.';
 
   @override
   String get downloadCreatePlaylistSourceFolderRedundant =>
-      'Klasör Düzeni zaten \'Çalma Listesine Göre\' ayarlı olduğu için bu seçenek pasiftir.';
+      'By Playlist already places downloads inside a playlist folder.';
 
   @override
-  String get downloadSongLinkRegion => 'SongLink Arama Bölgesi';
+  String get downloadSongLinkRegion => 'SongLink Region';
 
   @override
-  String get downloadNetworkCompatibilityMode => 'Ağ Uyumluluk Modu';
+  String get downloadNetworkCompatibilityMode => 'Network compatibility mode';
 
   @override
   String get downloadNetworkCompatibilityModeEnabled =>
-      'Açık: Bağlantı HTTP ile denenir ve geçersiz sertifikalar kabul edilir (Güvensiz ama çözümleyici)';
+      'Enabled: try HTTP + accept invalid TLS certificates (unsafe)';
 
   @override
   String get downloadNetworkCompatibilityModeDisabled =>
-      'Kapalı: Katı HTTPS kuralları uygulanır (Önerilen)';
+      'Off: strict HTTPS certificate validation (recommended)';
 
   @override
   String get downloadSelectServiceToEnable =>
-      'Kalite seçeneklerini açmak için uyumlu bir indirme sağlayıcısı seçin';
+      'Select a built-in service to enable';
 
   @override
   String get downloadSelectTidalQobuz =>
-      'Kaliteyi ayarlamak için yukarıdan uyumlu bir sağlayıcı seçin';
+      'Select Tidal or Qobuz above to configure quality';
 
   @override
   String get downloadEmbedLyricsDisabled =>
-      'Şarkı Verilerini Dosyaya Gömme ayarı kapalıyken kullanılamaz';
+      'Disabled while Embed Metadata is turned off';
 
   @override
   String get downloadNeteaseIncludeTranslation =>
-      'Netease: Çevirileri Dahil Et';
+      'Netease: Include Translation';
 
   @override
   String get downloadNeteaseIncludeTranslationEnabled =>
-      'Varsa, orijinal sözlere çevirilerini ekler';
+      'Append translated lyrics when available';
 
   @override
   String get downloadNeteaseIncludeTranslationDisabled =>
-      'Sadece şarkının kendi sözleri kullanılır';
+      'Use original lyrics only';
 
   @override
   String get downloadNeteaseIncludeRomanization =>
-      'Netease: Okunuşları (Romanizasyon) Dahil Et';
+      'Netease: Include Romanization';
 
   @override
   String get downloadNeteaseIncludeRomanizationEnabled =>
-      'Varsa, Asya şarkıları için Latin alfabesi okunuşlarını ekler';
+      'Append romanized lyrics when available';
 
   @override
-  String get downloadNeteaseIncludeRomanizationDisabled => 'Kapalı';
+  String get downloadNeteaseIncludeRomanizationDisabled => 'Disabled';
 
   @override
-  String get downloadAppleQqMultiPerson =>
-      'Apple/QQ: Çoklu Sanatçı Düzeni (Kelime kelime akan sözler)';
+  String get downloadAppleQqMultiPerson => 'Apple/QQ Multi-Person Word-by-Word';
 
   @override
   String get downloadAppleQqMultiPersonEnabled =>
-      'Gelişmiş v1/v2 ve arka plan [bg:] etiketlerini açık tutar';
+      'Enable v1/v2 speaker and [bg:] tags';
 
   @override
   String get downloadAppleQqMultiPersonDisabled =>
-      'Standart kelime kelime senkronizasyon kullanır';
+      'Simplified word-by-word formatting';
 
   @override
-  String get downloadMusixmatchLanguage => 'Musixmatch Tercih Edilen Dil';
+  String get downloadMusixmatchLanguage => 'Musixmatch Language';
 
   @override
-  String get downloadMusixmatchLanguageAuto => 'Otomatik (Orijinal Dil)';
+  String get downloadMusixmatchLanguageAuto => 'Auto (original)';
 
   @override
   String get downloadFilterContributing =>
-      'Albüm Sanatçısı etiketinde konuk sanatçıları filtrele';
+      'Filter contributing artists in Album Artist';
 
   @override
   String get downloadFilterContributingEnabled =>
-      'Albüm Sanatçısı verisinde sadece ana sanatçı ismi tutulur';
+      'Album Artist metadata uses primary artist only';
 
   @override
   String get downloadFilterContributingDisabled =>
-      'Tüm sanatçı isimlerini olduğu gibi korur';
+      'Keep full Album Artist metadata value';
 
   @override
-  String get downloadProvidersNoneEnabled => 'Hiçbir sağlayıcı açık değil';
+  String get downloadProvidersNoneEnabled => 'None enabled';
 
   @override
-  String get downloadMusixmatchLanguageCode => 'Dil Kodu';
+  String get downloadMusixmatchLanguageCode => 'Language code';
 
   @override
-  String get downloadMusixmatchLanguageHint => 'auto / tr / en / es';
+  String get downloadMusixmatchLanguageHint => 'auto / en / es / ja';
 
   @override
   String get downloadMusixmatchLanguageDesc =>
-      'Tercih ettiğiniz söz dilini belirleyin (örnek: tr, en, es). Otomatik seçim için boş bırakın.';
+      'Set preferred language code (example: en, es, ja). Leave empty for auto.';
 
   @override
-  String get downloadMusixmatchAuto => 'Otomatik';
+  String get downloadMusixmatchAuto => 'Auto';
 
   @override
-  String get downloadNetworkAnySubtitle => 'Wi-Fi + Mobil Veri üzerinden indir';
+  String get downloadNetworkAnySubtitle => 'WiFi + Mobile Data';
 
   @override
   String get downloadNetworkWifiOnlySubtitle =>
-      'Wi-Fi\'dan çıkarsanız indirmeler duraklatılır';
+      'Pause downloads on mobile data';
 
   @override
   String get downloadSongLinkRegionDesc =>
-      'Şarkı aramalarında SongLink API\'ye iletilecek ülke kodunu belirler.';
+      'Used as userCountry for SongLink API lookup.';
 
   @override
-  String get snackbarUnsupportedAudioFormat => 'Bu ses formatı desteklenmiyor';
+  String get snackbarUnsupportedAudioFormat => 'Unsupported audio format';
 
   @override
-  String get cacheRefresh => 'Yenile';
+  String get cacheRefresh => 'Refresh';
 
   @override
   String dialogDownloadPlaylistsMessage(int trackCount, int playlistCount) {
     String _temp0 = intl.Intl.pluralLogic(
+      trackCount,
+      locale: localeName,
+      other: 'tracks',
+      one: 'track',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
       playlistCount,
       locale: localeName,
-      other: 'listeden',
-      one: 'listeden',
+      other: 'playlists',
+      one: 'playlist',
     );
-    return '$playlistCount $_temp0 toplam $trackCount şarkı indirilsin mi?';
+    return 'Download $trackCount $_temp0 from $playlistCount $_temp1?';
   }
 
   @override
@@ -3136,123 +3118,122 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'listeyi',
-      one: 'listeyi',
+      other: 'playlists',
+      one: 'playlist',
     );
-    return 'Seçili $count $_temp0 indir';
+    return 'Download $count $_temp0';
   }
 
   @override
-  String get bulkDownloadSelectPlaylists =>
-      'İndirilecek çalma listelerini seçin';
+  String get bulkDownloadSelectPlaylists => 'Select playlists to download';
 
   @override
   String get snackbarSelectedPlaylistsEmpty =>
-      'Seçilen çalma listelerinde şarkı yok';
+      'Selected playlists have no tracks';
 
   @override
   String playlistsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count çalma listesi',
-      one: '1 çalma listesi',
+      other: '$count playlists',
+      one: '1 playlist',
     );
     return '$_temp0';
   }
 
   @override
-  String get editMetadataAutoFill => 'İnternetten Otomatik Doldur';
+  String get editMetadataAutoFill => 'Auto-fill from online';
 
   @override
   String get editMetadataAutoFillDesc =>
-      'İnternetteki verilerle otomatik doldurulmasını istediğiniz alanları seçin';
+      'Select fields to fill automatically from online metadata';
 
   @override
-  String get editMetadataAutoFillFetch => 'Bul ve Doldur';
+  String get editMetadataAutoFillFetch => 'Fetch & Fill';
 
   @override
-  String get editMetadataAutoFillSearching => 'İnternette eşleşme aranıyor...';
+  String get editMetadataAutoFillSearching => 'Searching online...';
 
   @override
   String get editMetadataAutoFillNoResults =>
-      'İnternette bu şarkıya uygun bir veri bulunamadı';
+      'No matching metadata found online';
 
   @override
   String editMetadataAutoFillDone(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'alan',
-      one: 'alan',
+      other: 'fields',
+      one: 'field',
     );
-    return 'Şarkı verilerinden $count $_temp0 internetten çekilerek dolduruldu';
+    return 'Filled $count $_temp0 from online metadata';
   }
 
   @override
   String get editMetadataAutoFillNoneSelected =>
-      'Lütfen otomatik doldurulacak en az bir alan seçin';
+      'Select at least one field to auto-fill';
 
   @override
-  String get editMetadataFieldTitle => 'Şarkı Adı';
+  String get editMetadataFieldTitle => 'Title';
 
   @override
-  String get editMetadataFieldArtist => 'Sanatçı';
+  String get editMetadataFieldArtist => 'Artist';
 
   @override
-  String get editMetadataFieldAlbum => 'Albüm';
+  String get editMetadataFieldAlbum => 'Album';
 
   @override
-  String get editMetadataFieldAlbumArtist => 'Albüm Sanatçısı';
+  String get editMetadataFieldAlbumArtist => 'Album Artist';
 
   @override
-  String get editMetadataFieldDate => 'Tarih';
+  String get editMetadataFieldDate => 'Date';
 
   @override
-  String get editMetadataFieldTrackNum => 'Şarkı Sırası';
+  String get editMetadataFieldTrackNum => 'Track #';
 
   @override
-  String get editMetadataFieldDiscNum => 'Disk #';
+  String get editMetadataFieldDiscNum => 'Disc #';
 
   @override
-  String get editMetadataFieldGenre => 'Tür';
+  String get editMetadataFieldGenre => 'Genre';
 
   @override
   String get editMetadataFieldIsrc => 'ISRC';
 
   @override
-  String get editMetadataFieldLabel => 'Plak Şirketi';
+  String get editMetadataFieldLabel => 'Label';
 
   @override
-  String get editMetadataFieldCopyright => 'Telif Hakkı';
+  String get editMetadataFieldCopyright => 'Copyright';
 
   @override
-  String get editMetadataFieldCover => 'Albüm Kapağı';
+  String get editMetadataFieldCover => 'Cover Art';
 
   @override
-  String get editMetadataSelectAll => 'Tümü';
+  String get editMetadataSelectAll => 'All';
 
   @override
-  String get editMetadataSelectEmpty => 'Sadece boşlar';
+  String get editMetadataSelectEmpty => 'Empty only';
 
   @override
   String queueDownloadingCount(int count) {
-    return 'Şu An İnenler ($count)';
+    return 'Downloading ($count)';
   }
 
   @override
-  String get queueDownloadedHeader => 'İnenler';
+  String get queueDownloadedHeader => 'Downloaded';
 
   @override
-  String get queueFilteringIndicator => 'Filtreleniyor...';
+  String get queueFilteringIndicator => 'Filtering...';
 
   @override
   String queueTrackCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count şarkı',
-      one: '1 şarkı',
+      other: '$count tracks',
+      one: '1 track',
     );
     return '$_temp0';
   }
@@ -3262,82 +3243,80 @@ class AppLocalizationsTr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count albüm',
-      one: '1 albüm',
+      other: '$count albums',
+      one: '1 album',
     );
     return '$_temp0';
   }
 
   @override
-  String get queueEmptyAlbums => 'İndirilmiş bir albüm yok';
+  String get queueEmptyAlbums => 'No album downloads';
 
   @override
   String get queueEmptyAlbumsSubtitle =>
-      'Bir albümden birden fazla şarkı indirdiğinizde burada görünecektir.';
+      'Download multiple tracks from an album to see them here';
 
   @override
-  String get queueEmptySingles => 'İndirilmiş bir şarkı yok';
+  String get queueEmptySingles => 'No single downloads';
 
   @override
   String get queueEmptySinglesSubtitle =>
-      'Tek tek indirdiğiniz şarkılar burada görünecektir.';
+      'Single track downloads will appear here';
 
   @override
-  String get queueEmptyHistory => 'İndirme geçmişi boş';
+  String get queueEmptyHistory => 'No download history';
 
   @override
-  String get queueEmptyHistorySubtitle =>
-      'İndirdiğiniz şarkılar başarıyla tamamlandığında burada görünecektir.';
+  String get queueEmptyHistorySubtitle => 'Downloaded tracks will appear here';
 
   @override
-  String get selectionAllPlaylistsSelected => 'Tüm listeler seçildi';
+  String get selectionAllPlaylistsSelected => 'All playlists selected';
 
   @override
-  String get selectionTapPlaylistsToSelect => 'Seçmek için listelere dokunun';
+  String get selectionTapPlaylistsToSelect => 'Tap playlists to select';
 
   @override
-  String get selectionSelectPlaylistsToDelete =>
-      'Silinecek çalma listelerini seçin';
+  String get selectionSelectPlaylistsToDelete => 'Select playlists to delete';
 
   @override
-  String get audioAnalysisTitle => 'Ses Kalitesi Analizi';
+  String get audioAnalysisTitle => 'Audio Quality Analysis';
 
   @override
   String get audioAnalysisDescription =>
-      'Kayıpsız kalite doğrulaması için spektrum analizi yapın';
+      'Verify lossless quality with spectrum analysis';
 
   @override
-  String get audioAnalysisAnalyzing => 'Ses dosyası analiz ediliyor...';
+  String get audioAnalysisAnalyzing => 'Analyzing audio...';
 
   @override
-  String get audioAnalysisSampleRate => 'Örnekleme Hızı (Sample Rate)';
+  String get audioAnalysisSampleRate => 'Sample Rate';
 
   @override
-  String get audioAnalysisBitDepth => 'Bit Derinliği';
+  String get audioAnalysisBitDepth => 'Bit Depth';
 
   @override
-  String get audioAnalysisChannels => 'Kanal';
+  String get audioAnalysisChannels => 'Channels';
 
   @override
-  String get audioAnalysisDuration => 'Süre';
+  String get audioAnalysisDuration => 'Duration';
 
   @override
-  String get audioAnalysisNyquist => 'Nyquist Frekansı';
+  String get audioAnalysisNyquist => 'Nyquist';
 
   @override
-  String get audioAnalysisFileSize => 'Boyut';
+  String get audioAnalysisFileSize => 'Size';
 
   @override
-  String get audioAnalysisDynamicRange => 'Dinamik Aralık';
+  String get audioAnalysisDynamicRange => 'Dynamic Range';
 
   @override
-  String get audioAnalysisPeak => 'Tepe Değeri (Peak)';
+  String get audioAnalysisPeak => 'Peak';
 
   @override
-  String get audioAnalysisRms => 'Ortalama Değer (RMS)';
+  String get audioAnalysisRms => 'RMS';
 
   @override
-  String get audioAnalysisSamples => 'Toplam Örneklem (Samples)';
+  String get audioAnalysisSamples => 'Samples';
 
   @override
   String extensionsSearchWith(String providerName) {
@@ -3752,4 +3731,71 @@ class AppLocalizationsTr extends AppLocalizations {
   String a11yOpenAlbum(String albumName) {
     return 'Open album $albumName';
   }
+
+  @override
+  String get optionsDefaultSearchTabAlbums => 'Albums';
+
+  @override
+  String get optionsDefaultSearchTabTracks => 'Tracks';
+
+  @override
+  String get settingsFiles => 'Files & Folders';
+
+  @override
+  String get settingsFilesSubtitle =>
+      'Download location, filename, folder structure';
+
+  @override
+  String get settingsMetadata => 'Metadata';
+
+  @override
+  String get settingsMetadataSubtitle =>
+      'Cover art, tags, ReplayGain, providers';
+
+  @override
+  String get settingsLyrics => 'Lyrics';
+
+  @override
+  String get settingsLyricsSubtitle =>
+      'Embed, mode, providers, language options';
+
+  @override
+  String get settingsApp => 'App';
+
+  @override
+  String get settingsAppSubtitle => 'Updates, data, extension repo, debug';
+
+  @override
+  String get sectionMetadataProviders => 'Providers';
+
+  @override
+  String get sectionDuplicates => 'Duplicates';
+
+  @override
+  String get sectionLyricsProviderOptions => 'Provider Options';
+
+  @override
+  String get metadataProvidersTitle => 'Metadata Provider Priority';
+
+  @override
+  String get metadataProvidersSubtitle =>
+      'Drag to set search and metadata source order';
+
+  @override
+  String get downloadDeduplication => 'Skip Duplicate Downloads';
+
+  @override
+  String get downloadDeduplicationEnabled =>
+      'Already-downloaded tracks will be skipped';
+
+  @override
+  String get downloadDeduplicationDisabled =>
+      'All tracks will be downloaded regardless of history';
+
+  @override
+  String get downloadFallbackExtensions => 'Fallback Extensions';
+
+  @override
+  String get downloadFallbackExtensionsSubtitle =>
+      'Choose which extensions can be used as fallback';
 }

@@ -21,13 +21,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navSettings => '設定';
 
   @override
-  String get navStore => 'ストア';
+  String get navStore => 'Repo';
 
   @override
   String get homeTitle => 'ホーム';
 
   @override
-  String get homeSubtitle => 'Spotify のリンクを貼り付けるか、名前で検索します';
+  String get homeSubtitle => 'Paste a supported URL or search by name';
 
   @override
   String get homeEmptyTitle => 'No search providers yet';
@@ -141,7 +141,8 @@ class AppLocalizationsJa extends AppLocalizations {
       'Choose which tab opens first for new search results.';
 
   @override
-  String get optionsSwitchBack => '現在の拡張の使用をやめるには、下から別のプロバイダーを選択してください';
+  String get optionsSwitchBack =>
+      'Tap Deezer or Spotify to switch back from extension';
 
   @override
   String get optionsAutoFallback => 'Auto Fallback';
@@ -157,7 +158,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get optionsUseExtensionProvidersOn => '最初に拡張で試みます';
 
   @override
-  String get optionsUseExtensionProvidersOff => '拡張はオフです';
+  String get optionsUseExtensionProvidersOff => '内蔵のプロバイダーのみを使用する';
 
   @override
   String get optionsEmbedLyrics => '歌詞を埋め込む';
@@ -219,10 +220,10 @@ class AppLocalizationsJa extends AppLocalizations {
       'Parallel downloads may trigger rate limiting';
 
   @override
-  String get optionsExtensionStore => '拡張ストア';
+  String get optionsExtensionStore => 'Extension Repo';
 
   @override
-  String get optionsExtensionStoreSubtitle => 'ナビゲーションにストアタブを表示';
+  String get optionsExtensionStoreSubtitle => 'Show Repo tab in navigation';
 
   @override
   String get optionsCheckUpdates => '更新を確認';
@@ -298,7 +299,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get extensionsUninstall => 'アンインストール';
 
   @override
-  String get storeTitle => '拡張ストア';
+  String get storeTitle => 'Extension Repo';
 
   @override
   String get storeSearch => '拡張を検索...';
@@ -950,7 +951,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get providerPriorityFallbackExtensionsDescription =>
-      'Choose which installed download extensions can be used during automatic fallback.';
+      'Choose which installed download extensions can be used during automatic fallback. Built-in providers still follow the priority order above.';
 
   @override
   String get providerPriorityFallbackExtensionsHint =>
@@ -1345,7 +1346,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get storeEmptyNoResults => 'No extensions found';
 
   @override
-  String get extensionDefaultProvider => 'デフォルト (Deezer/Spotify)';
+  String get extensionDefaultProvider => 'Default (Deezer)';
 
   @override
   String get extensionDefaultProviderSubtitle => '内蔵の検索を使用する';
@@ -2116,7 +2117,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tutorialExtensionsTip1 =>
-      'Browse the Store tab to discover useful extensions';
+      'Browse the Repo tab to discover useful extensions';
 
   @override
   String get tutorialExtensionsTip2 =>
@@ -2397,7 +2398,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get trackConvertFormat => '変換の形式';
 
   @override
-  String get trackConvertFormatSubtitle => 'MP3 または Opus に変換';
+  String get trackConvertFormatSubtitle =>
+      'Convert to MP3, Opus, ALAC, or FLAC';
 
   @override
   String get trackConvertTitle => 'オーディオを変換';
@@ -2904,8 +2906,17 @@ class AppLocalizationsJa extends AppLocalizations {
       'Pick folder via Android Storage Access Framework';
 
   @override
-  String get downloadFilenameDescription =>
-      'Customize how your files are named.';
+  String downloadFilenameDescription(
+    Object album,
+    Object artist,
+    Object date,
+    Object disc,
+    Object title,
+    Object track,
+    Object year,
+  ) {
+    return 'Customize how your files are named.';
+  }
 
   @override
   String get downloadFilenameInsertTag => 'Tap to insert tag:';
@@ -2951,11 +2962,11 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get downloadSelectServiceToEnable =>
-      'Select a compatible download provider to enable quality options';
+      'Select a built-in service to enable';
 
   @override
   String get downloadSelectTidalQobuz =>
-      'Select a compatible provider above to configure quality';
+      'Select Tidal or Qobuz above to configure quality';
 
   @override
   String get downloadEmbedLyricsDisabled =>
@@ -3681,4 +3692,71 @@ class AppLocalizationsJa extends AppLocalizations {
   String a11yOpenAlbum(String albumName) {
     return 'Open album $albumName';
   }
+
+  @override
+  String get optionsDefaultSearchTabAlbums => 'Albums';
+
+  @override
+  String get optionsDefaultSearchTabTracks => 'Tracks';
+
+  @override
+  String get settingsFiles => 'Files & Folders';
+
+  @override
+  String get settingsFilesSubtitle =>
+      'Download location, filename, folder structure';
+
+  @override
+  String get settingsMetadata => 'Metadata';
+
+  @override
+  String get settingsMetadataSubtitle =>
+      'Cover art, tags, ReplayGain, providers';
+
+  @override
+  String get settingsLyrics => 'Lyrics';
+
+  @override
+  String get settingsLyricsSubtitle =>
+      'Embed, mode, providers, language options';
+
+  @override
+  String get settingsApp => 'App';
+
+  @override
+  String get settingsAppSubtitle => 'Updates, data, extension repo, debug';
+
+  @override
+  String get sectionMetadataProviders => 'Providers';
+
+  @override
+  String get sectionDuplicates => 'Duplicates';
+
+  @override
+  String get sectionLyricsProviderOptions => 'Provider Options';
+
+  @override
+  String get metadataProvidersTitle => 'Metadata Provider Priority';
+
+  @override
+  String get metadataProvidersSubtitle =>
+      'Drag to set search and metadata source order';
+
+  @override
+  String get downloadDeduplication => 'Skip Duplicate Downloads';
+
+  @override
+  String get downloadDeduplicationEnabled =>
+      'Already-downloaded tracks will be skipped';
+
+  @override
+  String get downloadDeduplicationDisabled =>
+      'All tracks will be downloaded regardless of history';
+
+  @override
+  String get downloadFallbackExtensions => 'Fallback Extensions';
+
+  @override
+  String get downloadFallbackExtensionsSubtitle =>
+      'Choose which extensions can be used as fallback';
 }

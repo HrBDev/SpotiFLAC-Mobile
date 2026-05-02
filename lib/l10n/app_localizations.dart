@@ -17,6 +17,7 @@ import 'app_localizations_nl.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_uk.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -119,6 +120,7 @@ abstract class AppLocalizations {
     Locale('pt', 'PT'),
     Locale('ru'),
     Locale('tr'),
+    Locale('uk'),
     Locale('zh'),
     Locale('zh', 'CN'),
     Locale('zh', 'TW'),
@@ -355,7 +357,7 @@ abstract class AppLocalizations {
   /// Subtitle for primary provider
   ///
   /// In en, this message translates to:
-  /// **'Service used when searching by track name.'**
+  /// **'Service used for searching by track or album name'**
   String get optionsPrimaryProviderSubtitle;
 
   /// Shows active extension name
@@ -376,10 +378,10 @@ abstract class AppLocalizations {
   /// **'Choose which tab opens first for new search results.'**
   String get optionsDefaultSearchTabSubtitle;
 
-  /// Hint to switch away from the current provider selection
+  /// Hint to switch back to built-in providers
   ///
   /// In en, this message translates to:
-  /// **'Choose another provider below to stop using the current extension'**
+  /// **'Tap Deezer or Spotify to switch back from extension'**
   String get optionsSwitchBack;
 
   /// Auto-retry with other services
@@ -406,10 +408,10 @@ abstract class AppLocalizations {
   /// **'Extensions will be tried first'**
   String get optionsUseExtensionProvidersOn;
 
-  /// Status when extension providers are disabled
+  /// Status when extension providers disabled
   ///
   /// In en, this message translates to:
-  /// **'Extensions are turned off'**
+  /// **'Using built-in providers only'**
   String get optionsUseExtensionProvidersOff;
 
   /// Embed lyrics in audio files
@@ -421,7 +423,7 @@ abstract class AppLocalizations {
   /// Subtitle for embed lyrics
   ///
   /// In en, this message translates to:
-  /// **'Embed synced lyrics into FLAC files'**
+  /// **'Save synced lyrics alongside your downloaded tracks'**
   String get optionsEmbedLyricsSubtitle;
 
   /// Download highest quality album art
@@ -1795,7 +1797,7 @@ abstract class AppLocalizations {
   /// Section description for extension fallback selection
   ///
   /// In en, this message translates to:
-  /// **'Choose which installed download extensions can be used during automatic fallback.'**
+  /// **'Choose which installed download extensions can be used during automatic fallback. Built-in providers still follow the priority order above.'**
   String get providerPriorityFallbackExtensionsDescription;
 
   /// Hint below the extension fallback selection list
@@ -1804,10 +1806,10 @@ abstract class AppLocalizations {
   /// **'Only enabled extensions with download-provider capability are listed here.'**
   String get providerPriorityFallbackExtensionsHint;
 
-  /// Label for legacy providers kept for compatibility
+  /// Label for built-in providers (Tidal/Qobuz)
   ///
   /// In en, this message translates to:
-  /// **'Legacy'**
+  /// **'Built-in'**
   String get providerBuiltIn;
 
   /// Label for extension-provided providers
@@ -2125,13 +2127,13 @@ abstract class AppLocalizations {
   /// Download settings description
   ///
   /// In en, this message translates to:
-  /// **'Service, quality, filename format'**
+  /// **'Service, quality, fallback'**
   String get settingsDownloadSubtitle;
 
   /// Options settings description
   ///
   /// In en, this message translates to:
-  /// **'Fallback, lyrics, cover art, updates'**
+  /// **'Fallback, metadata, lyrics, cover art'**
   String get settingsOptionsSubtitle;
 
   /// Extensions settings description
@@ -4803,22 +4805,22 @@ abstract class AppLocalizations {
   /// **'{count} downloaded'**
   String downloadedAlbumDownloadedCount(int count);
 
-  /// Subtitle when Album Artist is used for folder naming
+  /// Subtitle when album artist is used for folder names
   ///
   /// In en, this message translates to:
-  /// **'Artist folders use Album Artist when available'**
+  /// **'Folder named after Album Artist tag'**
   String get downloadUseAlbumArtistForFoldersAlbumSubtitle;
 
-  /// Subtitle when Track Artist is used for folder naming
+  /// Subtitle when track artist is used for folder names
   ///
   /// In en, this message translates to:
-  /// **'Artist folders use Track Artist only'**
+  /// **'Folder named after Track Artist tag'**
   String get downloadUseAlbumArtistForFoldersTrackSubtitle;
 
-  /// Title for the lyrics provider priority page
+  /// Settings item title for lyrics provider order
   ///
   /// In en, this message translates to:
-  /// **'Lyrics Providers'**
+  /// **'Lyrics Provider Priority'**
   String get lyricsProvidersTitle;
 
   /// Description on the lyrics provider priority page
@@ -4923,16 +4925,16 @@ abstract class AppLocalizations {
   /// **'Download folder updated to SAF mode'**
   String get safMigrationSuccess;
 
-  /// Settings menu item - donate
+  /// Settings menu item - donate page
   ///
   /// In en, this message translates to:
-  /// **'Donate'**
+  /// **'Support Development'**
   String get settingsDonate;
 
   /// Subtitle for donate menu item
   ///
   /// In en, this message translates to:
-  /// **'Support SpotiFLAC-Mobile development'**
+  /// **'Buy the developer a coffee'**
   String get settingsDonateSubtitle;
 
   /// Tooltip for the Love All button on album/playlist screens
@@ -5031,41 +5033,49 @@ abstract class AppLocalizations {
   /// **'No tracks found for this album'**
   String get noTracksFoundForAlbum;
 
-  /// Subtitle text in Android download location bottom sheet
+  /// Subtitle shown in the download location picker sheet
   ///
   /// In en, this message translates to:
-  /// **'Choose storage mode for downloaded files.'**
+  /// **'Choose where to save your downloaded tracks'**
   String get downloadLocationSubtitle;
 
-  /// Storage mode option - use legacy app folder
+  /// Storage mode option - app-managed folder
   ///
   /// In en, this message translates to:
-  /// **'App folder (non-SAF)'**
+  /// **'App Folder (Recommended)'**
   String get storageModeAppFolder;
 
   /// Subtitle for app folder storage mode
   ///
   /// In en, this message translates to:
-  /// **'Use default Music/SpotiFLAC path'**
+  /// **'Saves to Music/SpotiFLAC by default'**
   String get storageModeAppFolderSubtitle;
 
-  /// Storage mode option - use Android SAF picker
+  /// Storage mode option - Storage Access Framework
   ///
   /// In en, this message translates to:
-  /// **'SAF folder'**
+  /// **'Custom Folder (SAF)'**
   String get storageModeSaf;
 
   /// Subtitle for SAF storage mode
   ///
   /// In en, this message translates to:
-  /// **'Pick folder via Android Storage Access Framework'**
+  /// **'Pick any folder, including SD card'**
   String get storageModeSafSubtitle;
 
-  /// Description text in filename format bottom sheet
+  /// Description shown in filename format editor
   ///
   /// In en, this message translates to:
-  /// **'Customize how your files are named.'**
-  String get downloadFilenameDescription;
+  /// **'Use {artist}, {title}, {album}, {track}, {year}, {date}, {disc} as placeholders.'**
+  String downloadFilenameDescription(
+    Object album,
+    Object artist,
+    Object date,
+    Object disc,
+    Object title,
+    Object track,
+    Object year,
+  );
 
   /// Label above filename tag chips
   ///
@@ -5073,16 +5083,16 @@ abstract class AppLocalizations {
   /// **'Tap to insert tag:'**
   String get downloadFilenameInsertTag;
 
-  /// Subtitle when separate singles folder is enabled
+  /// Subtitle when separate singles folder is on
   ///
   /// In en, this message translates to:
-  /// **'Albums/ and Singles/ folders'**
+  /// **'Singles and EPs saved in a separate folder'**
   String get downloadSeparateSinglesEnabled;
 
-  /// Subtitle when separate singles folder is disabled
+  /// Subtitle when separate singles folder is off
   ///
   /// In en, this message translates to:
-  /// **'All files in same structure'**
+  /// **'Singles and albums saved in the same folder'**
   String get downloadSeparateSinglesDisabled;
 
   /// Setting title for artist folder filter options
@@ -5091,202 +5101,202 @@ abstract class AppLocalizations {
   /// **'Artist Name Filters'**
   String get downloadArtistNameFilters;
 
-  /// Setting title for adding a playlist folder prefix before the normal organization structure
+  /// Setting to create a subfolder per playlist source
   ///
   /// In en, this message translates to:
-  /// **'Create playlist source folder'**
+  /// **'Playlist Source Folder'**
   String get downloadCreatePlaylistSourceFolder;
 
-  /// Subtitle when playlist source folder prefix is enabled
+  /// Subtitle when playlist folder is enabled
   ///
   /// In en, this message translates to:
-  /// **'Playlist downloads use Playlist/ plus your normal folder structure.'**
+  /// **'A subfolder is created for each playlist'**
   String get downloadCreatePlaylistSourceFolderEnabled;
 
-  /// Subtitle when playlist source folder prefix is disabled
+  /// Subtitle when playlist folder is disabled
   ///
   /// In en, this message translates to:
-  /// **'Playlist downloads use the normal folder structure only.'**
+  /// **'All tracks saved directly to download folder'**
   String get downloadCreatePlaylistSourceFolderDisabled;
 
-  /// Subtitle when playlist folder prefix setting is redundant because folder organization is already by playlist
+  /// Subtitle when folder organization is already set to playlist
   ///
   /// In en, this message translates to:
-  /// **'By Playlist already places downloads inside a playlist folder.'**
+  /// **'Handled by folder organization setting'**
   String get downloadCreatePlaylistSourceFolderRedundant;
 
-  /// Setting title for SongLink country region
+  /// Setting for SongLink region used during fallback resolution
   ///
   /// In en, this message translates to:
   /// **'SongLink Region'**
   String get downloadSongLinkRegion;
 
-  /// Setting title for network compatibility toggle
+  /// Setting for legacy TLS/network handling
   ///
   /// In en, this message translates to:
-  /// **'Network compatibility mode'**
+  /// **'Network Compatibility Mode'**
   String get downloadNetworkCompatibilityMode;
 
-  /// Subtitle when network compatibility mode is enabled
+  /// Subtitle when network compatibility mode is on
   ///
   /// In en, this message translates to:
-  /// **'Enabled: try HTTP + accept invalid TLS certificates (unsafe)'**
+  /// **'Using legacy TLS settings for older networks'**
   String get downloadNetworkCompatibilityModeEnabled;
 
-  /// Subtitle when network compatibility mode is disabled
+  /// Subtitle when network compatibility mode is off
   ///
   /// In en, this message translates to:
-  /// **'Off: strict HTTPS certificate validation (recommended)'**
+  /// **'Using standard network settings'**
   String get downloadNetworkCompatibilityModeDisabled;
 
-  /// Hint shown instead of Ask-quality subtitle when the selected provider does not expose built-in quality controls
+  /// Subtitle when quality picker is disabled due to extension service
   ///
   /// In en, this message translates to:
-  /// **'Select a compatible download provider to enable quality options'**
+  /// **'Select Tidal or Qobuz to enable this option'**
   String get downloadSelectServiceToEnable;
 
-  /// Info hint when the selected provider does not expose built-in quality controls
+  /// Info shown when a non-built-in service is selected
   ///
   /// In en, this message translates to:
-  /// **'Select a compatible provider above to configure quality'**
+  /// **'Select Tidal or Qobuz to choose audio quality'**
   String get downloadSelectTidalQobuz;
 
-  /// Subtitle for Embed Lyrics when Embed Metadata is disabled
+  /// Subtitle when lyrics embedding is blocked by metadata toggle
   ///
   /// In en, this message translates to:
-  /// **'Disabled while Embed Metadata is turned off'**
+  /// **'Enable metadata embedding first'**
   String get downloadEmbedLyricsDisabled;
 
-  /// Toggle title for including Netease translated lyrics
+  /// Setting to include translated lyrics from Netease
   ///
   /// In en, this message translates to:
   /// **'Netease: Include Translation'**
   String get downloadNeteaseIncludeTranslation;
 
-  /// Subtitle when Netease translation is enabled
+  /// Subtitle when Netease translation is on
   ///
   /// In en, this message translates to:
-  /// **'Append translated lyrics when available'**
+  /// **'Chinese translation lines included'**
   String get downloadNeteaseIncludeTranslationEnabled;
 
-  /// Subtitle when Netease translation is disabled
+  /// Subtitle when Netease translation is off
   ///
   /// In en, this message translates to:
-  /// **'Use original lyrics only'**
+  /// **'Original lyrics only'**
   String get downloadNeteaseIncludeTranslationDisabled;
 
-  /// Toggle title for including Netease romanized lyrics
+  /// Setting to include romanized lyrics from Netease
   ///
   /// In en, this message translates to:
   /// **'Netease: Include Romanization'**
   String get downloadNeteaseIncludeRomanization;
 
-  /// Subtitle when Netease romanization is enabled
+  /// Subtitle when Netease romanization is on
   ///
   /// In en, this message translates to:
-  /// **'Append romanized lyrics when available'**
+  /// **'Romanization lines included'**
   String get downloadNeteaseIncludeRomanizationEnabled;
 
-  /// Subtitle when Netease romanization is disabled
+  /// Subtitle when Netease romanization is off
   ///
   /// In en, this message translates to:
-  /// **'Disabled'**
+  /// **'No romanization'**
   String get downloadNeteaseIncludeRomanizationDisabled;
 
-  /// Toggle title for Apple/QQ multi-person word-by-word lyrics
+  /// Setting for word-by-word multi-person lyrics from Apple Music and QQ Music
   ///
   /// In en, this message translates to:
-  /// **'Apple/QQ Multi-Person Word-by-Word'**
+  /// **'Apple / QQ: Multi-Person Lyrics'**
   String get downloadAppleQqMultiPerson;
 
-  /// Subtitle when multi-person word-by-word is enabled
+  /// Subtitle when multi-person lyrics is on
   ///
   /// In en, this message translates to:
-  /// **'Enable v1/v2 speaker and [bg:] tags'**
+  /// **'Speaker labels included for duets and group tracks'**
   String get downloadAppleQqMultiPersonEnabled;
 
-  /// Subtitle when multi-person word-by-word is disabled
+  /// Subtitle when multi-person lyrics is off
   ///
   /// In en, this message translates to:
-  /// **'Simplified word-by-word formatting'**
+  /// **'Standard lyrics without speaker labels'**
   String get downloadAppleQqMultiPersonDisabled;
 
-  /// Setting title for Musixmatch language preference
+  /// Setting for Musixmatch lyrics translation language
   ///
   /// In en, this message translates to:
   /// **'Musixmatch Language'**
   String get downloadMusixmatchLanguage;
 
-  /// Option label when Musixmatch uses original language
+  /// Subtitle when no language is set
   ///
   /// In en, this message translates to:
-  /// **'Auto (original)'**
+  /// **'Auto (original language)'**
   String get downloadMusixmatchLanguageAuto;
 
-  /// Toggle title for filtering contributing artists in Album Artist metadata
+  /// Setting to strip contributing artists from Album Artist folder name
   ///
   /// In en, this message translates to:
-  /// **'Filter contributing artists in Album Artist'**
+  /// **'Filter Contributing Artists'**
   String get downloadFilterContributing;
 
-  /// Subtitle when contributing artist filter is enabled
+  /// Subtitle when contributing artist filter is on
   ///
   /// In en, this message translates to:
-  /// **'Album Artist metadata uses primary artist only'**
+  /// **'Contributing artists removed from Album Artist folder name'**
   String get downloadFilterContributingEnabled;
 
-  /// Subtitle when contributing artist filter is disabled
+  /// Subtitle when contributing artist filter is off
   ///
   /// In en, this message translates to:
-  /// **'Keep full Album Artist metadata value'**
+  /// **'Full Album Artist string used'**
   String get downloadFilterContributingDisabled;
 
-  /// Subtitle for lyrics providers setting when no providers are enabled
+  /// Shown when no lyrics providers are active
   ///
   /// In en, this message translates to:
-  /// **'None enabled'**
+  /// **'No providers enabled'**
   String get downloadProvidersNoneEnabled;
 
-  /// Label for the Musixmatch language code text field
+  /// Label for Musixmatch language input field
   ///
   /// In en, this message translates to:
   /// **'Language code'**
   String get downloadMusixmatchLanguageCode;
 
-  /// Hint text for the Musixmatch language code field
+  /// Placeholder for Musixmatch language input
   ///
   /// In en, this message translates to:
-  /// **'auto / en / es / ja'**
+  /// **'e.g. en, de, ja'**
   String get downloadMusixmatchLanguageHint;
 
-  /// Description in the Musixmatch language picker
+  /// Description in Musixmatch language picker
   ///
   /// In en, this message translates to:
-  /// **'Set preferred language code (example: en, es, ja). Leave empty for auto.'**
+  /// **'Enter a BCP-47 language code (e.g. en, de, ja) to request translated lyrics from Musixmatch.'**
   String get downloadMusixmatchLanguageDesc;
 
-  /// Button to reset Musixmatch language to automatic
+  /// Button to clear Musixmatch language (use auto)
   ///
   /// In en, this message translates to:
   /// **'Auto'**
   String get downloadMusixmatchAuto;
 
-  /// Subtitle for 'Any' network mode option
+  /// Subtitle for any-network option in picker
   ///
   /// In en, this message translates to:
-  /// **'WiFi + Mobile Data'**
+  /// **'Use WiFi or mobile data'**
   String get downloadNetworkAnySubtitle;
 
-  /// Subtitle for 'WiFi only' network mode option
+  /// Subtitle for WiFi-only option in picker
   ///
   /// In en, this message translates to:
-  /// **'Pause downloads on mobile data'**
+  /// **'Downloads pause when on mobile data'**
   String get downloadNetworkWifiOnlySubtitle;
 
-  /// Description in the SongLink region picker
+  /// Description in SongLink region picker
   ///
   /// In en, this message translates to:
-  /// **'Used as userCountry for SongLink API lookup.'**
+  /// **'Region used when resolving track links via SongLink. Choose the country where your streaming services are available.'**
   String get downloadSongLinkRegionDesc;
 
   /// Snackbar when the audio format is not supported for the requested operation
@@ -5637,7 +5647,7 @@ abstract class AppLocalizations {
   /// **'Choose which extension provides the home feed on the main screen'**
   String get extensionsHomeFeedDescription;
 
-  /// Extensions page - home feed provider option: auto
+  /// Label for auto-selected search provider
   ///
   /// In en, this message translates to:
   /// **'Auto'**
@@ -6280,6 +6290,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open album {albumName}'**
   String a11yOpenAlbum(String albumName);
+
+  /// Default search tab option - Albums tab
+  ///
+  /// In en, this message translates to:
+  /// **'Albums'**
+  String get optionsDefaultSearchTabAlbums;
+
+  /// Default search tab option - Tracks tab
+  ///
+  /// In en, this message translates to:
+  /// **'Tracks'**
+  String get optionsDefaultSearchTabTracks;
+
+  /// Settings menu item - file and folder settings
+  ///
+  /// In en, this message translates to:
+  /// **'Files & Folders'**
+  String get settingsFiles;
+
+  /// Subtitle for files & folders settings
+  ///
+  /// In en, this message translates to:
+  /// **'Download location, filename, folder structure'**
+  String get settingsFilesSubtitle;
+
+  /// Settings menu item - metadata settings
+  ///
+  /// In en, this message translates to:
+  /// **'Metadata'**
+  String get settingsMetadata;
+
+  /// Subtitle for metadata settings
+  ///
+  /// In en, this message translates to:
+  /// **'Cover art, tags, ReplayGain, providers'**
+  String get settingsMetadataSubtitle;
+
+  /// Settings menu item - lyrics settings
+  ///
+  /// In en, this message translates to:
+  /// **'Lyrics'**
+  String get settingsLyrics;
+
+  /// Subtitle for lyrics settings
+  ///
+  /// In en, this message translates to:
+  /// **'Embed, mode, providers, language options'**
+  String get settingsLyricsSubtitle;
+
+  /// Settings menu item - app settings
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get settingsApp;
+
+  /// Subtitle for app settings
+  ///
+  /// In en, this message translates to:
+  /// **'Updates, data, extension repo, debug'**
+  String get settingsAppSubtitle;
+
+  /// Settings section header for metadata providers
+  ///
+  /// In en, this message translates to:
+  /// **'Providers'**
+  String get sectionMetadataProviders;
+
+  /// Settings section header for deduplication
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicates'**
+  String get sectionDuplicates;
+
+  /// Settings section header for per-provider lyrics options
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Options'**
+  String get sectionLyricsProviderOptions;
+
+  /// Settings item title for metadata provider order
+  ///
+  /// In en, this message translates to:
+  /// **'Metadata Provider Priority'**
+  String get metadataProvidersTitle;
+
+  /// Subtitle for metadata provider priority item
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to set search and metadata source order'**
+  String get metadataProvidersSubtitle;
+
+  /// Setting - skip tracks already in download history
+  ///
+  /// In en, this message translates to:
+  /// **'Skip Duplicate Downloads'**
+  String get downloadDeduplication;
+
+  /// Subtitle when deduplication is on
+  ///
+  /// In en, this message translates to:
+  /// **'Already-downloaded tracks will be skipped'**
+  String get downloadDeduplicationEnabled;
+
+  /// Subtitle when deduplication is off
+  ///
+  /// In en, this message translates to:
+  /// **'All tracks will be downloaded regardless of history'**
+  String get downloadDeduplicationDisabled;
+
+  /// Settings item for configuring fallback extension providers
+  ///
+  /// In en, this message translates to:
+  /// **'Fallback Extensions'**
+  String get downloadFallbackExtensions;
+
+  /// Subtitle for fallback extensions item
+  ///
+  /// In en, this message translates to:
+  /// **'Choose which extensions can be used as fallback'**
+  String get downloadFallbackExtensionsSubtitle;
 }
 
 class _AppLocalizationsDelegate
@@ -6305,6 +6435,7 @@ class _AppLocalizationsDelegate
     'pt',
     'ru',
     'tr',
+    'uk',
     'zh',
   ].contains(locale.languageCode);
 
@@ -6369,6 +6500,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsRu();
     case 'tr':
       return AppLocalizationsTr();
+    case 'uk':
+      return AppLocalizationsUk();
     case 'zh':
       return AppLocalizationsZh();
   }

@@ -563,6 +563,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
     state = state.copyWith(hasCompletedTutorial: true);
     _saveSettings();
   }
+
+  void setDeduplicateDownloads(bool enabled) {
+    state = state.copyWith(deduplicateDownloads: enabled);
+    _saveSettings();
+  }
 }
 
 final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(

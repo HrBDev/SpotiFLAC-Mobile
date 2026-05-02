@@ -21,13 +21,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get navSettings => 'विकल्प';
 
   @override
-  String get navStore => 'Store';
+  String get navStore => 'Repo';
 
   @override
   String get homeTitle => 'Home';
 
   @override
-  String get homeSubtitle => 'Paste a Spotify link or search by name';
+  String get homeSubtitle => 'Paste a supported URL or search by name';
 
   @override
   String get homeEmptyTitle => 'No search providers yet';
@@ -222,10 +222,10 @@ class AppLocalizationsHi extends AppLocalizations {
       'Parallel downloads may trigger rate limiting';
 
   @override
-  String get optionsExtensionStore => 'Extension Store';
+  String get optionsExtensionStore => 'Extension Repo';
 
   @override
-  String get optionsExtensionStoreSubtitle => 'Show Store tab in navigation';
+  String get optionsExtensionStoreSubtitle => 'Show Repo tab in navigation';
 
   @override
   String get optionsCheckUpdates => 'Check for Updates';
@@ -302,7 +302,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get extensionsUninstall => 'Uninstall';
 
   @override
-  String get storeTitle => 'Extension Store';
+  String get storeTitle => 'Extension Repo';
 
   @override
   String get storeSearch => 'Search extensions...';
@@ -957,7 +957,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get providerPriorityFallbackExtensionsDescription =>
-      'Choose which installed download extensions can be used during automatic fallback.';
+      'Choose which installed download extensions can be used during automatic fallback. Built-in providers still follow the priority order above.';
 
   @override
   String get providerPriorityFallbackExtensionsHint =>
@@ -1352,7 +1352,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get storeEmptyNoResults => 'No extensions found';
 
   @override
-  String get extensionDefaultProvider => 'Default (Deezer/Spotify)';
+  String get extensionDefaultProvider => 'Default (Deezer)';
 
   @override
   String get extensionDefaultProviderSubtitle => 'Use built-in search';
@@ -2130,7 +2130,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get tutorialExtensionsTip1 =>
-      'Browse the Store tab to discover useful extensions';
+      'Browse the Repo tab to discover useful extensions';
 
   @override
   String get tutorialExtensionsTip2 =>
@@ -2411,7 +2411,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get trackConvertFormat => 'Convert Format';
 
   @override
-  String get trackConvertFormatSubtitle => 'Convert to MP3 or Opus';
+  String get trackConvertFormatSubtitle =>
+      'Convert to MP3, Opus, ALAC, or FLAC';
 
   @override
   String get trackConvertTitle => 'Convert Audio';
@@ -2918,8 +2919,17 @@ class AppLocalizationsHi extends AppLocalizations {
       'Pick folder via Android Storage Access Framework';
 
   @override
-  String get downloadFilenameDescription =>
-      'Customize how your files are named.';
+  String downloadFilenameDescription(
+    Object album,
+    Object artist,
+    Object date,
+    Object disc,
+    Object title,
+    Object track,
+    Object year,
+  ) {
+    return 'Customize how your files are named.';
+  }
 
   @override
   String get downloadFilenameInsertTag => 'Tap to insert tag:';
@@ -2965,11 +2975,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get downloadSelectServiceToEnable =>
-      'Select a compatible download provider to enable quality options';
+      'Select a built-in service to enable';
 
   @override
   String get downloadSelectTidalQobuz =>
-      'Select a compatible provider above to configure quality';
+      'Select Tidal or Qobuz above to configure quality';
 
   @override
   String get downloadEmbedLyricsDisabled =>
@@ -3695,4 +3705,71 @@ class AppLocalizationsHi extends AppLocalizations {
   String a11yOpenAlbum(String albumName) {
     return 'Open album $albumName';
   }
+
+  @override
+  String get optionsDefaultSearchTabAlbums => 'Albums';
+
+  @override
+  String get optionsDefaultSearchTabTracks => 'Tracks';
+
+  @override
+  String get settingsFiles => 'Files & Folders';
+
+  @override
+  String get settingsFilesSubtitle =>
+      'Download location, filename, folder structure';
+
+  @override
+  String get settingsMetadata => 'Metadata';
+
+  @override
+  String get settingsMetadataSubtitle =>
+      'Cover art, tags, ReplayGain, providers';
+
+  @override
+  String get settingsLyrics => 'Lyrics';
+
+  @override
+  String get settingsLyricsSubtitle =>
+      'Embed, mode, providers, language options';
+
+  @override
+  String get settingsApp => 'App';
+
+  @override
+  String get settingsAppSubtitle => 'Updates, data, extension repo, debug';
+
+  @override
+  String get sectionMetadataProviders => 'Providers';
+
+  @override
+  String get sectionDuplicates => 'Duplicates';
+
+  @override
+  String get sectionLyricsProviderOptions => 'Provider Options';
+
+  @override
+  String get metadataProvidersTitle => 'Metadata Provider Priority';
+
+  @override
+  String get metadataProvidersSubtitle =>
+      'Drag to set search and metadata source order';
+
+  @override
+  String get downloadDeduplication => 'Skip Duplicate Downloads';
+
+  @override
+  String get downloadDeduplicationEnabled =>
+      'Already-downloaded tracks will be skipped';
+
+  @override
+  String get downloadDeduplicationDisabled =>
+      'All tracks will be downloaded regardless of history';
+
+  @override
+  String get downloadFallbackExtensions => 'Fallback Extensions';
+
+  @override
+  String get downloadFallbackExtensionsSubtitle =>
+      'Choose which extensions can be used as fallback';
 }

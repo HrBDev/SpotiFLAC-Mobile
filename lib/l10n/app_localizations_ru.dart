@@ -21,13 +21,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navSettings => 'Настройки';
 
   @override
-  String get navStore => 'Магазин';
+  String get navStore => 'Repo';
 
   @override
   String get homeTitle => 'Главная';
 
   @override
-  String get homeSubtitle => 'Вставьте ссылку Spotify или ищите по названию';
+  String get homeSubtitle => 'Paste a supported URL or search by name';
 
   @override
   String get homeEmptyTitle => 'No search providers yet';
@@ -227,11 +227,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Параллельные загрузки могут вызвать ограничение скорости';
 
   @override
-  String get optionsExtensionStore => 'Магазин расширений';
+  String get optionsExtensionStore => 'Extension Repo';
 
   @override
-  String get optionsExtensionStoreSubtitle =>
-      'Показывать вкладку Магазин в гл. меню';
+  String get optionsExtensionStoreSubtitle => 'Show Repo tab in navigation';
 
   @override
   String get optionsCheckUpdates => 'Проверить обновления';
@@ -308,7 +307,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get extensionsUninstall => 'Удалить';
 
   @override
-  String get storeTitle => 'Магазин расширений';
+  String get storeTitle => 'Extension Repo';
 
   @override
   String get storeSearch => 'Поиск расширений...';
@@ -652,9 +651,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Удалить $count $_temp0 из истории?\n\nЭто также удалит файлы из хранилища.';
   }
@@ -707,9 +706,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Удалено $count $_temp0';
   }
@@ -971,7 +970,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get providerPriorityFallbackExtensionsDescription =>
-      'Choose which installed download extensions can be used during automatic fallback.';
+      'Choose which installed download extensions can be used during automatic fallback. Built-in providers still follow the priority order above.';
 
   @override
   String get providerPriorityFallbackExtensionsHint =>
@@ -1177,9 +1176,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count треков',
+      one: '1 трек',
       many: '$count треков',
       few: '$count трека',
-      one: '$count трек',
     );
     return '$_temp0';
   }
@@ -1373,7 +1372,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get storeEmptyNoResults => 'No extensions found';
 
   @override
-  String get extensionDefaultProvider => 'По умолчанию (Deezer/Spotify)';
+  String get extensionDefaultProvider => 'Default (Deezer)';
 
   @override
   String get extensionDefaultProviderSubtitle =>
@@ -1686,9 +1685,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Удалить $count $_temp0 из этого альбома?\n\nЭто также удалит файлы из хранилища.';
   }
@@ -1710,9 +1709,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Удалить $count $_temp0';
   }
@@ -1943,9 +1942,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return '$_temp0';
   }
@@ -2099,9 +2098,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count минут',
+      one: '1 минуту',
       many: '$count минут',
       few: '$count минуты',
-      one: '$count минуту',
     );
     return '$_temp0 назад';
   }
@@ -2112,9 +2111,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count часов',
+      one: '1 час',
       many: '$count часов',
       few: '$count часа',
-      one: '$count час',
     );
     return '$_temp0 назад';
   }
@@ -2180,7 +2179,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tutorialExtensionsTip1 =>
-      'Просмотрите вкладку Магазина, чтобы найти полезные расширения';
+      'Browse the Repo tab to discover useful extensions';
 
   @override
   String get tutorialExtensionsTip2 =>
@@ -2464,7 +2463,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get trackConvertFormat => 'Переконвертировать формат';
 
   @override
-  String get trackConvertFormatSubtitle => 'Конвертировать в MP3 или Opus';
+  String get trackConvertFormatSubtitle =>
+      'Convert to MP3, Opus, ALAC, or FLAC';
 
   @override
   String get trackConvertTitle => 'Конвертировать аудио';
@@ -2598,9 +2598,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: '$count треков',
+      one: '1 трек',
       many: '$count треков',
       few: '$count трека',
-      one: '$count трек',
     );
     return '$_temp0';
   }
@@ -2751,9 +2751,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Отправить $count $_temp0';
   }
@@ -2768,9 +2768,9 @@ class AppLocalizationsRu extends AppLocalizations {
       count,
       locale: localeName,
       other: 'треков',
+      one: 'трек',
       many: 'треков',
       few: 'трека',
-      one: 'трек',
     );
     return 'Конвертировать $count $_temp0';
   }
@@ -2978,8 +2978,17 @@ class AppLocalizationsRu extends AppLocalizations {
       'Pick folder via Android Storage Access Framework';
 
   @override
-  String get downloadFilenameDescription =>
-      'Customize how your files are named.';
+  String downloadFilenameDescription(
+    Object album,
+    Object artist,
+    Object date,
+    Object disc,
+    Object title,
+    Object track,
+    Object year,
+  ) {
+    return 'Customize how your files are named.';
+  }
 
   @override
   String get downloadFilenameInsertTag => 'Tap to insert tag:';
@@ -3025,11 +3034,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get downloadSelectServiceToEnable =>
-      'Select a compatible download provider to enable quality options';
+      'Select a built-in service to enable';
 
   @override
   String get downloadSelectTidalQobuz =>
-      'Select a compatible provider above to configure quality';
+      'Select Tidal or Qobuz above to configure quality';
 
   @override
   String get downloadEmbedLyricsDisabled =>
@@ -3755,4 +3764,71 @@ class AppLocalizationsRu extends AppLocalizations {
   String a11yOpenAlbum(String albumName) {
     return 'Open album $albumName';
   }
+
+  @override
+  String get optionsDefaultSearchTabAlbums => 'Albums';
+
+  @override
+  String get optionsDefaultSearchTabTracks => 'Tracks';
+
+  @override
+  String get settingsFiles => 'Files & Folders';
+
+  @override
+  String get settingsFilesSubtitle =>
+      'Download location, filename, folder structure';
+
+  @override
+  String get settingsMetadata => 'Metadata';
+
+  @override
+  String get settingsMetadataSubtitle =>
+      'Cover art, tags, ReplayGain, providers';
+
+  @override
+  String get settingsLyrics => 'Lyrics';
+
+  @override
+  String get settingsLyricsSubtitle =>
+      'Embed, mode, providers, language options';
+
+  @override
+  String get settingsApp => 'App';
+
+  @override
+  String get settingsAppSubtitle => 'Updates, data, extension repo, debug';
+
+  @override
+  String get sectionMetadataProviders => 'Providers';
+
+  @override
+  String get sectionDuplicates => 'Duplicates';
+
+  @override
+  String get sectionLyricsProviderOptions => 'Provider Options';
+
+  @override
+  String get metadataProvidersTitle => 'Metadata Provider Priority';
+
+  @override
+  String get metadataProvidersSubtitle =>
+      'Drag to set search and metadata source order';
+
+  @override
+  String get downloadDeduplication => 'Skip Duplicate Downloads';
+
+  @override
+  String get downloadDeduplicationEnabled =>
+      'Already-downloaded tracks will be skipped';
+
+  @override
+  String get downloadDeduplicationDisabled =>
+      'All tracks will be downloaded regardless of history';
+
+  @override
+  String get downloadFallbackExtensions => 'Fallback Extensions';
+
+  @override
+  String get downloadFallbackExtensionsSubtitle =>
+      'Choose which extensions can be used as fallback';
 }

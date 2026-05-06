@@ -3197,7 +3197,7 @@
       }
     }
   },
-  "trackConvertLosslessHint": "Lossless conversion — no quality loss",
+  "trackConvertLosslessHint": "Конвертация без потери качества",
   "@trackConvertLosslessHint": {
     "description": "Hint shown when converting between lossless formats"
   },
@@ -3552,7 +3552,7 @@
       }
     }
   },
-  "selectionBatchConvertConfirmMessageLossless": "Convert {count} {count, plural, =1{track} other{tracks}} to {format}? (Lossless — no quality loss)\n\nOriginal files will be deleted after conversion.",
+  "selectionBatchConvertConfirmMessageLossless": "Конвертировать {count} {count, plural, =1{track} other{tracks}} в {format}? (Без потери качества)\n\nОригинальные файлы будут удалены после конвертации.",
   "@selectionBatchConvertConfirmMessageLossless": {
     "description": "Confirmation dialog message for lossless batch conversion",
     "placeholders": {

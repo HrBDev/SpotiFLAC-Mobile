@@ -33,7 +33,7 @@
   "@homeEmptyTitle": {
     "description": "Title shown on home when no providers are available yet"
   },
-  "homeEmptySubtitle": "Install an extension to continue.",
+  "homeEmptySubtitle": "Instalar una extensión para continuar.",
   "@homeEmptySubtitle": {
     "description": "Subtitle shown on home when no providers are available yet"
   },
@@ -153,7 +153,7 @@
   "@optionsPrimaryProvider": {
     "description": "Main search provider setting"
   },
-  "optionsPrimaryProviderSubtitle": "Service used for searching by track or album name",
+  "optionsPrimaryProviderSubtitle": "Servicio usado para buscar por canción o nombre del album",
   "@optionsPrimaryProviderSubtitle": {
     "description": "Subtitle for primary provider"
   },
@@ -170,7 +170,7 @@
   "@optionsDefaultSearchTab": {
     "description": "Title for the preferred default search tab setting"
   },
-  "optionsDefaultSearchTabSubtitle": "Choose which tab opens first for new search results.",
+  "optionsDefaultSearchTabSubtitle": "Escoger cuál pestaña se abre primero para nuevos resultados de búsqueda.",
   "@optionsDefaultSearchTabSubtitle": {
     "description": "Subtitle for the preferred default search tab setting"
   },
@@ -438,7 +438,7 @@
   "@aboutPCSource": {
     "description": "Link to PC GitHub repo"
   },
-  "aboutKeepAndroidOpen": "Keep Android Open",
+  "aboutKeepAndroidOpen": "Mantener Android activo",
   "@aboutKeepAndroidOpen": {
     "description": "Link to Keep Android Open campaign website"
   },

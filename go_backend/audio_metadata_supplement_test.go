@@ -308,16 +308,20 @@ func TestM4AMetadataAtomHelpers(t *testing.T) {
 		t.Fatalf("ReplayGain fields = %#v", fields)
 	}
 
-	qualityPath := filepath.Join(dir, "quality.m4a")
+	qualityPath := filepath.Join(dir, "quality-alac.m4a")
 	mvhd := make([]byte, 20)
 	binary.BigEndian.PutUint32(mvhd[12:16], 1000)
 	binary.BigEndian.PutUint32(mvhd[16:20], 180000)
 	sampleEntry := make([]byte, 32)
-	copy(sampleEntry[0:4], "mp4a")
+	copy(sampleEntry[0:4], "alac")
 	binary.BigEndian.PutUint16(sampleEntry[22:24], 24)
 	sampleEntry[28] = 0xAC
 	sampleEntry[29] = 0x44
-	qualityFile := append(buildM4AAtom("ftyp", []byte("M4A \x00\x00\x00\x00")), buildM4AAtom("moov", append(buildM4AAtom("mvhd", mvhd), sampleEntry...))...)
+	alacConfig := make([]byte, 24)
+	alacConfig[5] = 24
+	binary.BigEndian.PutUint32(alacConfig[20:24], 44100)
+	alacEntryPayload := append(append([]byte{}, sampleEntry[4:]...), buildM4AAtom("alac", alacConfig)...)
+	qualityFile := append(buildM4AAtom("ftyp", []byte("M4A \x00\x00\x00\x00")), buildM4AAtom("moov", append(buildM4AAtom("mvhd", mvhd), buildM4AAtom("alac", alacEntryPayload)...))...)
 	if err := os.WriteFile(qualityPath, qualityFile, 0600); err != nil {
 		t.Fatal(err)
 	}
@@ -326,6 +330,15 @@ func TestM4AMetadataAtomHelpers(t *testing.T) {
 	}
 	if quality, err := GetAudioQuality(qualityPath); err != nil || quality.SampleRate != 44100 {
 		t.Fatalf("GetAudioQuality M4A = %#v/%v", quality, err)
+	}
+	aacQualityPath := filepath.Join(dir, "quality-aac.m4a")
+	copy(sampleEntry[0:4], "mp4a")
+	aacQualityFile := append(buildM4AAtom("ftyp", []byte("M4A \x00\x00\x00\x00")), buildM4AAtom("moov", append(buildM4AAtom("mvhd", mvhd), sampleEntry...))...)
+	if err := os.WriteFile(aacQualityPath, aacQualityFile, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if quality, err := GetM4AQuality(aacQualityPath); err != nil || quality.BitDepth != 0 || quality.SampleRate != 44100 || quality.Duration != 180 {
+		t.Fatalf("GetM4AQuality AAC = %#v/%v", quality, err)
 	}
 	if _, _, ok := parseALACSpecificConfig(make([]byte, 4)); ok {
 		t.Fatal("short ALAC config should not parse")

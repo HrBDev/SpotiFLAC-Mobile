@@ -1695,9 +1695,10 @@ func GetM4AQuality(filePath string) (AudioQuality, error) {
 	//   [26:28] reserved
 	//   [28:32] samplerate (16.16 fixed-point)
 	sampleRate := int(buf[28])<<8 | int(buf[29])
-	bitDepth := int(buf[22])<<8 | int(buf[23])
+	bitDepth := 0
 
 	if atomType == "alac" {
+		bitDepth = int(buf[22])<<8 | int(buf[23])
 		if alacBitDepth, alacSampleRate, ok := readALACSpecificConfig(f, sampleOffset, fileSize); ok {
 			if alacBitDepth > 0 {
 				bitDepth = alacBitDepth
@@ -1706,10 +1707,6 @@ func GetM4AQuality(filePath string) (AudioQuality, error) {
 				sampleRate = alacSampleRate
 			}
 		}
-	}
-
-	if bitDepth <= 0 {
-		bitDepth = 16
 	}
 
 	return AudioQuality{BitDepth: bitDepth, SampleRate: sampleRate, Duration: duration}, nil

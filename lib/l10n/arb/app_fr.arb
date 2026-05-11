@@ -627,19 +627,19 @@
   "@setupIosEmptyFolderWarning": {
     "description": "iOS folder selection warning"
   },
-  "setupIcloudNotSupported": "iCloud Drive is not supported. Please use the app Documents folder.",
+  "setupIcloudNotSupported": "iCloud Drive n'est pas pris en charge. Veuillez utiliser le dossier « Documents » de l'application.",
   "@setupIcloudNotSupported": {
     "description": "Error when user selects iCloud Drive on iOS"
   },
-  "setupDownloadInFlac": "Download Spotify tracks in FLAC",
+  "setupDownloadInFlac": "Télécharger des morceaux Spotify au format FLAC",
   "@setupDownloadInFlac": {
     "description": "App tagline in setup"
   },
-  "setupStorageGranted": "Storage Permission Granted!",
+  "setupStorageGranted": "Autorisation de stockage accordée !",
   "@setupStorageGranted": {
     "description": "Success message for storage permission"
   },
-  "setupStorageRequired": "Storage Permission Required",
+  "setupStorageRequired": "Autorisation de stockage requise",
   "@setupStorageRequired": {
     "description": "Title when storage permission needed"
   },
@@ -751,11 +751,11 @@
   "@dialogDiscardChanges": {
     "description": "Dialog title - unsaved changes warning"
   },
-  "dialogUnsavedChanges": "You have unsaved changes. Do you want to discard them?",
+  "dialogUnsavedChanges": "Vous avez des modifications non enregistrées. Voulez-vous les ignorer ?",
   "@dialogUnsavedChanges": {
     "description": "Dialog message - unsaved changes"
   },
-  "dialogClearAll": "Clear All",
+  "dialogClearAll": "Tout effacer",
   "@dialogClearAll": {
     "description": "Dialog title - clear all items"
   },
@@ -805,8 +805,8 @@
   "@dialogImportPlaylistTitle": {
     "description": "Dialog title - import CSV playlist"
   },
-  "dialogImportPlaylistMessage": "Found {count} tracks in CSV. Add them to download queue?",
-  "csvImportTracks": "{count} tracks from CSV",
+  "dialogImportPlaylistMessage": "{count} pistes ont été trouvées dans le fichier CSV. Voulez-vous les ajouter à la file d'attente de téléchargement ?",
+  "csvImportTracks": "{count} pistes issues d'un fichier CSV",
   "@csvImportTracks": {
     "description": "Label shown in quality picker for CSV import",
     "placeholders": {
@@ -823,7 +823,7 @@
       }
     }
   },
-  "snackbarAddedToQueue": "Added \"{trackName}\" to queue",
+  "snackbarAddedToQueue": "Ajout de « {trackName} » à la file d'attente",
   "@snackbarAddedToQueue": {
     "description": "Snackbar - track added to download queue",
     "placeholders": {
@@ -832,7 +832,7 @@
       }
     }
   },
-  "snackbarAddedTracksToQueue": "Added {count} tracks to queue",
+  "snackbarAddedTracksToQueue": "{count} titres ont été ajoutés à la file d'attente",
   "@snackbarAddedTracksToQueue": {
     "description": "Snackbar - multiple tracks added to queue",
     "placeholders": {
@@ -841,7 +841,7 @@
       }
     }
   },
-  "snackbarAlreadyDownloaded": "\"{trackName}\" already downloaded",
+  "snackbarAlreadyDownloaded": "« {trackName} » a déjà été téléchargé",
   "@snackbarAlreadyDownloaded": {
     "description": "Snackbar - track already exists",
     "placeholders": {
@@ -850,7 +850,7 @@
       }
     }
   },
-  "snackbarAlreadyInLibrary": "\"{trackName}\" already exists in your library",
+  "snackbarAlreadyInLibrary": "« {trackName} » existe déjà dans votre bibliothèque",
   "@snackbarAlreadyInLibrary": {
     "description": "Snackbar - track already exists in local library",
     "placeholders": {
@@ -863,11 +863,11 @@
   "@snackbarHistoryCleared": {
     "description": "Snackbar - history deleted"
   },
-  "snackbarCredentialsSaved": "Credentials saved",
+  "snackbarCredentialsSaved": "Identifiants enregistrés",
   "@snackbarCredentialsSaved": {
     "description": "Snackbar - Spotify credentials saved"
   },
-  "snackbarCredentialsCleared": "Credentials cleared",
+  "snackbarCredentialsCleared": "Identifiants validés",
   "@snackbarCredentialsCleared": {
     "description": "Snackbar - Spotify credentials removed"
   },

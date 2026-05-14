@@ -543,9 +543,20 @@ object NativeDownloadFinalizer {
         try {
             val codec = probePrimaryAudioCodec(localInput, shouldCancel)
             val isAlreadyNativeFlac = codec == "flac" && isNativeFlacFile(localInput)
-            if (!isLosslessAudioCodec(codec) || isAlreadyNativeFlac) {
-                val suffix = if (isAlreadyNativeFlac) " (native FLAC)" else ""
-                Log.d(TAG, "Preserving native container; audio codec is ${codec.ifBlank { "unknown" }}$suffix")
+            if (!isLosslessAudioCodec(codec)) {
+                Log.d(TAG, "Preserving native container; audio codec is ${codec.ifBlank { "unknown" }}")
+                return
+            }
+            if (isAlreadyNativeFlac) {
+                Log.d(TAG, "Native FLAC payload detected; publishing as FLAC and embedding metadata")
+                val nativeFlacOutput = if (localInput.lowercase(Locale.ROOT).endsWith(".flac")) {
+                    localInput
+                } else {
+                    File(localInput).copyTo(File(output), overwrite = true).absolutePath
+                }
+                embedBasicMetadata(context, nativeFlacOutput, input, "flac")
+                replaceStatePath(context, input, state, nativeFlacOutput, deleteOld = true)
+                adoptedOutput = true
                 return
             }
             val result = runFFmpeg(

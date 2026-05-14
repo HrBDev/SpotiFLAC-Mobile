@@ -6320,13 +6320,40 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         final codec = await FFmpegService.probePrimaryAudioCodec(tempPath);
         final isAlreadyNativeFlac =
             codec == 'flac' && await FFmpegService.isNativeFlacFile(tempPath);
-        if (!FFmpegService.isLosslessAudioCodec(codec) || isAlreadyNativeFlac) {
+        if (!FFmpegService.isLosslessAudioCodec(codec)) {
           _log.d(
-            'Preserving native container; audio codec is ${codec ?? 'unknown'}'
-            '${isAlreadyNativeFlac ? ' (native FLAC)' : ''}, '
+            'Preserving native container; audio codec is ${codec ?? 'unknown'}, '
             'no FLAC container conversion needed.',
           );
           return filePath;
+        }
+        if (isAlreadyNativeFlac) {
+          _log.d(
+            'Native FLAC payload detected in temporary container; publishing '
+            'as FLAC and embedding metadata.',
+          );
+          await embedFlacMetadata(tempPath);
+          final rawFileName =
+              (result['file_name'] as String?) ??
+              context.safFileName ??
+              'track';
+          final baseName = rawFileName.replaceFirst(RegExp(r'\.[^.]+$'), '');
+          final newFileName = '$baseName.flac';
+          final newUri = await _writeTempToSaf(
+            treeUri: treeUri,
+            relativeDir: context.safRelativeDir ?? '',
+            fileName: newFileName,
+            mimeType: _mimeTypeForExt('.flac'),
+            srcPath: tempPath,
+          );
+          if (newUri == null) {
+            return null;
+          }
+          if (newUri != filePath) {
+            await _deleteSafFile(filePath);
+          }
+          result['file_name'] = newFileName;
+          return newUri;
         }
         flacPath = await FFmpegService.convertM4aToFlac(tempPath);
         if (flacPath == null) {
@@ -6367,13 +6394,25 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
     final codec = await FFmpegService.probePrimaryAudioCodec(filePath);
     final isAlreadyNativeFlac =
         codec == 'flac' && await FFmpegService.isNativeFlacFile(filePath);
-    if (!FFmpegService.isLosslessAudioCodec(codec) || isAlreadyNativeFlac) {
+    if (!FFmpegService.isLosslessAudioCodec(codec)) {
       _log.d(
-        'Preserving native container; audio codec is ${codec ?? 'unknown'}'
-        '${isAlreadyNativeFlac ? ' (native FLAC)' : ''}, '
+        'Preserving native container; audio codec is ${codec ?? 'unknown'}, '
         'no FLAC container conversion needed.',
       );
       return filePath;
+    }
+    if (isAlreadyNativeFlac) {
+      var flacPath = filePath;
+      if (!filePath.toLowerCase().endsWith('.flac')) {
+        final renamedPath = filePath.replaceAll(RegExp(r'\.[^.]+$'), '.flac');
+        final targetPath = renamedPath == filePath
+            ? '$filePath.flac'
+            : renamedPath;
+        await File(filePath).rename(targetPath);
+        flacPath = targetPath;
+      }
+      await embedFlacMetadata(flacPath);
+      return flacPath;
     }
     final flacPath = await FFmpegService.convertM4aToFlac(filePath);
     if (flacPath == null) {
@@ -7721,11 +7760,9 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
                     final isAlreadyNativeFlac =
                         codec == 'flac' &&
                         await FFmpegService.isNativeFlacFile(tempPath);
-                    if (!FFmpegService.isLosslessAudioCodec(codec) ||
-                        isAlreadyNativeFlac) {
+                    if (!FFmpegService.isLosslessAudioCodec(codec)) {
                       _log.d(
-                        'Preserving native container; audio codec is ${codec ?? 'unknown'}'
-                        '${isAlreadyNativeFlac ? ' (native FLAC)' : ''}, '
+                        'Preserving native container; audio codec is ${codec ?? 'unknown'}, '
                         'no FLAC container conversion needed.',
                       );
                       final preserveExt = resultOutputExt == '.mp4'
@@ -7746,6 +7783,49 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
                         }
                         filePath = newUri;
                         finalSafFileName = newFileName;
+                      }
+                    } else if (isAlreadyNativeFlac) {
+                      _log.d(
+                        'Native FLAC payload detected in SAF temp file; '
+                        'publishing as FLAC and embedding metadata.',
+                      );
+                      final finalTrack = _buildTrackForMetadataEmbedding(
+                        trackToDownload,
+                        result,
+                        resolvedAlbumArtist,
+                      );
+
+                      final backendGenre = result['genre'] as String?;
+                      final backendLabel = result['label'] as String?;
+                      final backendCopyright = result['copyright'] as String?;
+
+                      await _embedMetadataToFile(
+                        tempPath,
+                        finalTrack,
+                        format: 'flac',
+                        genre: backendGenre ?? genre,
+                        label: backendLabel ?? label,
+                        copyright: backendCopyright,
+                        downloadService: item.service,
+                        writeExternalLrc: false,
+                      );
+
+                      final newFileName = '${safBaseName ?? 'track'}.flac';
+                      final newUri = await _writeTempToSaf(
+                        treeUri: settings.downloadTreeUri,
+                        relativeDir: effectiveOutputDir,
+                        fileName: newFileName,
+                        mimeType: _mimeTypeForExt('.flac'),
+                        srcPath: tempPath,
+                      );
+                      if (newUri != null) {
+                        if (newUri != currentFilePath) {
+                          await _deleteSafFile(currentFilePath);
+                        }
+                        filePath = newUri;
+                        finalSafFileName = newFileName;
+                      } else {
+                        _log.w('Failed to write native FLAC to SAF');
                       }
                     } else {
                       updateItemStatus(
@@ -7960,12 +8040,48 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
                     final isAlreadyNativeFlac =
                         codec == 'flac' &&
                         await FFmpegService.isNativeFlacFile(currentFilePath);
-                    if (!FFmpegService.isLosslessAudioCodec(codec) ||
-                        isAlreadyNativeFlac) {
+                    if (!FFmpegService.isLosslessAudioCodec(codec)) {
                       _log.d(
-                        'Preserving native container; audio codec is ${codec ?? 'unknown'}'
-                        '${isAlreadyNativeFlac ? ' (native FLAC)' : ''}, '
+                        'Preserving native container; audio codec is ${codec ?? 'unknown'}, '
                         'no FLAC container conversion needed.',
+                      );
+                    } else if (isAlreadyNativeFlac) {
+                      _log.d(
+                        'Native FLAC payload detected; ensuring .flac '
+                        'extension and embedding metadata.',
+                      );
+                      var flacPath = currentFilePath;
+                      if (!currentFilePath.toLowerCase().endsWith('.flac')) {
+                        final renamedPath = currentFilePath.replaceAll(
+                          RegExp(r'\.[^.]+$'),
+                          '.flac',
+                        );
+                        final targetPath = renamedPath == currentFilePath
+                            ? '$currentFilePath.flac'
+                            : renamedPath;
+                        await File(currentFilePath).rename(targetPath);
+                        flacPath = targetPath;
+                        filePath = targetPath;
+                      }
+
+                      final finalTrack = _buildTrackForMetadataEmbedding(
+                        trackToDownload,
+                        result,
+                        resolvedAlbumArtist,
+                      );
+
+                      final backendGenre = result['genre'] as String?;
+                      final backendLabel = result['label'] as String?;
+                      final backendCopyright = result['copyright'] as String?;
+
+                      await _embedMetadataToFile(
+                        flacPath,
+                        finalTrack,
+                        format: 'flac',
+                        genre: backendGenre ?? genre,
+                        label: backendLabel ?? label,
+                        copyright: backendCopyright,
+                        downloadService: item.service,
                       );
                     } else {
                       updateItemStatus(

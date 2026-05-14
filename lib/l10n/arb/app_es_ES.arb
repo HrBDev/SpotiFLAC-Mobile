@@ -1457,7 +1457,7 @@
   "@settingsDownloadSubtitle": {
     "description": "Download settings description"
   },
-  "settingsOptionsSubtitle": "Fallback, metadata, lyrics, cover art",
+  "settingsOptionsSubtitle": "Respaldo, meta datos, letras, portada",
   "@settingsOptionsSubtitle": {
     "description": "Options settings description"
   },
@@ -1877,7 +1877,7 @@
   "@extensionsInstalledSuccess": {
     "description": "Success message after install"
   },
-  "extensionsInstalledCount": "{count} extensions installed successfully",
+  "extensionsInstalledCount": "{count} Extensiones instaladas correctamente",
   "@extensionsInstalledCount": {
     "description": "Success message after installing multiple extensions",
     "placeholders": {
@@ -1887,7 +1887,7 @@
       }
     }
   },
-  "extensionsInstallPartialSuccess": "Installed {installed} of {attempted} extensions",
+  "extensionsInstallPartialSuccess": "{installed} Instalados de {attempted} extensiones",
   "@extensionsInstallPartialSuccess": {
     "description": "Message when installing multiple extensions partially succeeds",
     "placeholders": {
@@ -2145,7 +2145,7 @@
   "@albumFolderArtistAlbumFlat": {
     "description": "Album folder option with singles directly in artist folder"
   },
-  "albumFolderArtistAlbumFlatSubtitle": "Artist/Album/ and Artist/song.flac",
+  "albumFolderArtistAlbumFlatSubtitle": "Artista/Album/ y Artista/canción.flac",
   "@albumFolderArtistAlbumFlatSubtitle": {
     "description": "Folder structure example for flat singles"
   },
@@ -2370,23 +2370,23 @@
   "@allFilesAccessDisabledSubtitle": {
     "description": "Subtitle when all files access is disabled"
   },
-  "allFilesAccessDescription": "Enable this if you encounter write errors when saving to custom folders. Android 13+ restricts access to certain directories by default.",
+  "allFilesAccessDescription": "Habilite esto si tiene problemas de escritura al guardar en carpetas personalizadas. Android 13+ restringe el acceso a ciertas carpetas por defecto.",
   "@allFilesAccessDescription": {
     "description": "Description explaining when to enable all files access"
   },
-  "allFilesAccessDeniedMessage": "Permission was denied. Please enable 'All files access' manually in system settings.",
+  "allFilesAccessDeniedMessage": "Permiso denegado. Por favor habilite 'Acceso a todos los archivos' de manera manual en la configuración del sistema.",
   "@allFilesAccessDeniedMessage": {
     "description": "Message when permission is permanently denied"
   },
-  "allFilesAccessDisabledMessage": "All Files Access disabled. The app will use limited storage access.",
+  "allFilesAccessDisabledMessage": "Acceso a todos los archivos desactivado. La aplicación usará acceso limitado al almacenamiento.",
   "@allFilesAccessDisabledMessage": {
     "description": "Snackbar message when user disables all files access"
   },
-  "settingsLocalLibrary": "Local Library",
+  "settingsLocalLibrary": "Librería local",
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "Escanear música y detectar duplicados",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
@@ -2398,15 +2398,15 @@
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
-  "libraryTitle": "Local Library",
+  "libraryTitle": "Librería local",
   "@libraryTitle": {
     "description": "Library settings page title"
   },
-  "libraryScanSettings": "Scan Settings",
+  "libraryScanSettings": "Configuración de escaneo",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
   },
-  "libraryEnableLocalLibrary": "Enable Local Library",
+  "libraryEnableLocalLibrary": "Habilitar librería local",
   "@libraryEnableLocalLibrary": {
     "description": "Toggle to enable library scanning"
   },
@@ -2414,19 +2414,19 @@
   "@libraryEnableLocalLibrarySubtitle": {
     "description": "Subtitle for enable toggle"
   },
-  "libraryFolder": "Library Folder",
+  "libraryFolder": "Carpeta de la librería",
   "@libraryFolder": {
     "description": "Folder selection setting"
   },
-  "libraryFolderHint": "Tap to select folder",
+  "libraryFolderHint": "Toque para seleccionar la carpeta",
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "Mostrar indicador de duplicados",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
-  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "libraryShowDuplicateIndicatorSubtitle": "Mostrar al buscar canciones existentes",
   "@libraryShowDuplicateIndicatorSubtitle": {
     "description": "Subtitle for duplicate indicator toggle"
   },
@@ -2434,7 +2434,7 @@
   "@libraryAutoScan": {
     "description": "Setting for automatic library scanning"
   },
-  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "libraryAutoScanSubtitle": "Escanear automáticamente tu librería por nuevos archivos",
   "@libraryAutoScanSubtitle": {
     "description": "Subtitle for auto scan setting"
   },
@@ -2442,63 +2442,63 @@
   "@libraryAutoScanOff": {
     "description": "Auto scan disabled"
   },
-  "libraryAutoScanOnOpen": "Every app open",
+  "libraryAutoScanOnOpen": "Cada vez que la aplicación se abra",
   "@libraryAutoScanOnOpen": {
     "description": "Auto scan when app opens"
   },
-  "libraryAutoScanDaily": "Daily",
+  "libraryAutoScanDaily": "Diariamente",
   "@libraryAutoScanDaily": {
     "description": "Auto scan once per day"
   },
-  "libraryAutoScanWeekly": "Weekly",
+  "libraryAutoScanWeekly": "Semanalmente",
   "@libraryAutoScanWeekly": {
     "description": "Auto scan once per week"
   },
-  "libraryActions": "Actions",
+  "libraryActions": "Acciones",
   "@libraryActions": {
     "description": "Section header for library actions"
   },
-  "libraryScan": "Scan Library",
+  "libraryScan": "Escanear librería",
   "@libraryScan": {
     "description": "Button to start library scan"
   },
-  "libraryScanSubtitle": "Scan for audio files",
+  "libraryScanSubtitle": "Escanear archivos de audio",
   "@libraryScanSubtitle": {
     "description": "Subtitle for scan button"
   },
-  "libraryScanSelectFolderFirst": "Select a folder first",
+  "libraryScanSelectFolderFirst": "Primero seleccione una carpeta",
   "@libraryScanSelectFolderFirst": {
     "description": "Message when trying to scan without folder"
   },
-  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "libraryCleanupMissingFiles": "Limpiar archivos faltantes",
   "@libraryCleanupMissingFiles": {
     "description": "Button to remove entries for missing files"
   },
-  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "libraryCleanupMissingFilesSubtitle": "Remover entradas para archivos que ya no existen",
   "@libraryCleanupMissingFilesSubtitle": {
     "description": "Subtitle for cleanup button"
   },
-  "libraryClear": "Clear Library",
+  "libraryClear": "Limpiar librería",
   "@libraryClear": {
     "description": "Button to clear all library entries"
   },
-  "libraryClearSubtitle": "Remove all scanned tracks",
+  "libraryClearSubtitle": "Remover todas las canciones escaneadas",
   "@libraryClearSubtitle": {
     "description": "Subtitle for clear button"
   },
-  "libraryClearConfirmTitle": "Clear Library",
+  "libraryClearConfirmTitle": "Limpiar librería",
   "@libraryClearConfirmTitle": {
     "description": "Dialog title for clear confirmation"
   },
-  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "libraryClearConfirmMessage": "Esto removerá todas las canciones escaneadas de tu librería. Los archivos de música no serán eliminados.",
   "@libraryClearConfirmMessage": {
     "description": "Dialog message for clear confirmation"
   },
-  "libraryAbout": "About Local Library",
+  "libraryAbout": "Acerca de la librería local",
   "@libraryAbout": {
     "description": "Section header for about info"
   },
-  "libraryAboutDescription": "Scans your existing music collection to detect duplicates when downloading. Supports FLAC, M4A, MP3, Opus, and OGG formats. Metadata is read from file tags when available.",
+  "libraryAboutDescription": "Escanea tu colección de música para detectar duplicados al descargar. Permite formatos FLAC, M4A, MP3, Opus, y OGG. La meta data será leída de los archivos cuando sea posible.",
   "@libraryAboutDescription": {
     "description": "Description of local library feature"
   },
@@ -2520,7 +2520,7 @@
       }
     }
   },
-  "libraryLastScanned": "Last scanned: {time}",
+  "libraryLastScanned": "Último escaneo: {time}",
   "@libraryLastScanned": {
     "description": "Last scan time display",
     "placeholders": {
@@ -2529,11 +2529,11 @@
       }
     }
   },
-  "libraryLastScannedNever": "Never",
+  "libraryLastScannedNever": "Nunca",
   "@libraryLastScannedNever": {
     "description": "Shown when library has never been scanned"
   },
-  "libraryScanning": "Scanning...",
+  "libraryScanning": "Escaneando...",
   "@libraryScanning": {
     "description": "Status during scan"
   },
@@ -2720,27 +2720,27 @@
   "@tutorialWelcomeDesc": {
     "description": "Tutorial welcome page description"
   },
-  "tutorialWelcomeTip1": "Download music from Spotify, Deezer, or paste any supported URL",
+  "tutorialWelcomeTip1": "Descarga música de Spotify, Deezer, o pega cualquier URL soportada",
   "@tutorialWelcomeTip1": {
     "description": "Tutorial welcome tip 1"
   },
-  "tutorialWelcomeTip2": "Get FLAC quality audio from Tidal, Qobuz, or Deezer",
+  "tutorialWelcomeTip2": "Obtener audio de calidad FLAC de Tidal, Qobuz o Deezer",
   "@tutorialWelcomeTip2": {
     "description": "Tutorial welcome tip 2"
   },
-  "tutorialWelcomeTip3": "Automatic metadata, cover art, and lyrics embedding",
+  "tutorialWelcomeTip3": "Meta datos automáticos, portadas y letras integradas",
   "@tutorialWelcomeTip3": {
     "description": "Tutorial welcome tip 3"
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "Buscando música",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
-  "tutorialSearchDesc": "There are two easy ways to find music you want to download.",
+  "tutorialSearchDesc": "Hay dos maneras fáciles de encontrar la música que quieres descargar.",
   "@tutorialSearchDesc": {
     "description": "Tutorial search page description"
   },
-  "tutorialDownloadTitle": "Downloading Music",
+  "tutorialDownloadTitle": "Descargando música",
   "@tutorialDownloadTitle": {
     "description": "Tutorial download page title"
   },

@@ -202,7 +202,7 @@
   "@optionsEmbedLyrics": {
     "description": "Embed lyrics in audio files"
   },
-  "optionsEmbedLyricsSubtitle": "Save synced lyrics alongside your downloaded tracks",
+  "optionsEmbedLyricsSubtitle": "حفظ كلمات الأغاني المتزامنة جنبا إلى جنب مع المسارات التي تم تنزيلها",
   "@optionsEmbedLyricsSubtitle": {
     "description": "Subtitle for embed lyrics"
   },

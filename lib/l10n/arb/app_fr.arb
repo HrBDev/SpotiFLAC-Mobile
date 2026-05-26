@@ -5303,11 +5303,11 @@
   "@badgeBeta": {
     "description": "Badge label for beta features"
   },
-  "extensionServiceStatus": "Service Status",
+  "extensionServiceStatus": "État du service",
   "@extensionServiceStatus": {
     "description": "Extension detail section header for service status"
   },
-  "extensionServiceHealth": "Service health",
+  "extensionServiceHealth": "État du service",
   "@extensionServiceHealth": {
     "description": "Extension capability label for service health checks"
   },

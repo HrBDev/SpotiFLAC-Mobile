@@ -723,7 +723,7 @@
   "@dialogClear": {
     "description": "Dialog button - clear items"
   },
-  "dialogDone": "Done",
+  "dialogDone": "C'est fait",
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
@@ -1099,7 +1099,7 @@
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
-  "tooltipPlay": "Play",
+  "tooltipPlay": "Lecture",
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
@@ -2707,7 +2707,7 @@
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "Il y a quelques instants",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
@@ -3696,15 +3696,15 @@
   "@lyricsProvidersTitle": {
     "description": "Settings item title for lyrics provider order"
   },
-  "lyricsProvidersDescription": "Enable, disable and reorder lyrics sources. Providers are tried top-to-bottom until lyrics are found.",
+  "lyricsProvidersDescription": "Activer, désactiver et réorganiser les sources de paroles. Les sources sont parcourues de haut en bas jusqu'à ce que les paroles soient trouvées.",
   "@lyricsProvidersDescription": {
     "description": "Description on the lyrics provider priority page"
   },
-  "lyricsProvidersInfoText": "Extension lyrics providers always run before built-in providers. At least one provider must remain enabled.",
+  "lyricsProvidersInfoText": "Les fournisseurs de paroles des extensions s'exécutent toujours avant les fournisseurs intégrés. Au moins un fournisseur doit rester activé.",
   "@lyricsProvidersInfoText": {
     "description": "Info tip on lyrics provider priority page"
   },
-  "lyricsProvidersEnabledSection": "Enabled ({count})",
+  "lyricsProvidersEnabledSection": "Activé ({count})",
   "@lyricsProvidersEnabledSection": {
     "description": "Section header for enabled providers",
     "placeholders": {
@@ -3713,7 +3713,7 @@
       }
     }
   },
-  "lyricsProvidersDisabledSection": "Disabled ({count})",
+  "lyricsProvidersDisabledSection": "Désactivés ({count})",
   "@lyricsProvidersDisabledSection": {
     "description": "Section header for disabled providers",
     "placeholders": {
@@ -3722,15 +3722,15 @@
       }
     }
   },
-  "lyricsProvidersAtLeastOne": "At least one provider must remain enabled",
+  "lyricsProvidersAtLeastOne": "Au moins un fournisseur doit rester activé",
   "@lyricsProvidersAtLeastOne": {
     "description": "Snackbar when user tries to disable the last enabled provider"
   },
-  "lyricsProvidersSaved": "Lyrics provider priority saved",
+  "lyricsProvidersSaved": "Priorité du fournisseur de paroles enregistrée",
   "@lyricsProvidersSaved": {
     "description": "Snackbar after saving lyrics provider priority"
   },
-  "lyricsProvidersDiscardContent": "You have unsaved changes that will be lost.",
+  "lyricsProvidersDiscardContent": "Vous avez des modifications non enregistrées qui seront perdues.",
   "@lyricsProvidersDiscardContent": {
     "description": "Body text of the discard-changes dialog on lyrics provider page"
   },
@@ -3758,11 +3758,11 @@
   "@lyricsProviderExtensionDesc": {
     "description": "Generic description for extension-based lyrics providers"
   },
-  "safMigrationTitle": "Storage Update Required",
+  "safMigrationTitle": "Mise à jour du stockage requise",
   "@safMigrationTitle": {
     "description": "Title of SAF migration dialog"
   },
-  "safMigrationMessage1": "SpotiFLAC now uses Android Storage Access Framework (SAF) for downloads. This fixes \"permission denied\" errors on Android 10+.",
+  "safMigrationMessage1": "SpotiFLAC utilise désormais le framework d'accès au stockage Android (SAF) pour les téléchargements. Cela permet de résoudre les erreurs « autorisation refusée » sur Android 10 et versions ultérieures.",
   "@safMigrationMessage1": {
     "description": "First paragraph of SAF migration dialog"
   },
@@ -3770,11 +3770,11 @@
   "@safMigrationMessage2": {
     "description": "Second paragraph of SAF migration dialog"
   },
-  "safMigrationSuccess": "Download folder updated to SAF mode",
+  "safMigrationSuccess": "Le dossier de téléchargement a été mis à jour en mode SAF",
   "@safMigrationSuccess": {
     "description": "Snackbar after successfully migrating to SAF"
   },
-  "settingsDonate": "Support Development",
+  "settingsDonate": "Soutien au développement",
   "@settingsDonate": {
     "description": "Settings menu item - donate page"
   },

@@ -3,9 +3,11 @@ files:
     translation: /lib/l10n/arb/app_%locale%.arb
     languages_mapping:
       locale:
-        # Short codes for single-variant languages
+        # Keys MUST be the project's Crowdin language ids; values are the
+        # %locale% suffix used in app_%locale%.arb (underscores so Flutter
+        # gen-l10n parses them — hyphenated filenames break gen-l10n).
+        ar: ar
         de: de
-        es: es
         es-ES: es_ES
         fr: fr
         hi: hi
@@ -13,12 +15,9 @@ files:
         ja: ja
         ko: ko
         nl: nl
-        pt: pt
         pt-PT: pt_PT
         ru: ru
         tr: tr
         uk: uk
-        zh: zh
-        # Full codes for Chinese variants
         zh-CN: zh_CN
         zh-TW: zh_TW

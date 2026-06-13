@@ -2530,7 +2530,16 @@ func DownloadWithExtensionFallback(req DownloadRequest) (*DownloadResponse, erro
 				StartItemProgress(req.ItemID)
 			}
 
-			result, err := provider.Download(availability.TrackID, req.Quality, outputPath, req.ItemID, func(percent int) {
+			// Fallback provider: request its own highest quality, not the
+			// source provider's quality token.
+			fallbackQuality := req.Quality
+			if len(ext.Manifest.QualityOptions) > 0 {
+				if best := strings.TrimSpace(ext.Manifest.QualityOptions[0].ID); best != "" {
+					fallbackQuality = best
+				}
+			}
+
+			result, err := provider.Download(availability.TrackID, fallbackQuality, outputPath, req.ItemID, func(percent int) {
 				if req.ItemID != "" {
 					normalized := float64(percent) / 100.0
 					if normalized < 0 {

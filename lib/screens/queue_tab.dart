@@ -11,6 +11,7 @@ import 'package:spotiflac_android/services/replaygain_service.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/utils/app_bar_layout.dart';
+import 'package:spotiflac_android/utils/nav_bar_inset.dart';
 import 'package:spotiflac_android/utils/audio_conversion_utils.dart';
 import 'package:spotiflac_android/widgets/settings_group.dart';
 import 'package:spotiflac_android/utils/file_access.dart';
@@ -34,6 +35,9 @@ import 'package:spotiflac_android/widgets/re_enrich_field_dialog.dart';
 import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
 import 'package:spotiflac_android/widgets/batch_convert_sheet.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spotiflac_android/services/cover_cache_manager.dart';
 import 'package:spotiflac_android/screens/library_tracks_folder_screen.dart';
 import 'package:spotiflac_android/screens/local_album_screen.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
@@ -86,6 +90,27 @@ String _formatDownloadProgressLabel(BuildContext context, DownloadItem item) {
   }
 
   return context.l10n.queueDownloadStarting;
+}
+
+String _formatDownloadStatusLine(BuildContext context, DownloadItem item) {
+  final base = _formatDownloadProgressLabel(context, item);
+  final eta = _formatDownloadEta(item);
+  return eta == null ? base : '$base • $eta';
+}
+
+String? _formatDownloadEta(DownloadItem item) {
+  if (item.speedMBps <= 0 || item.bytesTotal <= 0) return null;
+  final received = item.bytesReceived > 0
+      ? item.bytesReceived
+      : (item.bytesTotal * item.progress).round();
+  final remaining = item.bytesTotal - received;
+  if (remaining <= 0) return null;
+  final seconds = remaining / (item.speedMBps * 1024 * 1024);
+  if (!seconds.isFinite || seconds > 3600) return null;
+  if (seconds < 60) return '~${seconds.round()}s';
+  final minutes = (seconds / 60).floor();
+  final secs = (seconds % 60).round();
+  return '~${minutes}m${secs.toString().padLeft(2, '0')}s';
 }
 
 class QueueTab extends ConsumerStatefulWidget {
@@ -158,6 +183,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   List<DownloadHistoryItem>? _historyItemsCache;
   List<LocalLibraryItem>? _localLibraryItemsCache;
   _HistoryStats? _historyStatsCache;
+  final Map<String, Track> _completionBridge = {};
+  final Map<String, DateTime> _completionBridgeAt = {};
+  final Set<String> _bridgePrecacheStarted = {};
   final Map<String, String> _searchIndexCache = {};
   final Map<String, String> _localSearchIndexCache = {};
   Map<String, List<DownloadHistoryItem>> _filteredHistoryCache = const {};
@@ -2571,6 +2599,25 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   Widget build(BuildContext context) {
     _initializePageController();
 
+    ref.listen(downloadQueueLookupProvider, (previous, next) {
+      if (previous == null) return;
+      for (final id in previous.itemIds) {
+        final prevItem = previous.byItemId[id];
+        final nextItem = next.byItemId[id];
+        if (prevItem == null) continue;
+        final wasActive =
+            prevItem.status == DownloadStatus.downloading ||
+            prevItem.status == DownloadStatus.finalizing ||
+            prevItem.status == DownloadStatus.queued;
+        final nowCompleted =
+            nextItem != null && nextItem.status == DownloadStatus.completed;
+        if (wasActive && nowCompleted) {
+          _completionBridge[id] = nextItem.track;
+          _completionBridgeAt[id] = DateTime.now();
+        }
+      }
+    });
+
     final hasQueueItems = ref.watch(
       downloadQueueLookupProvider.select((lookup) => lookup.itemIds.isNotEmpty),
     );
@@ -2682,6 +2729,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         hasLibraryContent || hasAnyLibraryItems || hasActiveSearch;
 
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final bottomInset = context.navBarBottomInset;
     final selectionItems = getFilterData(
       historyFilterMode,
     ).filteredUnifiedItems;
@@ -2819,11 +2867,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                     ),
                   ),
 
-                if (hasQueueItems)
-                  _buildQueueHeaderSliver(context, colorScheme),
-
-                if (hasQueueItems) _buildQueueItemsSliver(context, colorScheme),
-
                 if (shouldShowLibraryControls)
                   SliverToBoxAdapter(
                     child: Padding(
@@ -2896,6 +2939,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         ? hasMoreLibrary
                         : false,
                     isPageLoading: isLibraryPageLoading,
+                    bottomInset: bottomInset,
                   );
                 },
               ),
@@ -3027,7 +3071,16 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     return Consumer(
       builder: (context, ref, child) {
         final queueCount = ref.watch(
-          downloadQueueLookupProvider.select((lookup) => lookup.itemIds.length),
+          downloadQueueLookupProvider.select((lookup) {
+            var count = 0;
+            for (final id in lookup.itemIds) {
+              final entry = lookup.byItemId[id];
+              if (entry != null && entry.status != DownloadStatus.completed) {
+                count++;
+              }
+            }
+            return count;
+          }),
         );
         final failedCount = ref.watch(
           downloadQueueProvider.select((state) => state.failedCount),
@@ -3035,75 +3088,366 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         final isProcessing = ref.watch(
           downloadQueueProvider.select((state) => state.isProcessing),
         );
-        if (queueCount == 0) {
-          return const SliverToBoxAdapter(child: SizedBox.shrink());
-        }
+        final isPaused = ref.watch(
+          downloadQueueProvider.select((state) => state.isPaused),
+        );
         return SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        context.l10n.queueDownloadingCount(queueCount),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    _buildPauseResumeButton(context, ref, colorScheme),
-                    const SizedBox(width: 4),
-                    _buildClearAllButton(context, ref, colorScheme),
-                  ],
-                ),
-                if (failedCount > 0 && !isProcessing) ...[
-                  const SizedBox(height: 6),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: _buildRetryAllFailedButton(
-                      context,
-                      ref,
-                      colorScheme,
-                      failedCount,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 260),
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            transitionBuilder: (child, animation) => SizeTransition(
+              sizeFactor: animation,
+              alignment: Alignment.topCenter,
+              child: FadeTransition(opacity: animation, child: child),
+            ),
+            child: queueCount == 0
+                ? const SizedBox(
+                    width: double.infinity,
+                    key: ValueKey('dl_header_empty'),
+                  )
+                : Padding(
+                    key: const ValueKey('dl_header'),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.downloading_rounded,
+                          size: 16,
+                          color: colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            context.l10n.queueDownloadingCount(queueCount),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                        if (failedCount > 0 && !isProcessing)
+                          IconButton(
+                            onPressed: () => ref
+                                .read(downloadQueueProvider.notifier)
+                                .retryAllFailed(),
+                            icon: const Icon(Icons.replay_rounded, size: 20),
+                            tooltip: context.l10n.queueRetryAllFailed(
+                              failedCount,
+                            ),
+                            color: colorScheme.primary,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        IconButton(
+                          onPressed: () => ref
+                              .read(downloadQueueProvider.notifier)
+                              .togglePause(),
+                          icon: Icon(
+                            isPaused
+                                ? Icons.play_arrow_rounded
+                                : Icons.pause_rounded,
+                            size: 20,
+                          ),
+                          tooltip: isPaused
+                              ? context.l10n.actionResume
+                              : context.l10n.actionPause,
+                          color: colorScheme.onSurfaceVariant,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              _showClearAllDialog(context, ref, colorScheme),
+                          icon: const Icon(Icons.clear_all_rounded, size: 20),
+                          tooltip: context.l10n.queueClearAll,
+                          color: colorScheme.error,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ],
-            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildQueueItemsSliver(BuildContext context, ColorScheme colorScheme) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final queueIdsSnapshot = ref.watch(
-          downloadQueueLookupProvider.select(
-            (lookup) => _QueueItemIdsSnapshot(lookup.itemIds),
+  Future<void> _confirmCancelDownload(
+    BuildContext context,
+    DownloadItem item,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.cancelDownloadTitle),
+        content: Text(context.l10n.cancelDownloadContent(item.track.name)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(context.l10n.cancelDownloadKeep),
           ),
-        );
-        if (queueIdsSnapshot.ids.isEmpty) {
-          return const SliverToBoxAdapter(child: SizedBox.shrink());
-        }
-        return SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            final itemId = queueIdsSnapshot.ids[index];
-            return _QueueItemSliverRow(
-              key: ValueKey(itemId),
-              itemId: itemId,
-              colorScheme: colorScheme,
-              itemBuilder: _buildQueueItem,
-            );
-          }, childCount: queueIdsSnapshot.ids.length),
-        );
-      },
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(context.l10n.dialogCancel),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      ref.read(downloadQueueProvider.notifier).dismissItem(item.id);
+    }
+  }
+
+  Widget _buildDownloadGridItem(
+    BuildContext context,
+    DownloadItem item,
+    ColorScheme colorScheme,
+  ) {
+    final radius = BorderRadius.circular(8);
+    final isDownloading = item.status == DownloadStatus.downloading;
+    final isFinalizing = item.status == DownloadStatus.finalizing;
+    final isQueued = item.status == DownloadStatus.queued;
+    final isFailed = item.status == DownloadStatus.failed;
+    final progress = item.progress.clamp(0.0, 1.0);
+    final pct = (progress * 100).round();
+
+    final cover = item.track.coverUrl != null
+        ? CachedCoverImage(
+            imageUrl: item.track.coverUrl!,
+            borderRadius: radius,
+            fadeInDuration: const Duration(milliseconds: 180),
+          )
+        : Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: radius,
+            ),
+            child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
+          );
+
+    final onTap = isFailed || item.status == DownloadStatus.skipped
+        ? () => ref.read(downloadQueueProvider.notifier).removeItem(item.id)
+        : () => _confirmCancelDownload(context, item);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ClipRRect(borderRadius: radius, child: cover),
+                if (isDownloading || isFinalizing || isQueued)
+                  ClipRRect(
+                    borderRadius: radius,
+                    child: ColoredBox(
+                      color: Colors.black.withValues(alpha: 0.45),
+                    ),
+                  ),
+                if (isDownloading || isFinalizing || isQueued)
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 34,
+                          height: 34,
+                          child: CircularProgressIndicator(
+                            value: (isFinalizing || isQueued || progress <= 0)
+                                ? null
+                                : progress,
+                            strokeWidth: 3,
+                            color: Colors.white,
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.25,
+                            ),
+                          ),
+                        ),
+                        if (isDownloading && progress > 0) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            '$pct%',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                if (isFailed)
+                  Positioned(
+                    right: 4,
+                    top: 4,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: colorScheme.errorContainer,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.error_outline,
+                        color: colorScheme.error,
+                        size: 14,
+                      ),
+                    ),
+                  ),
+                if (item.track.hasAudioQuality)
+                  Positioned(
+                    left: 4,
+                    top: 4,
+                    child: AudioQualityBadge(
+                      label: item.track.audioQuality!,
+                      colorScheme: colorScheme,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            item.track.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+          ),
+          Text(
+            item.track.artistName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBridgeGridItem(
+    BuildContext context,
+    Track track,
+    ColorScheme colorScheme,
+  ) {
+    final radius = BorderRadius.circular(8);
+    final cover = track.coverUrl != null
+        ? CachedCoverImage(imageUrl: track.coverUrl!, borderRadius: radius)
+        : Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: radius,
+            ),
+            child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
+          );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AspectRatio(
+          aspectRatio: 1,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              ClipRRect(borderRadius: radius, child: cover),
+              if (track.hasAudioQuality)
+                Positioned(
+                  left: 4,
+                  top: 4,
+                  child: AudioQualityBadge(
+                    label: track.audioQuality!,
+                    colorScheme: colorScheme,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          track.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+        ),
+        Text(
+          track.artistName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(
+            context,
+          ).textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBridgeListItem(
+    BuildContext context,
+    Track track,
+    ColorScheme colorScheme,
+  ) {
+    final coverSize = _queueCoverSize();
+    final radius = BorderRadius.circular(8);
+    final cover = track.coverUrl != null
+        ? CachedCoverImage(
+            imageUrl: track.coverUrl!,
+            width: coverSize,
+            height: coverSize,
+            borderRadius: radius,
+          )
+        : Container(
+            width: coverSize,
+            height: coverSize,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: radius,
+            ),
+            child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
+          );
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            cover,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    track.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    track.artistName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -3519,6 +3863,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     required LibraryCollectionsState collectionState,
     required bool hasMoreLibrary,
     required bool isPageLoading,
+    double bottomInset = 0,
   }) {
     final historyItems = filterData.historyItems;
     final showFilteringIndicator = filterData.showFilteringIndicator;
@@ -3546,6 +3891,140 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         localNavigationIndexByUnifiedId[item.id] = localNavigationItems.length;
         localNavigationItems.add(localItem);
       }
+    }
+
+    final activeDownloadIds = filterMode == 'albums'
+        ? const <String>[]
+        : ref
+              .watch(
+                downloadQueueLookupProvider.select((lookup) {
+                  final ids = <String>[];
+                  for (final id in lookup.itemIds) {
+                    final entry = lookup.byItemId[id];
+                    if (entry != null &&
+                        entry.status != DownloadStatus.completed) {
+                      ids.add(id);
+                    }
+                  }
+                  return _QueueItemIdsSnapshot(ids);
+                }),
+              )
+              .ids
+              .reversed
+              .toList(growable: false);
+
+    final libIdSet = <String>{for (final item in filteredUnifiedItems) item.id};
+    List<String> bridgeIds = const [];
+    if (filterMode != 'albums' && _completionBridge.isNotEmpty) {
+      final now = DateTime.now();
+      final stale = <String>[];
+      final pending = <String>[];
+      _completionBridge.forEach((id, _) {
+        final landed = libIdSet.contains('dl_$id');
+        final addedAt = _completionBridgeAt[id];
+        final expired =
+            addedAt == null || now.difference(addedAt).inSeconds >= 6;
+        if (landed || expired || activeDownloadIds.contains(id)) {
+          stale.add(id);
+        } else {
+          pending.add(id);
+        }
+      });
+      bridgeIds = pending;
+      if (stale.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          var changed = false;
+          for (final id in stale) {
+            if (_completionBridge.remove(id) != null) changed = true;
+            _completionBridgeAt.remove(id);
+            _bridgePrecacheStarted.remove(id);
+          }
+          if (changed) setState(() {});
+        });
+      }
+      final toPrecache = pending
+          .where((id) => !_bridgePrecacheStarted.contains(id))
+          .toList(growable: false);
+      if (toPrecache.isNotEmpty) {
+        final historyItems = ref.read(downloadHistoryProvider).items;
+        for (final id in toPrecache) {
+          DownloadHistoryItem? historyItem;
+          for (final h in historyItems) {
+            if (h.id == id) {
+              historyItem = h;
+              break;
+            }
+          }
+          if (historyItem == null) continue;
+          _bridgePrecacheStarted.add(id);
+          final coverUrl = historyItem.coverUrl;
+          final embeddedPath = _resolveDownloadedEmbeddedCoverPath(
+            historyItem.filePath,
+          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            try {
+              if (embeddedPath != null) {
+                precacheImage(FileImage(File(embeddedPath)), context);
+              }
+              if (coverUrl != null && coverUrl.isNotEmpty) {
+                precacheImage(
+                  CachedNetworkImageProvider(
+                    coverUrl,
+                    cacheManager: CoverCacheManager.instance,
+                  ),
+                  context,
+                );
+              }
+            } catch (_) {}
+          });
+        }
+      }
+    }
+
+    final leadCount = activeDownloadIds.length + bridgeIds.length;
+
+    Widget leadGridCell(int index) {
+      if (index < activeDownloadIds.length) {
+        final id = activeDownloadIds[index];
+        return _QueueItemSliverRow(
+          key: ValueKey('dlgrid_$id'),
+          itemId: id,
+          colorScheme: colorScheme,
+          itemBuilder: _buildDownloadGridItem,
+        );
+      }
+      final bridgeId = bridgeIds[index - activeDownloadIds.length];
+      return KeyedSubtree(
+        key: ValueKey('dlgrid_bridge_$bridgeId'),
+        child: _buildBridgeGridItem(
+          context,
+          _completionBridge[bridgeId]!,
+          colorScheme,
+        ),
+      );
+    }
+
+    Widget leadListCell(int index) {
+      if (index < activeDownloadIds.length) {
+        final id = activeDownloadIds[index];
+        return _QueueItemSliverRow(
+          key: ValueKey('dllist_$id'),
+          itemId: id,
+          colorScheme: colorScheme,
+          itemBuilder: _buildQueueItem,
+        );
+      }
+      final bridgeId = bridgeIds[index - activeDownloadIds.length];
+      return KeyedSubtree(
+        key: ValueKey('dllist_bridge_$bridgeId'),
+        child: _buildBridgeListItem(
+          context,
+          _completionBridge[bridgeId]!,
+          colorScheme,
+        ),
+      );
     }
 
     final content = CustomScrollView(
@@ -3650,19 +4129,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             ),
           ),
 
-        if (historyItems.isNotEmpty && hasQueueItems)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
-                context.l10n.queueDownloadedHeader,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-
         if (showFilteringIndicator)
           SliverToBoxAdapter(
             child: Padding(
@@ -3688,6 +4154,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
               ),
             ),
           ),
+
+        if (filterMode == 'all') _buildQueueHeaderSliver(context, colorScheme),
 
         if (filterMode == 'albums' &&
             (filteredGroupedAlbums.isNotEmpty ||
@@ -3751,7 +4219,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                         filteredUnifiedItems: filteredUnifiedItems,
                       );
                     }
-                    final trackIndex = index - collectionCount;
+                    final afterCollections = index - collectionCount;
+                    if (afterCollections < leadCount) {
+                      return leadGridCell(afterCollections);
+                    }
+                    final trackIndex = afterCollections - leadCount;
                     if (trackIndex < filteredUnifiedItems.length) {
                       final item = filteredUnifiedItems[trackIndex];
                       return KeyedSubtree(
@@ -3796,6 +4268,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                     return const SizedBox.shrink();
                   },
                   childCount:
+                      leadCount +
                       _getVisibleCollectionEntries(collectionState).length +
                       filteredUnifiedItems.length,
                 ),
@@ -3818,7 +4291,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                       filteredUnifiedItems: filteredUnifiedItems,
                     );
                   }
-                  final trackIndex = index - collectionCount;
+                  final afterCollections = index - collectionCount;
+                  if (afterCollections < leadCount) {
+                    return leadListCell(afterCollections);
+                  }
+                  final trackIndex = afterCollections - leadCount;
                   if (trackIndex < filteredUnifiedItems.length) {
                     final item = filteredUnifiedItems[trackIndex];
                     return KeyedSubtree(
@@ -3862,6 +4339,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                   return const SizedBox.shrink();
                 },
                 childCount:
+                    leadCount +
                     _getVisibleCollectionEntries(collectionState).length +
                     filteredUnifiedItems.length,
               ),
@@ -3897,7 +4375,11 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             ),
           ),
 
-        if (filteredUnifiedItems.isNotEmpty && filterMode == 'singles')
+        if (filterMode == 'singles')
+          _buildQueueHeaderSliver(context, colorScheme),
+
+        if ((filteredUnifiedItems.isNotEmpty || leadCount > 0) &&
+            filterMode == 'singles')
           historyViewMode == 'grid'
               ? SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -3907,7 +4389,10 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.66,
                     delegate: SliverChildBuilderDelegate((context, index) {
-                      final item = filteredUnifiedItems[index];
+                      if (index < leadCount) {
+                        return leadGridCell(index);
+                      }
+                      final item = filteredUnifiedItems[index - leadCount];
                       return KeyedSubtree(
                         key: ValueKey(item.id),
                         child: _buildUnifiedGridItem(
@@ -3922,12 +4407,15 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                               localNavigationIndexByUnifiedId[item.id],
                         ),
                       );
-                    }, childCount: filteredUnifiedItems.length),
+                    }, childCount: leadCount + filteredUnifiedItems.length),
                   ),
                 )
               : SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final item = filteredUnifiedItems[index];
+                    if (index < leadCount) {
+                      return leadListCell(index);
+                    }
+                    final item = filteredUnifiedItems[index - leadCount];
                     return KeyedSubtree(
                       key: ValueKey(item.id),
                       child: _buildUnifiedLibraryItem(
@@ -3942,7 +4430,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                             localNavigationIndexByUnifiedId[item.id],
                       ),
                     );
-                  }, childCount: filteredUnifiedItems.length),
+                  }, childCount: leadCount + filteredUnifiedItems.length),
                 ),
 
         if (!hasQueueItems &&
@@ -3981,6 +4469,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
           SliverToBoxAdapter(
             child: SizedBox(height: _isSelectionMode ? 100 : 16),
           ),
+        SliverToBoxAdapter(child: SizedBox(height: bottomInset)),
       ],
     );
 
@@ -4001,64 +4490,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       onScaleUpdate: _handleLibraryGridScaleUpdate,
       onScaleEnd: _handleLibraryGridScaleEnd,
       child: scrollAwareContent,
-    );
-  }
-
-  Widget _buildPauseResumeButton(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-  ) {
-    final isPaused = ref.watch(downloadQueueProvider.select((s) => s.isPaused));
-
-    return TextButton.icon(
-      onPressed: () {
-        ref.read(downloadQueueProvider.notifier).togglePause();
-      },
-      icon: Icon(isPaused ? Icons.play_arrow : Icons.pause, size: 18),
-      label: Text(
-        isPaused ? context.l10n.actionResume : context.l10n.actionPause,
-      ),
-      style: TextButton.styleFrom(
-        visualDensity: VisualDensity.compact,
-        foregroundColor: isPaused
-            ? colorScheme.primary
-            : colorScheme.onSurfaceVariant,
-      ),
-    );
-  }
-
-  Widget _buildClearAllButton(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-  ) {
-    return TextButton.icon(
-      onPressed: () => _showClearAllDialog(context, ref, colorScheme),
-      icon: const Icon(Icons.clear_all, size: 18),
-      label: Text(context.l10n.queueClearAll),
-      style: TextButton.styleFrom(
-        visualDensity: VisualDensity.compact,
-        foregroundColor: colorScheme.error,
-      ),
-    );
-  }
-
-  Widget _buildRetryAllFailedButton(
-    BuildContext context,
-    WidgetRef ref,
-    ColorScheme colorScheme,
-    int failedCount,
-  ) {
-    return TextButton.icon(
-      onPressed: () =>
-          ref.read(downloadQueueProvider.notifier).retryAllFailed(),
-      icon: const Icon(Icons.replay_rounded, size: 18),
-      label: Text(context.l10n.queueRetryAllFailed(failedCount)),
-      style: TextButton.styleFrom(
-        visualDensity: VisualDensity.compact,
-        foregroundColor: colorScheme.primary,
-      ),
     );
   }
 
@@ -5635,13 +6066,37 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         showSuccess: isCompleted,
         child: Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: isCompleted ? () => _navigateToMetadataScreen(item) : null,
             borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
+            child: Stack(
+              children: [
+                if (item.status == DownloadStatus.downloading)
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        widthFactor: item.progress.clamp(0.0, 1.0),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                colorScheme.primary.withValues(alpha: 0.16),
+                                colorScheme.primary.withValues(alpha: 0.04),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
                   isCompleted
                       ? Hero(
                           tag: 'cover_${item.id}',
@@ -5671,31 +6126,28 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
                         if (item.status == DownloadStatus.downloading) ...[
-                          const SizedBox(height: 6),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              _formatDownloadProgressLabel(context, item),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.right,
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: item.progress > 0 ? item.progress : null,
-                              backgroundColor:
-                                  colorScheme.surfaceContainerHighest,
-                              color: colorScheme.primary,
-                              minHeight: 6,
-                            ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.download_rounded,
+                                size: 12,
+                                color: colorScheme.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  _formatDownloadStatusLine(context, item),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                         if (item.status == DownloadStatus.failed) ...[
@@ -5713,6 +6165,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                   _buildActionButtons(context, item, colorScheme),
                 ],
               ),
+            ),
+              ],
             ),
           ),
         ),
@@ -5780,13 +6234,14 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   Widget _buildCoverArt(DownloadItem item, ColorScheme colorScheme) {
     final coverSize = _queueCoverSize();
+    final radius = BorderRadius.circular(8);
 
-    return item.track.coverUrl != null
+    final cover = item.track.coverUrl != null
         ? CachedCoverImage(
             imageUrl: item.track.coverUrl!,
             width: coverSize,
             height: coverSize,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: radius,
             fadeInDuration: const Duration(milliseconds: 180),
             fadeOutDuration: const Duration(milliseconds: 90),
           )
@@ -5795,10 +6250,57 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             height: coverSize,
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: radius,
             ),
             child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
           );
+
+    final isDownloading =
+        item.status == DownloadStatus.downloading ||
+        item.status == DownloadStatus.finalizing;
+    if (!isDownloading) return cover;
+
+    final progress = item.progress.clamp(0.0, 1.0);
+    final indeterminate =
+        item.status == DownloadStatus.finalizing || progress <= 0;
+
+    return SizedBox(
+      width: coverSize,
+      height: coverSize,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          cover,
+          ClipRRect(
+            borderRadius: radius,
+            child: ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
+          ),
+          Center(
+            child: SizedBox(
+              width: coverSize * 0.6,
+              height: coverSize * 0.6,
+              child: CircularProgressIndicator(
+                value: indeterminate ? null : progress,
+                strokeWidth: 3,
+                color: Colors.white,
+                backgroundColor: Colors.white.withValues(alpha: 0.25),
+              ),
+            ),
+          ),
+          if (!indeterminate)
+            Center(
+              child: Text(
+                '${(progress * 100).round()}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Widget _buildActionButtons(
@@ -6023,10 +6525,24 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
     Widget fadeInFileImage(Widget child, int? frame, bool wasSync) {
       if (wasSync) return child;
+      final Widget backdrop;
+      if (isDownloaded && item.coverUrl != null) {
+        backdrop = CachedCoverImage(
+          imageUrl: item.coverUrl!,
+          width: size,
+          height: size,
+          memCacheWidth: cacheSize,
+          memCacheHeight: cacheSize,
+          placeholder: (context, url) => buildPlaceholder(),
+          errorWidget: (context, url, error) => buildPlaceholder(),
+        );
+      } else {
+        backdrop = buildPlaceholder(isLocal: !isDownloaded);
+      }
       final animated = Stack(
         fit: StackFit.expand,
         children: [
-          buildPlaceholder(isLocal: !isDownloaded),
+          backdrop,
           AnimatedOpacity(
             opacity: frame == null ? 0.0 : 1.0,
             duration: const Duration(milliseconds: 180),

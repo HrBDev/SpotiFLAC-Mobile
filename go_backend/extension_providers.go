@@ -2532,12 +2532,26 @@ func DownloadWithExtensionFallback(req DownloadRequest) (*DownloadResponse, erro
 				StartItemProgress(req.ItemID)
 			}
 
-			// Fallback provider: request its own highest quality, not the
-			// source provider's quality token.
+			// Honor the requested quality when this provider recognizes it
+			// (e.g. an explicit user selection). Only when the token is not
+			// one of this provider's own options do we fall back to its
+			// highest quality, since a source provider's token may not map.
 			fallbackQuality := req.Quality
 			if len(ext.Manifest.QualityOptions) > 0 {
-				if best := strings.TrimSpace(ext.Manifest.QualityOptions[0].ID); best != "" {
-					fallbackQuality = best
+				requested := strings.TrimSpace(req.Quality)
+				recognized := false
+				if requested != "" {
+					for _, opt := range ext.Manifest.QualityOptions {
+						if strings.EqualFold(strings.TrimSpace(opt.ID), requested) {
+							recognized = true
+							break
+						}
+					}
+				}
+				if !recognized {
+					if best := strings.TrimSpace(ext.Manifest.QualityOptions[0].ID); best != "" {
+						fallbackQuality = best
+					}
 				}
 			}
 

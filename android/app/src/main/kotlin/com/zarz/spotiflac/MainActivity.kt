@@ -148,8 +148,15 @@ class MainActivity: FlutterFragmentActivity() {
             "mali-t7",
             "powervr sgx",
             "powervr ge8320",
+            "vivante",
             "gc1000",
             "gc2000",
+            "gc4000",
+            "gc5000",
+            "gc7000",
+            "gc8000",
+            "gc820",
+            "gc880",
         )
 
         private val PROBLEMATIC_CHIPSETS = listOf(
@@ -163,6 +170,15 @@ class MainActivity: FlutterFragmentActivity() {
             "apq8084",
         )
 
+        // Sony Walkman / audio players report MANUFACTURER "SonyAudio" (distinct
+        // from Xperia phones, which use "Sony"). They ship legacy Vivante GPUs
+        // whose drivers crash in glLinkProgram with Impeller shaders, and the GL
+        // renderer string is unavailable when shell args are built, so match on
+        // the manufacturer instead.
+        private val PROBLEMATIC_MANUFACTURERS = listOf(
+            "sonyaudio",
+        )
+
         private val PROBLEMATIC_MODELS = listOf(
             "sm-t220",
             "sm-t225",
@@ -173,6 +189,14 @@ class MainActivity: FlutterFragmentActivity() {
             val board = Build.BOARD.lowercase(Locale.ROOT)
             val model = Build.MODEL.lowercase(Locale.ROOT)
             val device = Build.DEVICE.lowercase(Locale.ROOT)
+            val manufacturer = Build.MANUFACTURER.lowercase(Locale.ROOT)
+
+            for (problematicManufacturer in PROBLEMATIC_MANUFACTURERS) {
+                if (manufacturer.contains(problematicManufacturer)) {
+                    android.util.Log.i("SpotiFLAC", "Matched problematic manufacturer: $problematicManufacturer")
+                    return true
+                }
+            }
 
             for (problematicModel in PROBLEMATIC_MODELS) {
                 if (model.contains(problematicModel) || device.contains(problematicModel)) {

@@ -1529,6 +1529,29 @@ func WriteM4AFreeformTags(filePath, metadataJSON string) (string, error) {
 	return string(jsonBytes), nil
 }
 
+// EnsureAC4Config normalizes a decrypted AC-4 file to a standards-compliant ISO
+// MP4 and injects the dac4 configuration box copied from sourcePath. No-op when
+// the file is not AC-4.
+func EnsureAC4Config(filePath, sourcePath string) (string, error) {
+	if err := EnsureAC4ConfigBox(filePath, sourcePath); err != nil {
+		return "", fmt.Errorf("failed to finalize AC-4 container: %w", err)
+	}
+	return `{"success":true}`, nil
+}
+
+// WriteAC4Metadata writes iTunes-style metadata into an AC-4 MP4. The JSON
+// "handled" field reports whether the file was AC-4 (true) so the caller can
+// skip the FFmpeg metadata pass that would re-wrap it as QuickTime.
+func WriteAC4Metadata(filePath, metadataJSON, coverPath string) (string, error) {
+	handled, err := WriteAC4MetadataIfApplicable(filePath, metadataJSON, coverPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to write AC-4 metadata: %w", err)
+	}
+	resp := map[string]any{"success": true, "handled": handled}
+	jsonBytes, _ := json.Marshal(resp)
+	return string(jsonBytes), nil
+}
+
 // EditFileMetadata writes audio file tags: FLAC via native Go library, MP3/Opus returns map for Dart/FFmpeg.
 func EditFileMetadata(filePath, metadataJSON string) (string, error) {
 	var fields map[string]string

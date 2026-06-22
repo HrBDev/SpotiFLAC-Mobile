@@ -2680,6 +2680,33 @@ class MainActivity: FlutterFragmentActivity() {
                             }
                             result.success(response)
                         }
+                        "ensureAC4Config" -> {
+                            val filePath = call.argument<String>("file_path") ?: ""
+                            val sourcePath = call.argument<String>("source_path") ?: ""
+                            val response = withContext(Dispatchers.IO) {
+                                try {
+                                    Gobackend.ensureAC4Config(filePath, sourcePath)
+                                } catch (e: Exception) {
+                                    android.util.Log.e("SpotiFLAC", "ensureAC4Config failed: ${e.message}", e)
+                                    """{"error":"${e.message?.replace("\"", "'")}"}"""
+                                }
+                            }
+                            result.success(response)
+                        }
+                        "writeAC4Metadata" -> {
+                            val filePath = call.argument<String>("file_path") ?: ""
+                            val metadataJson = call.argument<String>("metadata_json") ?: "{}"
+                            val coverPath = call.argument<String>("cover_path") ?: ""
+                            val response = withContext(Dispatchers.IO) {
+                                try {
+                                    Gobackend.writeAC4Metadata(filePath, metadataJson, coverPath)
+                                } catch (e: Exception) {
+                                    android.util.Log.e("SpotiFLAC", "writeAC4Metadata failed: ${e.message}", e)
+                                    """{"error":"${e.message?.replace("\"", "'")}"}"""
+                                }
+                            }
+                            result.success(response)
+                        }
                         "writeTempToSaf" -> {
                             val tempPath = call.argument<String>("temp_path") ?: ""
                             val safUri = call.argument<String>("saf_uri") ?: ""

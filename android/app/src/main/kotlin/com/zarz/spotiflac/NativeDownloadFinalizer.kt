@@ -422,16 +422,19 @@ object NativeDownloadFinalizer {
         try {
             for (candidate in decryptionKeyCandidates(key)) {
                 checkCancelled(shouldCancel)
-                val attempts = mutableListOf<Pair<String, Boolean>>()
-                attempts.add(outputPath to (preferredExt == ".flac"))
+                val attempts = mutableListOf<Triple<String, Boolean, Boolean>>()
+                attempts.add(Triple(outputPath, preferredExt == ".flac", false))
                 if (preferredExt == ".flac") {
-                    attempts.add(buildOutputPath(localInput, ".m4a") to false)
+                    attempts.add(Triple(buildOutputPath(localInput, ".m4a"), false, false))
                 }
                 if (preferredExt == ".flac" || preferredExt == ".m4a") {
-                    attempts.add(buildOutputPath(localInput, ".mp4") to false)
+                    attempts.add(Triple(buildOutputPath(localInput, ".mp4"), false, false))
                 }
+                // MOV muxer fallback for codecs the MP4 muxer rejects (e.g. AC-4):
+                // keeps the .mp4 filename but stores the codec params.
+                attempts.add(Triple(buildOutputPath(localInput, ".mp4"), false, true))
 
-                for ((candidateOutput, mapAudioOnly) in attempts) {
+                for ((candidateOutput, mapAudioOnly, forceMov) in attempts) {
                     try {
                         val audioMap = if (mapAudioOnly) "-map 0:a " else ""
                         // Force the flac muxer when the target extension is
@@ -439,7 +442,11 @@ object NativeDownloadFinalizer {
                         // stream layout, producing FLAC-in-MP4 under a .flac
                         // filename which downstream native FLAC tag writers
                         // cannot read.
-                        val muxerOverride = if (candidateOutput.lowercase(Locale.ROOT).endsWith(".flac")) "-f flac " else ""
+                        val muxerOverride = when {
+                            forceMov -> "-f mov "
+                            candidateOutput.lowercase(Locale.ROOT).endsWith(".flac") -> "-f flac "
+                            else -> ""
+                        }
                         val command = "-v error -decryption_key ${q(candidate)} -f $inputFormat -i ${q(localInput)} ${audioMap}-c copy ${muxerOverride}${q(candidateOutput)} -y"
                         val result = runFFmpeg(command, shouldCancel)
                         lastOutput = result.second
@@ -1159,18 +1166,28 @@ object NativeDownloadFinalizer {
         val mp3Flags = if (format == "mp3") "-id3v2_version 3 " else ""
         var adoptedTemp = false
         var originalDeleted = false
-        try {
-            val command = if (isM4a && coverFile != null) {
+
+        fun buildEmbedCommand(forceMov: Boolean): String {
+            return if (isM4a && coverFile != null) {
                 "-v error -hide_banner -i ${q(path)} -i ${q(coverFile.absolutePath)} " +
                     "-map 0:a -c:a copy -map_metadata 0 -map 1:v -c:v copy " +
                     "-disposition:v:0 attached_pic " +
                     "-metadata:s:v ${q("title=Album cover")} " +
                     "-metadata:s:v ${q("comment=Cover (front)")} " +
-                    "$metadataArgs -f mp4 ${q(temp.absolutePath)} -y"
+                    "$metadataArgs -f ${if (forceMov) "mov" else "mp4"} ${q(temp.absolutePath)} -y"
             } else {
-                "-v error -hide_banner -i ${q(path)} -map 0 -c copy -map_metadata 0 $metadataArgs $mp3Flags${q(temp.absolutePath)} -y"
+                val movFlag = if (forceMov) "-f mov " else ""
+                "-v error -hide_banner -i ${q(path)} -map 0 -c copy -map_metadata 0 $metadataArgs $mp3Flags$movFlag${q(temp.absolutePath)} -y"
             }
-            val result = runFFmpeg(command)
+        }
+
+        try {
+            var result = runFFmpeg(buildEmbedCommand(false))
+            // MOV muxer fallback for codecs the MP4 muxer rejects (e.g. AC-4).
+            if (!result.first && (isM4a || ext.equals(".mp4", ignoreCase = true))) {
+                temp.delete()
+                result = runFFmpeg(buildEmbedCommand(true))
+            }
             if (result.first && temp.exists()) {
                 if (inputFile.delete()) {
                     originalDeleted = true

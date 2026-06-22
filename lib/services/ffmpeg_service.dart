@@ -483,6 +483,7 @@ class FFmpegService {
       String outputPath, {
       required bool mapAudioOnly,
       required String key,
+      bool forceMovMuxer = false,
     }) {
       final audioMap = mapAudioOnly ? '-map 0:a ' : '';
       // Force MOV demuxer: -decryption_key is only supported by the MOV/MP4
@@ -494,7 +495,12 @@ class FFmpegService {
       // extension AND keeps the input container's stream layout, which for
       // FLAC-in-MP4 sources would still emit an ISO-BMFF payload under a
       // .flac filename. That file fails native FLAC tag writers later on.
-      final muxerOverride = outputPath.toLowerCase().endsWith('.flac')
+      //
+      // forceMovMuxer routes through the MOV muxer for codecs the MP4 muxer
+      // rejects (e.g. AC-4), keeping the .mp4 filename.
+      final muxerOverride = forceMovMuxer
+          ? '-f mov '
+          : outputPath.toLowerCase().endsWith('.flac')
           ? '-f flac '
           : '';
       return '-v error -decryption_key "$key" -f $demuxerFormat -i "$inputPath" $audioMap-c copy $muxerOverride"$outputPath" -y';
@@ -552,6 +558,24 @@ class FFmpegService {
         if (mp4FallbackResult.success) {
           tempOutput = mp4FallbackOutput;
           result = mp4FallbackResult;
+        }
+      }
+
+      // Final fallback: force the MOV muxer for codecs the MP4 muxer rejects
+      // (e.g. AC-4). MOV stores the codec params and keeps the .mp4 filename.
+      if (!result.success) {
+        final movFallbackOutput = _buildOutputPath(inputPath, '.mp4');
+        final movFallbackResult = await _execute(
+          buildDecryptCommand(
+            movFallbackOutput,
+            mapAudioOnly: false,
+            key: keyCandidate,
+            forceMovMuxer: true,
+          ),
+        );
+        if (movFallbackResult.success) {
+          tempOutput = movFallbackOutput;
+          result = movFallbackResult;
         }
       }
 
@@ -1974,69 +1998,88 @@ class FFmpegService {
   }) async {
     final tempDir = await getTemporaryDirectory();
     final tempOutput = _nextTempEmbedPath(tempDir.path, '.m4a');
-    final arguments = <String>['-v', 'error', '-hide_banner', '-i', m4aPath];
 
     final normalizedCoverPath = coverPath?.trim();
     final hasCover =
         normalizedCoverPath != null &&
         normalizedCoverPath.isNotEmpty &&
         await File(normalizedCoverPath).exists();
-    if (hasCover) {
-      arguments
-        ..add('-i')
-        ..add(normalizedCoverPath);
-    }
-
     final preserveExistingStreams = preserveMetadata && !hasCover;
-    if (preserveExistingStreams) {
-      // When no replacement cover is provided, preserve all input streams so
-      // the existing attached artwork is not dropped during the metadata rewrite.
-      arguments
-        ..add('-map')
-        ..add('0')
-        ..add('-c')
-        ..add('copy');
-    } else {
-      arguments
-        ..add('-map')
-        ..add('0:a')
-        ..add('-c:a')
-        ..add('copy');
-    }
-    arguments
-      ..add('-map_metadata')
-      ..add(preserveMetadata ? '0' : '-1');
 
-    // For M4A cover replacements, mark the image as an attached picture so the
-    // mp4 muxer writes a proper covr atom instead of a generic MJPEG video track.
-    // Force the mp4 muxer because the default ipod muxer (auto-selected for .m4a)
-    // does not register a codec tag for mjpeg on FFmpeg 8.0+.
-    if (hasCover) {
+    List<String> buildArgs(bool forceMov) {
+      final arguments = <String>['-v', 'error', '-hide_banner', '-i', m4aPath];
+      if (hasCover) {
+        arguments
+          ..add('-i')
+          ..add(normalizedCoverPath);
+      }
+      if (preserveExistingStreams) {
+        // When no replacement cover is provided, preserve all input streams so
+        // the existing attached artwork is not dropped during the metadata rewrite.
+        arguments
+          ..add('-map')
+          ..add('0')
+          ..add('-c')
+          ..add('copy');
+      } else {
+        arguments
+          ..add('-map')
+          ..add('0:a')
+          ..add('-c:a')
+          ..add('copy');
+      }
       arguments
-        ..add('-map')
-        ..add('1:v')
-        ..add('-c:v')
-        ..add('copy')
-        ..add('-disposition:v:0')
-        ..add('attached_pic')
-        ..add('-metadata:s:v')
-        ..add('title=Album cover')
-        ..add('-metadata:s:v')
-        ..add('comment=Cover (front)')
-        ..add('-f')
-        ..add('mp4');
-    }
+        ..add('-map_metadata')
+        ..add(preserveMetadata ? '0' : '-1');
 
-    if (metadata != null) {
-      _appendMappedMetadataToArguments(arguments, _convertToM4aTags(metadata));
-    }
+      if (hasCover) {
+        // Mark the image as an attached picture so the container writes a proper
+        // covr atom instead of a generic MJPEG video track.
+        arguments
+          ..add('-map')
+          ..add('1:v')
+          ..add('-c:v')
+          ..add('copy')
+          ..add('-disposition:v:0')
+          ..add('attached_pic')
+          ..add('-metadata:s:v')
+          ..add('title=Album cover')
+          ..add('-metadata:s:v')
+          ..add('comment=Cover (front)');
+      }
 
-    arguments
-      ..add(tempOutput)
-      ..add('-y');
+      if (metadata != null) {
+        _appendMappedMetadataToArguments(arguments, _convertToM4aTags(metadata));
+      }
+
+      // MOV muxer accepts codecs the MP4 muxer rejects (e.g. AC-4). The default
+      // (no -f) keeps the ipod muxer for plain .m4a; cover writes force mp4.
+      if (forceMov) {
+        arguments
+          ..add('-f')
+          ..add('mov');
+      } else if (hasCover) {
+        arguments
+          ..add('-f')
+          ..add('mp4');
+      }
+
+      arguments
+        ..add(tempOutput)
+        ..add('-y');
+      return arguments;
+    }
 
     _log.d('Executing FFmpeg M4A embed command');
-    final result = await _executeWithArguments(arguments);
+    var result = await _executeWithArguments(buildArgs(false));
+    if (!result.success) {
+      _log.w('M4A embed failed with default muxer, retrying with mov muxer');
+      try {
+        final stale = File(tempOutput);
+        if (await stale.exists()) await stale.delete();
+      } catch (_) {}
+      result = await _executeWithArguments(buildArgs(true));
+    }
 
     if (result.success) {
       try {

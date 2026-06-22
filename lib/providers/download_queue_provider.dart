@@ -4878,6 +4878,47 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
           ? coverPath
           : null;
 
+      // AC-4 is passthrough-only: the FFmpeg mov muxer would re-wrap it as
+      // QuickTime and break the ISO MP4 from decryption. writeAC4Metadata is a
+      // no-op for non-AC-4 files, so other m4a downloads fall through to FFmpeg.
+      if (isM4a) {
+        try {
+          final ac4Meta = <String, String>{
+            'title': track.name,
+            'artist': track.artistName,
+            'album': track.albumName,
+            'albumArtist': ?albumArtist,
+            if (track.releaseDate != null) 'date': track.releaseDate!,
+            if (genre != null && genre.isNotEmpty) 'genre': genre,
+            if (track.composer != null && track.composer!.isNotEmpty)
+              'composer': track.composer!,
+            if (track.trackNumber != null && track.trackNumber! > 0)
+              'trackNumber': track.trackNumber!.toString(),
+            if (track.totalTracks != null && track.totalTracks! > 0)
+              'totalTracks': track.totalTracks!.toString(),
+            if (track.discNumber != null && track.discNumber! > 0)
+              'discNumber': track.discNumber!.toString(),
+            if (track.totalDiscs != null && track.totalDiscs! > 0)
+              'totalDiscs': track.totalDiscs!.toString(),
+            if (track.isrc != null) 'isrc': track.isrc!,
+            if (label != null && label.isNotEmpty) 'label': label,
+            if (copyright != null && copyright.isNotEmpty) 'copyright': copyright,
+            if (shouldEmbedLyrics) 'lyrics': ?lrcContent,
+          };
+          final ac4Result = await PlatformBridge.writeAC4Metadata(
+            filePath,
+            ac4Meta,
+            validCover ?? '',
+          );
+          if (ac4Result['handled'] == true) {
+            _log.d('AC-4 metadata embedded natively for $format');
+            return;
+          }
+        } catch (e) {
+          _log.w('AC-4 metadata path failed, falling back to FFmpeg: $e');
+        }
+      }
+
       String? ffmpegResult;
       if (isFlac) {
         ffmpegResult = await FFmpegService.embedMetadata(
@@ -7565,6 +7606,14 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
                 return;
               }
 
+              // Repair AC-4 (dac4 + ISO MP4) using the still-present encrypted
+              // source. No-op for other codecs.
+              try {
+                await PlatformBridge.ensureAC4Config(decryptedTempPath, tempPath);
+              } catch (e) {
+                _log.w('AC-4 container repair skipped: $e');
+              }
+
               final dotIndex = decryptedTempPath.lastIndexOf('.');
               final decryptedExt = dotIndex >= 0
                   ? decryptedTempPath.substring(dotIndex).toLowerCase()
@@ -7617,10 +7666,11 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
               }
             }
           } else {
+            final encryptedSource = filePath;
             final decryptedPath = await FFmpegService.decryptWithDescriptor(
-              inputPath: filePath,
+              inputPath: encryptedSource,
               descriptor: decryptionDescriptor,
-              deleteOriginal: true,
+              deleteOriginal: false,
             );
             if (decryptedPath == null) {
               _log.e('FFmpeg decrypt failed for local file');
@@ -7631,10 +7681,20 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
                 errorType: DownloadErrorType.unknown,
               );
               try {
-                await deleteFile(filePath);
+                await deleteFile(encryptedSource);
               } catch (_) {}
               return;
             }
+            // Repair AC-4 (dac4 + ISO MP4) using the still-present encrypted
+            // source before discarding it. No-op for other codecs.
+            try {
+              await PlatformBridge.ensureAC4Config(decryptedPath, encryptedSource);
+            } catch (e) {
+              _log.w('AC-4 container repair skipped: $e');
+            }
+            try {
+              await deleteFile(encryptedSource);
+            } catch (_) {}
             filePath = decryptedPath;
             _log.i('Local decryption completed');
           }

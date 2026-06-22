@@ -809,6 +809,39 @@ class PlatformBridge {
     return _decodeRequiredMapResult(result, 'writeM4AFreeformTags');
   }
 
+  /// Normalizes a decrypted AC-4 file to a standards-compliant ISO MP4 and
+  /// injects the dac4 configuration box from the encrypted [sourcePath]. The
+  /// FFmpeg mov muxer drops dac4 and writes a QuickTime-flavored container that
+  /// players reject, so this repair is required for AC-4 to be playable.
+  static Future<Map<String, dynamic>> ensureAC4Config(
+    String filePath,
+    String sourcePath,
+  ) async {
+    final result = await _channel.invokeMethod('ensureAC4Config', {
+      'file_path': filePath,
+      'source_path': sourcePath,
+    });
+    return _decodeRequiredMapResult(result, 'ensureAC4Config');
+  }
+
+  /// Writes iTunes-style metadata (and cover art) into an AC-4 MP4. Returns a
+  /// map whose `handled` flag is `true` when the file was AC-4 and metadata was
+  /// written natively, signalling the caller to skip the FFmpeg metadata pass
+  /// (which would re-wrap the file as QuickTime).
+  static Future<Map<String, dynamic>> writeAC4Metadata(
+    String filePath,
+    Map<String, String> metadata,
+    String coverPath,
+  ) async {
+    final metadataJSON = jsonEncode(metadata);
+    final result = await _channel.invokeMethod('writeAC4Metadata', {
+      'file_path': filePath,
+      'metadata_json': metadataJSON,
+      'cover_path': coverPath,
+    });
+    return _decodeRequiredMapResult(result, 'writeAC4Metadata');
+  }
+
   /// Rewrites ARTIST/ALBUMARTIST Vorbis comments as multiple split entries
   /// using the native Go FLAC writer, fixing FFmpeg's tag deduplication.
   static Future<Map<String, dynamic>> rewriteSplitArtistTags(

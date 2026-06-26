@@ -13,6 +13,7 @@ import 'package:spotiflac_android/services/backup_service.dart';
 import 'package:spotiflac_android/services/history_database.dart';
 import 'package:spotiflac_android/utils/app_bar_layout.dart';
 import 'package:spotiflac_android/utils/logger.dart';
+import 'package:spotiflac_android/widgets/settings_group.dart';
 
 class BackupRestorePage extends ConsumerStatefulWidget {
   const BackupRestorePage({super.key});
@@ -275,121 +276,65 @@ class _BackupRestorePageState extends ConsumerState<BackupRestorePage> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _ActionCard(
-                    icon: Icons.backup_outlined,
-                    title: l10n.backupExportSectionTitle,
-                    description: l10n.backupExportSectionDescription,
-                    buttonLabel: l10n.backupExportButton,
-                    buttonIcon: Icons.ios_share,
-                    isBusy: _isExporting,
-                    onPressed: _isBusy ? null : _createBackup,
-                    extra: Padding(
-                      padding: const EdgeInsets.only(top: 4, bottom: 4),
-                      child: SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        value: _includeSecrets,
-                        onChanged: _isBusy
-                            ? null
-                            : (value) =>
-                                  setState(() => _includeSecrets = value),
-                        title: Text(l10n.backupIncludeSecrets),
-                        subtitle: Text(l10n.backupIncludeSecretsDescription),
-                        isThreeLine: true,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _ActionCard(
-                    icon: Icons.settings_backup_restore,
-                    title: l10n.backupImportSectionTitle,
-                    description: l10n.backupImportSectionDescription,
-                    buttonLabel: l10n.backupImportButton,
-                    buttonIcon: Icons.folder_open_outlined,
-                    isBusy: _isImporting,
-                    onPressed: _isBusy ? null : _restoreBackup,
-                  ),
-                ],
-              ),
+            child: SettingsSectionHeader(
+              title: l10n.backupExportSectionTitle,
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
-  final String buttonLabel;
-  final IconData buttonIcon;
-  final bool isBusy;
-  final VoidCallback? onPressed;
-  final Widget? extra;
-
-  const _ActionCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.buttonLabel,
-    required this.buttonIcon,
-    required this.isBusy,
-    required this.onPressed,
-    this.extra,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: colorScheme.primary),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+          SliverToBoxAdapter(
+            child: SettingsGroup(
+              children: [
+                SettingsSwitchItem(
+                  icon: Icons.vpn_key_outlined,
+                  title: l10n.backupIncludeSecrets,
+                  subtitle: l10n.backupIncludeSecretsDescription,
+                  value: _includeSecrets,
+                  onChanged: _isBusy
+                      ? null
+                      : (value) => setState(() => _includeSecrets = value),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            description,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+                SettingsItem(
+                  icon: Icons.ios_share,
+                  title: l10n.backupExportButton,
+                  subtitle: l10n.backupExportSectionDescription,
+                  onTap: _isBusy ? null : _createBackup,
+                  trailing: _isExporting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : null,
+                  showDivider: false,
+                ),
+              ],
             ),
           ),
-          ?extra,
-          const SizedBox(height: 16),          FilledButton.icon(
-            onPressed: onPressed,
-            icon: isBusy
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Icon(buttonIcon),
-            label: Text(buttonLabel),
+          SliverToBoxAdapter(
+            child: SettingsSectionHeader(
+              title: l10n.backupImportSectionTitle,
+            ),
           ),
+          SliverToBoxAdapter(
+            child: SettingsGroup(
+              children: [
+                SettingsItem(
+                  icon: Icons.settings_backup_restore,
+                  title: l10n.backupImportButton,
+                  subtitle: l10n.backupImportSectionDescription,
+                  onTap: _isBusy ? null : _restoreBackup,
+                  trailing: _isImporting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : null,
+                  showDivider: false,
+                ),
+              ],
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );

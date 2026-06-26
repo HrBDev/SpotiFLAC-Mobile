@@ -29,14 +29,14 @@ class DownloadItem {
   final DownloadStatus status;
   final double progress;
   final double speedMBps;
-  final int bytesReceived; // Bytes downloaded so far
+  final int bytesReceived;
   final int bytesTotal; // Total bytes when the server provides content length
   final String? filePath;
   final String? error;
   final DownloadErrorType? errorType;
   final DateTime createdAt;
-  final String? qualityOverride; // Override quality for this specific download
-  final String? playlistName; // Playlist context for folder organization
+  final String? qualityOverride;
+  final String? playlistName;
   final int? playlistPosition; // 1-based position in the source playlist
 
   const DownloadItem({

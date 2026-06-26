@@ -531,8 +531,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
   }
 
   bool _isStepCompleted(int step) {
-    if (step == 0) return true; // Welcome
-    if (step == 1) return true; // Language (always valid)
+    if (step == 0) return true;
+    if (step == 1) return true;
 
     final logicStep = step - 2;
 

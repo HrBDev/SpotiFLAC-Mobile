@@ -286,7 +286,6 @@ func (r *extensionRuntime) transformBlockCipher(call goja.FunctionCall, decrypt 
 	}
 	switch parsedOptions.Mode {
 	case "cbc", "ctr":
-		// supported
 	default:
 		return r.vm.ToValue(map[string]interface{}{
 			"success": false,

@@ -2027,8 +2027,6 @@ class PlatformBridge {
     return const <String, dynamic>{};
   }
 
-  // MARK: - iOS Security-Scoped Bookmark
-
   /// Create a security-scoped bookmark from a filesystem path picked by
   /// FilePicker on iOS. Must be called while the picker session is still active.
   /// Returns base64-encoded bookmark data, or null on failure.

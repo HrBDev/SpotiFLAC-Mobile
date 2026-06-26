@@ -15,11 +15,11 @@ class AppSettings {
   final String storageMode; // 'app' or 'saf'
   final String downloadTreeUri; // SAF persistable tree URI
   final bool autoFallback;
-  final bool embedMetadata; // Master switch for metadata/cover/lyrics embedding
+  final bool embedMetadata;
   final String
   artistTagMode; // 'joined' or 'split_vorbis' for Vorbis-based formats
   final bool embedLyrics;
-  final bool embedReplayGain; // Calculate and embed ReplayGain tags
+  final bool embedReplayGain;
   final bool maxQualityCover;
   final bool isFirstLaunch;
   final bool checkForUpdates;
@@ -50,7 +50,7 @@ class AppSettings {
   final bool
   useAllFilesAccess; // Android 13+ only: enable MANAGE_EXTERNAL_STORAGE
   final bool
-  autoExportFailedDownloads; // Auto export failed downloads to TXT file
+  autoExportFailedDownloads;
   final String
   downloadNetworkMode; // 'any' = WiFi + Mobile, 'wifi_only' = WiFi only
   final bool
@@ -62,20 +62,20 @@ class AppSettings {
   final bool
   nativeDownloadWorkerEnabled; // Experimental Android service-owned worker
 
-  final bool localLibraryEnabled; // Enable local library scanning
-  final String localLibraryPath; // Path to scan for audio files
+  final bool localLibraryEnabled;
+  final String localLibraryPath;
   final String
   localLibraryBookmark; // Base64-encoded iOS security-scoped bookmark
   final bool
-  localLibraryShowDuplicates; // Show indicator when searching for existing tracks
+  localLibraryShowDuplicates;
   final String
   localLibraryAutoScan; // Auto-scan mode: 'off', 'on_open', 'daily', 'weekly'
 
   final bool
-  hasCompletedTutorial; // Track if user has completed the app tutorial
+  hasCompletedTutorial;
 
   final List<String>
-  lyricsProviders; // Ordered list of enabled lyrics provider IDs
+  lyricsProviders;
   final bool
   lyricsIncludeTranslationNetease; // Append translated lyrics (Netease)
   final bool
@@ -91,8 +91,8 @@ class AppSettings {
   lastSeenVersion; // Last app version the user has acknowledged (e.g. '3.7.0')
 
   final bool
-  deduplicateDownloads; // Skip downloading tracks already present in history
-  final bool saveDownloadHistory; // Record completed downloads in local history
+  deduplicateDownloads;
+  final bool saveDownloadHistory;
 
   const AppSettings({
     this.defaultService = '',

@@ -121,10 +121,6 @@ Future<void> showAppAnnouncementDialog(
   required RemoteAnnouncement announcement,
   required VoidCallback onDismiss,
 }) {
-  // barrierDismissible is false so a stray tap outside the dialog can no longer
-  // close (and silently mark-as-seen) the notice. Dismissal — and the
-  // mark-as-seen side effect in onDismiss — only happens via the explicit close
-  // button or the CTA, both of which call onDismiss themselves.
   return showDialog<void>(
     context: context,
     barrierDismissible: false,

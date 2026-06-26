@@ -16,11 +16,6 @@ class AppTheme {
   // cost of the predictive-back preview animation.
   static const PageTransitionsTheme _pageTransitionsTheme = PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
-      // Android default is PredictiveBackPageTransitionsBuilder, whose
-      // _PredictiveBackGestureDetector mis-routes the back gesture to a nested
-      // Navigator (flutter#152323). For NON-gesture transitions that builder
-      // already delegates to FadeForwardsPageTransitionsBuilder, so we use it
-      // directly: identical push/pop animation, minus the buggy gesture detector.
       TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),

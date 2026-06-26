@@ -4539,14 +4539,13 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         .where((item) => _albumRgKey(item.track) == key)
         .toList();
 
-    // If any item is still in-flight, the album isn't complete yet.
     final pending = albumItemsInQueue.where(
       (item) =>
           item.status == DownloadStatus.queued ||
           item.status == DownloadStatus.downloading ||
           item.status == DownloadStatus.finalizing,
     );
-    if (pending.isNotEmpty) return; // still in progress
+    if (pending.isNotEmpty) return;
 
     // If any item is failed/skipped, the user might retry it later.
     // Don't finalize album RG with partial data — wait until all album
@@ -4556,7 +4555,7 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
           item.status == DownloadStatus.failed ||
           item.status == DownloadStatus.skipped,
     );
-    if (retryable.isNotEmpty) return; // still retryable
+    if (retryable.isNotEmpty) return;
 
     // The accumulator entries represent successfully scanned tracks.  Entries
     // are only added after a successful ReplayGain scan, removed on retry or
@@ -4696,7 +4695,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         }
         continue;
       }
-      // If any representative item is available, use its track.
       final representative = albumItems.first;
       _checkAndWriteAlbumReplayGain(representative.track);
     }

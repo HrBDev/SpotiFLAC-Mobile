@@ -334,7 +334,6 @@ object NativeDownloadFinalizer {
     }
 
     private fun currentStatus(@Suppress("UNUSED_PARAMETER") status: String) {
-        // Kept as a narrow hook for future richer progress snapshots.
     }
 
     private fun cleanupFailedFinalizationOutput(

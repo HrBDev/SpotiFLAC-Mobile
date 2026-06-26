@@ -41,8 +41,6 @@ const (
 	wavFormatExtensn = 0xFFFE
 )
 
-// ---------- low-level chunk size helpers ----------
-
 func putUint32(dst []byte, le bool, v uint32) {
 	if le {
 		binary.LittleEndian.PutUint32(dst, v)
@@ -94,8 +92,6 @@ func parseExtendedFloat80(b []byte) float64 {
 	}
 	return sign * float64(mantissa) * math.Pow(2, float64(exponent-16383-63))
 }
-
-// ---------- WAV (RIFF) ----------
 
 type wavProbe struct {
 	sampleRate int
@@ -289,8 +285,6 @@ func ReadWAVTags(filePath string) (*AudioMetadata, error) {
 	return meta, nil
 }
 
-// ---------- AIFF / AIFC ----------
-
 type aiffProbe struct {
 	sampleRate     int
 	bitDepth       int
@@ -443,8 +437,6 @@ func ReadAIFFTags(filePath string) (*AudioMetadata, error) {
 	return meta, nil
 }
 
-// ---------- ID3v2 reading from a buffered chunk ----------
-
 // readID3v2FromBytes parses an in-memory ID3v2 tag (the contents of a WAV "id3 "
 // or AIFF "ID3 " chunk) by reusing the existing frame parsers.
 func readID3v2FromBytes(data []byte) (*AudioMetadata, error) {
@@ -534,8 +526,6 @@ func extractAPICFromID3(tag []byte) ([]byte, string) {
 	}
 	return nil, ""
 }
-
-// ---------- ID3v2.4 building ----------
 
 // buildID3v24Tag builds a UTF-8 ID3v2.4 tag from metadata plus optional cover.
 func buildID3v24Tag(meta *AudioMetadata, coverData []byte, coverMIME string) []byte {
@@ -642,8 +632,6 @@ func buildID3v24Tag(meta *AudioMetadata, coverData []byte, coverMIME string) []b
 	return out.Bytes()
 }
 
-// ---------- tag writing (streaming chunk rewrite) ----------
-
 // writeID3Chunk rewrites filePath, replacing any existing tag chunk (chunkID,
 // matched case-insensitively) with a fresh ID3v2.4 chunk appended at the end.
 // The audio data and all other chunks are preserved; container size is patched.
@@ -692,7 +680,6 @@ func writeID3Chunk(filePath, expectMagic, chunkID string, le bool, id3 []byte) e
 		pad := int64(size) & 1
 
 		if strings.EqualFold(id, chunkID) {
-			// Drop the existing tag chunk.
 			if _, err := in.Seek(int64(size)+pad, io.SeekCurrent); err != nil {
 				cleanup()
 				return err
@@ -711,7 +698,6 @@ func writeID3Chunk(filePath, expectMagic, chunkID string, le bool, id3 []byte) e
 		bodyLen += 8 + int64(size) + pad
 	}
 
-	// Append the new tag chunk.
 	newSize := len(id3)
 	chunkHdr := make([]byte, 8)
 	copy(chunkHdr[0:4], chunkID)
@@ -889,8 +875,6 @@ func WriteAIFFTags(filePath string, fields map[string]string) error {
 	tag := buildID3v24Tag(meta, coverData, coverMIME)
 	return writeID3Chunk(filePath, "FORM", id3ChunkAIFF, false, tag)
 }
-
-// ---------- library scan integration ----------
 
 func scanWAVFile(filePath string, result *LibraryScanResult, displayNameHint string) (*LibraryScanResult, error) {
 	if metadata, err := ReadWAVTags(filePath); err == nil && metadata != nil {

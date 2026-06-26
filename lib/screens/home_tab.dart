@@ -177,7 +177,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
       },
     );
 
-    // Watch for new homeFeed extension being installed/enabled after init
     _homeFeedExtSub = ref.listenManual<bool>(
       extensionProvider.select(
         (s) => s.extensions.any((e) => e.enabled && e.hasHomeFeed),

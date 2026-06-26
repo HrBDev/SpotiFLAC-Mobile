@@ -1380,7 +1380,6 @@ func ReadFileMetadata(filePath string) (string, error) {
 	} else if isApe || isWv || isMpc {
 		result["format"] = strings.TrimPrefix(filepath.Ext(filePath), ".")
 		result["audio_codec"] = result["format"]
-		// APE, WavPack, Musepack: read APEv2 tags
 		apeTag, apeErr := ReadAPETags(filePath)
 		if apeErr == nil && apeTag != nil {
 			meta := APETagToAudioMetadata(apeTag)
@@ -1613,7 +1612,6 @@ func EditFileMetadata(filePath, metadataJSON string) (string, error) {
 		return string(jsonBytes), nil
 	}
 
-	// APE/WV/MPC: write APEv2 tags natively
 	if isApeFile {
 		trackNum := 0
 		totalTracks := 0
@@ -2710,8 +2708,6 @@ func ReEnrichFile(requestJSON string) (string, error) {
 
 	GoLog("[ReEnrich] Starting re-enrichment for: %s\n", req.FilePath)
 
-	// When search_online is true, search for metadata from internet using the
-	// configured metadata-provider priority.
 	if req.SearchOnline {
 		found := false
 
@@ -2880,7 +2876,6 @@ func ReEnrichFile(requestJSON string) (string, error) {
 	}
 
 	if isFlac {
-		// Native Go FLAC metadata embedding.
 		// Only populate Metadata fields for selected update groups; empty/zero
 		// values cause EmbedMetadata's setComment() to skip those tags,
 		// preserving whatever is already in the file.

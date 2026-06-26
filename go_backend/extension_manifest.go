@@ -222,7 +222,6 @@ func (m *ExtensionManifest) Validate() error {
 			}
 		}
 
-		// Select type requires options
 		if setting.Type == SettingTypeSelect && len(setting.Options) == 0 {
 			return &ManifestValidationError{
 				Field:   fmt.Sprintf("settings[%d].options", i),

@@ -783,7 +783,6 @@ func (c *DeezerClient) GetArtist(ctx context.Context, artistID string) (*ArtistR
 // not include this field. Albums whose track count is already known (non-zero)
 // are skipped.
 func (c *DeezerClient) fetchAlbumTrackCounts(ctx context.Context, albums []ArtistAlbumMetadata) {
-	// Find albums that need track counts
 	type indexedID struct {
 		idx     int
 		albumID string

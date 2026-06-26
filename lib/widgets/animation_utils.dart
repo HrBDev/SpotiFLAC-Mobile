@@ -542,7 +542,7 @@ class ArtistScreenSkeleton extends StatelessWidget {
                               borderRadius: 4,
                             ),
                             const SizedBox(height: 8),
-                            // Mimics the small "In Library" badge pill.
+
                             const SkeletonBox(
                               width: 64,
                               height: 14,

@@ -772,7 +772,7 @@ class _SwingIconState extends State<SwingIcon>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    // Create a swinging motion (like a pendulum/sign)
+
     _rotationAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.2), weight: 20),
       TweenSequenceItem(tween: Tween(begin: -0.2, end: 0.15), weight: 20),

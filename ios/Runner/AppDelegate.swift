@@ -1,6 +1,6 @@
 import Flutter
 import UIKit
-import Gobackend  // Import Go framework
+import Gobackend
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -632,7 +632,6 @@ import Gobackend  // Import Go framework
             GobackendClearTrackCache()
             return nil
             
-        // Log methods
         case "getLogs":
             let response = GobackendGetLogs()
             return response
@@ -657,7 +656,6 @@ import Gobackend  // Import Go framework
             GobackendSetLoggingEnabled(enabled)
             return nil
             
-        // Extension System methods
         case "initExtensionSystem":
             let args = call.arguments as! [String: Any]
             let extensionsDir = args["extensions_dir"] as! String
@@ -822,7 +820,6 @@ import Gobackend  // Import Go framework
             GobackendCleanupExtensions()
             return nil
             
-        // Extension Auth API
         case "getExtensionPendingAuth":
             let args = call.arguments as! [String: Any]
             let extensionId = args["extension_id"] as! String
@@ -863,7 +860,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Extension FFmpeg API
         case "getPendingFFmpegCommand":
             let args = call.arguments as! [String: Any]
             let commandId = args["command_id"] as! String
@@ -885,7 +881,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Extension Custom Search API
         case "customSearchWithExtension":
             let args = call.arguments as! [String: Any]
             let extensionId = args["extension_id"] as! String
@@ -907,7 +902,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Extension URL Handler API
         case "handleURLWithExtension":
             let args = call.arguments as! [String: Any]
             let url = args["url"] as! String
@@ -926,7 +920,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Extension Post-Processing API
         case "runPostProcessing":
             let args = call.arguments as! [String: Any]
             let filePath = args["file_path"] as! String
@@ -948,7 +941,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Extension Store
         case "initExtensionStore":
             let args = call.arguments as! [String: Any]
             let cacheDir = args["cache_dir"] as! String
@@ -1006,7 +998,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return nil
             
-        // Extension Home Feed API
         case "getExtensionHomeFeed":
             let args = call.arguments as! [String: Any]
             let extensionId = args["extension_id"] as! String
@@ -1022,7 +1013,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // Local Library Scanning
         case "setLibraryCoverCacheDir":
             let args = call.arguments as! [String: Any]
             let cacheDir = args["cache_dir"] as! String
@@ -1059,7 +1049,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
         
-        // iOS Security-Scoped Bookmark for Local Library
         case "resolveIosBookmark":
             let args = call.arguments as! [String: Any]
             let bookmarkBase64 = args["bookmark"] as! String
@@ -1079,7 +1068,6 @@ import Gobackend  // Import Go framework
             let path = args["path"] as! String
             return try createIosBookmarkFromPath(path)
             
-        // Lyrics Provider Settings
         case "setLyricsProviders":
             let args = call.arguments as! [String: Any]
             let providersJson = args["providers_json"] as? String ?? "[]"
@@ -1109,7 +1097,6 @@ import Gobackend  // Import Go framework
             if let error = error { throw error }
             return response
             
-        // CUE Sheet Parsing
         case "parseCueSheet":
             let args = call.arguments as! [String: Any]
             let cuePath = args["cue_path"] as! String

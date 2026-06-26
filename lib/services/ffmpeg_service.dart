@@ -1338,7 +1338,6 @@ class FFmpegService {
         final tempFile = File(tempOutput);
         if (await tempFile.exists()) {
           if (returnTempPath) {
-            // Caller will handle SAF write-back and cleanup.
             onTempReady?.call(tempOutput);
             return true;
           }
@@ -3051,7 +3050,6 @@ class FFmpegService {
         case 'COMMENT':
           id3Map['comment'] = value;
           break;
-        // ReplayGain as TXXX user-defined frames
         // FFmpeg writes these as TXXX frames automatically with uppercase keys
         case 'REPLAYGAINTRACKGAIN':
           id3Map['REPLAYGAIN_TRACK_GAIN'] = value;

@@ -370,7 +370,6 @@ func (r *extensionRuntime) fileDownloadChunked(client *http.Client, urlStr, full
 	var totalSize int64
 	contentRange := probeResp.Header.Get("Content-Range")
 	if contentRange != "" {
-		// Format: "bytes 0-1/12345"
 		if idx := strings.LastIndex(contentRange, "/"); idx >= 0 {
 			sizeStr := contentRange[idx+1:]
 			if sizeStr != "*" {
@@ -457,7 +456,6 @@ func (r *extensionRuntime) fileDownloadChunked(client *http.Client, urlStr, full
 				break // Success
 			}
 
-			// Non-success status
 			io.Copy(io.Discard, chunkResp.Body)
 			chunkResp.Body.Close()
 
@@ -474,7 +472,6 @@ func (r *extensionRuntime) fileDownloadChunked(client *http.Client, urlStr, full
 			})
 		}
 
-		// Read chunk body and write to file
 		chunkWritten := int64(0)
 		for {
 			nr, er := chunkResp.Body.Read(buf)

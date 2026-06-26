@@ -2691,7 +2691,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
             cleanFilePath,
             tempOutput,
           );
-          // Fall back to downloading from URL if extraction failed.
           if (result['error'] != null &&
               _coverUrl != null &&
               _coverUrl!.isNotEmpty) {
@@ -2782,13 +2781,10 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
 
       Map<String, dynamic> result;
       if (_fileExists) {
-        // Prefer extracting cover from the already-downloaded file to avoid
-        // a redundant network request.
         result = await PlatformBridge.extractCoverToFile(
           cleanFilePath,
           outputPath,
         );
-        // Fall back to downloading from URL if extraction failed.
         if (result['error'] != null &&
             _coverUrl != null &&
             _coverUrl!.isNotEmpty) {
@@ -2850,7 +2846,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
       }
 
       if (_isSafFile) {
-        // SAF file: save to temp, then copy to SAF tree
         final tempDir = await Directory.systemTemp.createTemp('lyrics_');
         final tempOutput =
             '${tempDir.path}${Platform.pathSeparator}$baseName.lrc';
@@ -4407,7 +4402,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
 
       var finalOutputPaths = outputPaths;
 
-      // Embed cover art into split FLAC files using Go backend
       if (coverPath != null && finalOutputPaths != null) {
         for (final path in finalOutputPaths) {
           if (path.toLowerCase().endsWith('.flac')) {

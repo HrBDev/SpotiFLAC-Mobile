@@ -834,7 +834,6 @@ class _EditMetadataSheetState extends State<_EditMetadataSheet> {
 
       if (!mounted) return;
 
-      // Fetch ISRC from Deezer track metadata if still missing
       if (needsIsrc &&
           (enriched['isrc'] ?? '').trim().isEmpty &&
           deezerId != null) {

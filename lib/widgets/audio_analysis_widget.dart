@@ -1646,7 +1646,6 @@ class _SpectrogramView extends StatelessWidget {
               },
             ),
           ),
-          // Intensity color legend (matches the spectrogram colormap).
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 0, 10, 8),
             child: Row(
@@ -1731,7 +1730,6 @@ class _SpectrogramPainter extends CustomPainter {
     );
     if (plot.width <= 0 || plot.height <= 0) return;
 
-    // Spectrogram image.
     canvas.drawImageRect(
       image,
       Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
@@ -1760,7 +1758,6 @@ class _SpectrogramPainter extends CustomPainter {
       }
     }
 
-    // Time axis (X): 0 at the left, duration at the right.
     if (durationSec > 0) {
       final stepSec = _niceStepSec(durationSec);
       for (double ts = 0; ts <= durationSec + 0.001; ts += stepSec) {

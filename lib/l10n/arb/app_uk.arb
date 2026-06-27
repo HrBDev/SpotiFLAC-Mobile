@@ -1980,6 +1980,10 @@
   "@downloadAlbumFolderStructure": {
     "description": "Setting - album folder organization"
   },
+  "albumFolderStructureDescription": "Виберіть структуру папок альбомів",
+  "@albumFolderStructureDescription": {
+    "description": "Album folder structure picker description"
+  },
   "downloadUseAlbumArtistForFolders": "Використовувати виконавця альбому для папок",
   "@downloadUseAlbumArtistForFolders": {
     "description": "Setting - choose whether artist folders use Album Artist or Track Artist"

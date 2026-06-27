@@ -1638,6 +1638,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Structure du dossier de l\'album';
 
   @override
+  String get albumFolderStructureDescription =>
+      'Choisir la structure des dossiers d\'album';
+
+  @override
   String get downloadUseAlbumArtistForFolders =>
       'Utilisez l\'artiste de l\'album pour les dossiers';
 

@@ -1610,6 +1610,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Albüm Klasör Yapısı';
 
   @override
+  String get albumFolderStructureDescription => 'Albüm klasör yapısını seçin';
+
+  @override
   String get downloadUseAlbumArtistForFolders =>
       'Klasörler için Albüm Sanatçısı\'nı kullan';
 

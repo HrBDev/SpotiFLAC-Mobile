@@ -1756,6 +1756,10 @@
   "@downloadAlbumFolderStructure": {
     "description": "Setting - album folder organization"
   },
+  "albumFolderStructureDescription": "アルバムフォルダの構成を選択",
+  "@albumFolderStructureDescription": {
+    "description": "Album folder structure picker description"
+  },
   "downloadUseAlbumArtistForFolders": "Use Album Artist for folders",
   "@downloadUseAlbumArtistForFolders": {
     "description": "Setting - choose whether artist folders use Album Artist or Track Artist"

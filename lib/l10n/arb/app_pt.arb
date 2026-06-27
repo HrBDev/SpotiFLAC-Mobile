@@ -1592,6 +1592,10 @@
   "@downloadAlbumFolderStructure": {
     "description": "Setting - album folder organization"
   },
+  "albumFolderStructureDescription": "Choose how album folders are structured",
+  "@albumFolderStructureDescription": {
+    "description": "Album folder structure picker description"
+  },
   "downloadSelectQuality": "Select Quality",
   "@downloadSelectQuality": {
     "description": "Dialog title - choose audio quality"

@@ -734,64 +734,95 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
     WidgetRef ref,
     String current,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
     showModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,
+      backgroundColor: colorScheme.surfaceContainerHigh,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.7,
+      ),
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final option in [
-              (
-                'artist_album',
-                context.l10n.albumFolderArtistAlbum,
-                context.l10n.albumFolderArtistAlbumSubtitle,
-                Icons.folder_outlined,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                child: Text(
+                  context.l10n.downloadAlbumFolderStructure,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
               ),
-              (
-                'artist_year_album',
-                context.l10n.albumFolderArtistYearAlbum,
-                context.l10n.albumFolderArtistYearAlbumSubtitle,
-                Icons.calendar_today_outlined,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                child: Text(
+                  context.l10n.albumFolderStructureDescription,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
-              (
-                'album_only',
-                context.l10n.albumFolderAlbumOnly,
-                context.l10n.albumFolderAlbumOnlySubtitle,
-                Icons.album_outlined,
-              ),
-              (
-                'year_album',
-                context.l10n.albumFolderYearAlbum,
-                context.l10n.albumFolderYearAlbumSubtitle,
-                Icons.event_outlined,
-              ),
-              (
-                'artist_album_singles',
-                context.l10n.albumFolderArtistAlbumSingles,
-                context.l10n.albumFolderArtistAlbumSinglesSubtitle,
-                Icons.person_outlined,
-              ),
-              (
-                'artist_album_flat',
-                context.l10n.albumFolderArtistAlbumFlat,
-                context.l10n.albumFolderArtistAlbumFlatSubtitle,
-                Icons.person_outline_outlined,
-              ),
-            ])
-              ListTile(
-                leading: Icon(option.$4),
-                title: Text(option.$2),
-                subtitle: Text(option.$3),
-                trailing: current == option.$1 ? const Icon(Icons.check) : null,
-                onTap: () {
-                  ref
-                      .read(settingsProvider.notifier)
-                      .setAlbumFolderStructure(option.$1);
-                  Navigator.pop(context);
-                },
-              ),
-          ],
+              for (final option in [
+                (
+                  'artist_album',
+                  context.l10n.albumFolderArtistAlbum,
+                  context.l10n.albumFolderArtistAlbumSubtitle,
+                  Icons.folder_outlined,
+                ),
+                (
+                  'artist_year_album',
+                  context.l10n.albumFolderArtistYearAlbum,
+                  context.l10n.albumFolderArtistYearAlbumSubtitle,
+                  Icons.calendar_today_outlined,
+                ),
+                (
+                  'album_only',
+                  context.l10n.albumFolderAlbumOnly,
+                  context.l10n.albumFolderAlbumOnlySubtitle,
+                  Icons.album_outlined,
+                ),
+                (
+                  'year_album',
+                  context.l10n.albumFolderYearAlbum,
+                  context.l10n.albumFolderYearAlbumSubtitle,
+                  Icons.event_outlined,
+                ),
+                (
+                  'artist_album_singles',
+                  context.l10n.albumFolderArtistAlbumSingles,
+                  context.l10n.albumFolderArtistAlbumSinglesSubtitle,
+                  Icons.person_outlined,
+                ),
+                (
+                  'artist_album_flat',
+                  context.l10n.albumFolderArtistAlbumFlat,
+                  context.l10n.albumFolderArtistAlbumFlatSubtitle,
+                  Icons.person_outline_outlined,
+                ),
+              ])
+                ListTile(
+                  leading: Icon(option.$4),
+                  title: Text(option.$2),
+                  subtitle: Text(option.$3),
+                  trailing:
+                      current == option.$1 ? const Icon(Icons.check) : null,
+                  onTap: () {
+                    ref
+                        .read(settingsProvider.notifier)
+                        .setAlbumFolderStructure(option.$1);
+                    Navigator.pop(context);
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );

@@ -1616,6 +1616,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Структура папок альбому';
 
   @override
+  String get albumFolderStructureDescription =>
+      'Виберіть структуру папок альбомів';
+
+  @override
   String get downloadUseAlbumArtistForFolders =>
       'Використовувати виконавця альбому для папок';
 

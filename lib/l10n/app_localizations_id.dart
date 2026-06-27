@@ -1599,6 +1599,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Struktur Folder Album';
 
   @override
+  String get albumFolderStructureDescription => 'Pilih struktur folder album';
+
+  @override
   String get downloadUseAlbumArtistForFolders =>
       'Gunakan Artis Album untuk folder';
 

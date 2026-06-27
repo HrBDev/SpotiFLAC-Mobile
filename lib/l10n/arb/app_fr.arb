@@ -1980,6 +1980,10 @@
   "@downloadAlbumFolderStructure": {
     "description": "Setting - album folder organization"
   },
+  "albumFolderStructureDescription": "Choisir la structure des dossiers d'album",
+  "@albumFolderStructureDescription": {
+    "description": "Album folder structure picker description"
+  },
   "downloadUseAlbumArtistForFolders": "Utilisez l'artiste de l'album pour les dossiers",
   "@downloadUseAlbumArtistForFolders": {
     "description": "Setting - choose whether artist folders use Album Artist or Track Artist"

@@ -1593,6 +1593,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Album Folder Structure';
 
   @override
+  String get albumFolderStructureDescription =>
+      'Choose how album folders are structured';
+
+  @override
   String get downloadUseAlbumArtistForFolders => 'Use Album Artist for folders';
 
   @override
@@ -6010,6 +6014,10 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
 
   @override
   String get downloadAlbumFolderStructure => 'Estructura de carpeta del álbum';
+
+  @override
+  String get albumFolderStructureDescription =>
+      'Elige cómo se estructuran las carpetas de los álbumes';
 
   @override
   String get downloadUseAlbumArtistForFolders =>

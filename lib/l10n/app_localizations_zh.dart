@@ -1593,6 +1593,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadAlbumFolderStructure => 'Album Folder Structure';
 
   @override
+  String get albumFolderStructureDescription =>
+      'Choose how album folders are structured';
+
+  @override
   String get downloadUseAlbumArtistForFolders => 'Use Album Artist for folders';
 
   @override
@@ -5977,6 +5981,10 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get downloadAlbumFolderStructure => 'Album Folder Structure';
 
   @override
+  String get albumFolderStructureDescription =>
+      'Choose how album folders are structured';
+
+  @override
   String get downloadUseAlbumArtistForFolders => 'Use Album Artist for folders';
 
   @override
@@ -10206,6 +10214,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get downloadAlbumFolderStructure => 'Album Folder Structure';
+
+  @override
+  String get albumFolderStructureDescription =>
+      'Choose how album folders are structured';
 
   @override
   String get downloadUseAlbumArtistForFolders => 'Use Album Artist for folders';

@@ -2954,6 +2954,12 @@ abstract class AppLocalizations {
   /// **'Album Folder Structure'**
   String get downloadAlbumFolderStructure;
 
+  /// Album folder structure picker description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how album folders are structured'**
+  String get albumFolderStructureDescription;
+
   /// Setting - choose whether artist folders use Album Artist or Track Artist
   ///
   /// In en, this message translates to:

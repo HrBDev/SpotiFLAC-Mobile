@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,7 +75,9 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(extensionProvider.notifier).refreshEnabledExtensionHealth();
+      ref
+          .read(extensionProvider.notifier)
+          .refreshEnabledExtensionHealth(force: true);
     });
     final downloadExtensions = _downloadExtensions();
     final recommended = widget.recommendedService;
@@ -100,6 +103,17 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
     }
 
     return const [];
+  }
+
+  void _selectService(Extension extension) {
+    setState(() => _selectedService = extension.id);
+    if (extension.hasServiceHealth) {
+      unawaited(
+        ref
+            .read(extensionProvider.notifier)
+            .checkExtensionHealth(extension.id, force: true),
+      );
+    }
   }
 
   @override
@@ -166,8 +180,7 @@ class _DownloadServicePickerState extends ConsumerState<DownloadServicePicker> {
                                 ? extensionState.healthStatuses[ext.id]?.status
                                 : null,
                             isSelected: _selectedService == ext.id,
-                            onTap: () =>
-                                setState(() => _selectedService = ext.id),
+                            onTap: () => _selectService(ext),
                             iconPath: ext.iconPath,
                           ),
                       ],

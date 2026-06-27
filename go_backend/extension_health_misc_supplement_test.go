@@ -32,8 +32,8 @@ func TestExtensionHealthClassificationAndValidation(t *testing.T) {
 	if !isTransientExtensionHealthError(context.DeadlineExceeded) || !isTransientExtensionHealthError(&net.DNSError{IsTimeout: true}) {
 		t.Fatal("expected timeout health errors to be transient")
 	}
-	if isTransientExtensionHealthError(&net.DNSError{IsNotFound: true}) {
-		t.Fatal("expected non-timeout DNS errors to be non-transient")
+	if !isTransientExtensionHealthError(&net.DNSError{IsNotFound: true}) {
+		t.Fatal("expected health transport lookup errors to be indeterminate")
 	}
 
 	if result := CheckExtensionHealth(nil); result.Status != "offline" {

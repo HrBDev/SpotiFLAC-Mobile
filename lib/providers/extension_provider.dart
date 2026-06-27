@@ -814,6 +814,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
   Completer<void>? _initializationCompleter;
   final Map<String, DateTime> _healthExpiresAt = {};
   final Map<String, Future<ExtensionHealthStatus?>> _healthInFlight = {};
+  final Map<String, int> _healthRequestSerial = {};
 
   @override
   ExtensionState build() {
@@ -825,6 +826,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
       _appLifecycleListener = null;
       _healthExpiresAt.clear();
       _healthInFlight.clear();
+      _healthRequestSerial.clear();
     });
     return const ExtensionState();
   }
@@ -954,15 +956,18 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
     }
   }
 
-  void _scheduleExtensionHealthRefresh(List<Extension> extensions) {
+  void _scheduleExtensionHealthRefresh(
+    List<Extension> extensions, {
+    bool force = false,
+  }) {
     for (final ext in extensions) {
       if (!ext.enabled || !ext.hasServiceHealth) continue;
-      unawaited(checkExtensionHealth(ext.id));
+      unawaited(checkExtensionHealth(ext.id, force: force));
     }
   }
 
-  void refreshEnabledExtensionHealth() {
-    _scheduleExtensionHealthRefresh(state.extensions);
+  void refreshEnabledExtensionHealth({bool force = false}) {
+    _scheduleExtensionHealthRefresh(state.extensions, force: force);
   }
 
   Future<ExtensionHealthStatus?> checkExtensionHealth(
@@ -990,17 +995,22 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
       return inFlight;
     }
 
+    final requestSerial = (_healthRequestSerial[extensionId] ?? 0) + 1;
+    _healthRequestSerial[extensionId] = requestSerial;
+
     final future = () async {
       try {
         final result = await PlatformBridge.checkExtensionHealth(extensionId);
         final status = ExtensionHealthStatus.fromJson(result);
-        final updated = Map<String, ExtensionHealthStatus>.of(
-          state.healthStatuses,
-        )..[extensionId] = status;
-        _healthExpiresAt[extensionId] = DateTime.now().add(
-          _extensionHealthCacheTtl,
-        );
-        state = state.copyWith(healthStatuses: updated);
+        if (_healthRequestSerial[extensionId] == requestSerial) {
+          final updated = Map<String, ExtensionHealthStatus>.of(
+            state.healthStatuses,
+          )..[extensionId] = status;
+          _healthExpiresAt[extensionId] = DateTime.now().add(
+            _extensionHealthCacheTtl,
+          );
+          state = state.copyWith(healthStatuses: updated);
+        }
         return status;
       } catch (e) {
         _log.w('Failed to check extension health for $extensionId: $e');
@@ -1010,16 +1020,20 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
           checkedAt: DateTime.now(),
           checks: const [],
         );
-        final updated = Map<String, ExtensionHealthStatus>.of(
-          state.healthStatuses,
-        )..[extensionId] = status;
-        _healthExpiresAt[extensionId] = DateTime.now().add(
-          const Duration(seconds: 20),
-        );
-        state = state.copyWith(healthStatuses: updated);
+        if (_healthRequestSerial[extensionId] == requestSerial) {
+          final updated = Map<String, ExtensionHealthStatus>.of(
+            state.healthStatuses,
+          )..[extensionId] = status;
+          _healthExpiresAt[extensionId] = DateTime.now().add(
+            const Duration(seconds: 20),
+          );
+          state = state.copyWith(healthStatuses: updated);
+        }
         return status;
       } finally {
-        _healthInFlight.remove(extensionId);
+        if (_healthRequestSerial[extensionId] == requestSerial) {
+          _healthInFlight.remove(extensionId);
+        }
       }
     }();
 

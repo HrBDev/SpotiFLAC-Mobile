@@ -59,6 +59,7 @@ func CheckExtensionHealthJSON(extensionID string) (string, error) {
 	}
 
 	result := CheckExtensionHealth(ext)
+	cacheExtensionHealthResult(ext, result)
 	bytes, err := json.Marshal(result)
 	if err != nil {
 		return "", err
@@ -86,6 +87,20 @@ func CheckExtensionHealthCached(ext *loadedExtension) ExtensionHealthResult {
 	extensionHealthCacheMu.Unlock()
 
 	result := CheckExtensionHealth(ext)
+	cacheExtensionHealthResult(ext, result)
+	return result
+}
+
+func cacheExtensionHealthResult(ext *loadedExtension, result ExtensionHealthResult) {
+	if ext == nil || ext.Manifest == nil || len(ext.Manifest.ServiceHealth) == 0 {
+		return
+	}
+
+	cacheKey := strings.TrimSpace(ext.ID)
+	if cacheKey == "" {
+		return
+	}
+
 	ttl := extensionHealthCacheTTL(ext.Manifest.ServiceHealth)
 	if result.Status == "unknown" && ttl > extensionHealthUnknownCache {
 		ttl = extensionHealthUnknownCache
@@ -94,11 +109,9 @@ func CheckExtensionHealthCached(ext *loadedExtension) ExtensionHealthResult {
 	extensionHealthCacheMu.Lock()
 	extensionHealthCache[cacheKey] = cachedExtensionHealthResult{
 		result:    result,
-		expiresAt: now.Add(ttl),
+		expiresAt: time.Now().Add(ttl),
 	}
 	extensionHealthCacheMu.Unlock()
-
-	return result
 }
 
 func CheckExtensionHealth(ext *loadedExtension) ExtensionHealthResult {
@@ -271,7 +284,7 @@ func runExtensionHealthCheck(manifest *ExtensionManifest, check ExtensionHealthC
 }
 
 func isTransientExtensionHealthError(err error) bool {
-	return isTransientNetworkError(err)
+	return isTransientNetworkError(err) || isConnectivityFailure(err)
 }
 
 func classifyExtensionHealthBody(body []byte, serviceKey string) (string, string) {

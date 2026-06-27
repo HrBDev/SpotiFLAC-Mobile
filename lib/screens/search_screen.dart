@@ -4,6 +4,7 @@ import 'package:spotiflac_android/l10n/l10n.dart';
 import 'package:spotiflac_android/models/track.dart';
 import 'package:spotiflac_android/providers/extension_provider.dart';
 import 'package:spotiflac_android/providers/track_provider.dart';
+import 'package:spotiflac_android/providers/preview_player_provider.dart';
 import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/widgets/track_collection_quick_actions.dart';
@@ -11,6 +12,7 @@ import 'package:spotiflac_android/widgets/animation_utils.dart';
 import 'package:spotiflac_android/utils/clickable_metadata.dart';
 import 'package:spotiflac_android/widgets/audio_quality_badges.dart';
 import 'package:spotiflac_android/widgets/cached_cover_image.dart';
+import 'package:spotiflac_android/widgets/preview_button.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   final String query;
@@ -37,6 +39,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   void dispose() {
+    ref.read(previewPlayerProvider.notifier).stop();
     _searchController.dispose();
     super.dispose();
   }
@@ -239,6 +242,7 @@ class _SearchTrackTile extends ConsumerWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          PreviewButton(track: track),
           IconButton(
             icon: const Icon(Icons.download_rounded),
             tooltip: context.l10n.dialogDownload,

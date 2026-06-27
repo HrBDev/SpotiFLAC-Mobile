@@ -157,6 +157,7 @@ class LocalTrackRedownloadService {
       source: data['source']?.toString() ?? data['provider_id']?.toString(),
       albumType: data['album_type']?.toString(),
       itemType: itemType,
+      previewUrl: data['preview_url']?.toString(),
     );
   }
 

@@ -13,6 +13,7 @@ class Track {
   final String? albumId;
   final String? coverUrl;
   final String? isrc;
+  final String? previewUrl;
   final int duration;
   final int? trackNumber;
   final int? discNumber;
@@ -38,6 +39,7 @@ class Track {
     this.albumId,
     this.coverUrl,
     this.isrc,
+    this.previewUrl,
     required this.duration,
     this.trackNumber,
     this.discNumber,
@@ -81,6 +83,8 @@ class Track {
       audioModes != null && audioModes!.contains('DOLBY_ATMOS');
 
   bool get hasAudioQuality => audioQuality != null && audioQuality!.isNotEmpty;
+
+  bool get hasPreview => previewUrl != null && previewUrl!.isNotEmpty;
 }
 
 @JsonSerializable()

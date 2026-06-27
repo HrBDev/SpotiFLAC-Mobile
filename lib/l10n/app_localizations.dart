@@ -1202,6 +1202,24 @@ abstract class AppLocalizations {
   /// **'Download'**
   String get dialogDownload;
 
+  /// Tooltip for the button that plays a short track preview snippet
+  ///
+  /// In en, this message translates to:
+  /// **'Play preview'**
+  String get previewPlay;
+
+  /// Tooltip for the button that stops the playing track preview snippet
+  ///
+  /// In en, this message translates to:
+  /// **'Stop preview'**
+  String get previewStop;
+
+  /// Snackbar shown when a track preview snippet cannot be played
+  ///
+  /// In en, this message translates to:
+  /// **'Preview unavailable'**
+  String get previewUnavailable;
+
   /// Dialog button - discard changes
   ///
   /// In en, this message translates to:

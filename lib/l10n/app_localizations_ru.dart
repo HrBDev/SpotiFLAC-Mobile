@@ -610,6 +610,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dialogDownload => 'Скачать';
 
   @override
+  String get previewPlay => 'Play preview';
+
+  @override
+  String get previewStop => 'Stop preview';
+
+  @override
+  String get previewUnavailable => 'Preview unavailable';
+
+  @override
   String get dialogDiscard => 'Отменить';
 
   @override

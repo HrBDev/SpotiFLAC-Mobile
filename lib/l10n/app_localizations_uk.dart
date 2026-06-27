@@ -613,6 +613,15 @@ class AppLocalizationsUk extends AppLocalizations {
   String get dialogDownload => 'Завантажити';
 
   @override
+  String get previewPlay => 'Play preview';
+
+  @override
+  String get previewStop => 'Stop preview';
+
+  @override
+  String get previewUnavailable => 'Preview unavailable';
+
+  @override
   String get dialogDiscard => 'Відхилити';
 
   @override

@@ -611,6 +611,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dialogDownload => 'İndir';
 
   @override
+  String get previewPlay => 'Play preview';
+
+  @override
+  String get previewStop => 'Stop preview';
+
+  @override
+  String get previewUnavailable => 'Preview unavailable';
+
+  @override
   String get dialogDiscard => 'Vazgeç';
 
   @override

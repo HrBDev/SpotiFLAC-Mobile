@@ -772,6 +772,18 @@
   "@dialogDownload": {
     "description": "Confirm button in Download All dialog"
   },
+  "previewPlay": "Play preview",
+  "@previewPlay": {
+    "description": "Tooltip for the button that plays a short track preview snippet"
+  },
+  "previewStop": "Stop preview",
+  "@previewStop": {
+    "description": "Tooltip for the button that stops the playing track preview snippet"
+  },
+  "previewUnavailable": "Preview unavailable",
+  "@previewUnavailable": {
+    "description": "Snackbar shown when a track preview snippet cannot be played"
+  },
   "dialogDiscard": "Discard",
   "@dialogDiscard": {
     "description": "Dialog button - discard changes"

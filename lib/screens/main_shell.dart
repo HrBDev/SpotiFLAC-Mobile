@@ -11,6 +11,7 @@ import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/providers/store_provider.dart';
 import 'package:spotiflac_android/providers/track_provider.dart';
+import 'package:spotiflac_android/providers/preview_player_provider.dart';
 import 'package:spotiflac_android/screens/home_tab.dart';
 import 'package:spotiflac_android/screens/repo_tab.dart';
 import 'package:spotiflac_android/screens/queue_tab.dart';
@@ -52,6 +53,10 @@ class _MainShellState extends ConsumerState<MainShell>
   final GlobalKey<NavigatorState> _repoTabNavigatorKey =
       ShellNavigationService.repoTabNavigatorKey;
 
+  late final _PreviewStopNavigatorObserver _homePreviewStopObserver;
+  late final _PreviewStopNavigatorObserver _libraryPreviewStopObserver;
+  late final _PreviewStopNavigatorObserver _repoPreviewStopObserver;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -61,6 +66,15 @@ class _MainShellState extends ConsumerState<MainShell>
   @override
   void initState() {
     super.initState();
+    _homePreviewStopObserver = _PreviewStopNavigatorObserver(
+      () => ref.read(previewPlayerProvider.notifier).stop(),
+    );
+    _libraryPreviewStopObserver = _PreviewStopNavigatorObserver(
+      () => ref.read(previewPlayerProvider.notifier).stop(),
+    );
+    _repoPreviewStopObserver = _PreviewStopNavigatorObserver(
+      () => ref.read(previewPlayerProvider.notifier).stop(),
+    );
     _pageController = PageController(initialPage: _currentIndex);
     _tabJumpTransitionController = AnimationController(
       vsync: this,
@@ -264,6 +278,7 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   void _resetHomeToMain() {
+    ref.read(previewPlayerProvider.notifier).stop();
     final showStore = ref.read(
       settingsProvider.select((s) => s.showExtensionStore),
     );
@@ -312,6 +327,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
   void _onPageChanged(int index) {
     if (_currentIndex != index) {
+      ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
       final showStore = ref.read(
         settingsProvider.select((s) => s.showExtensionStore),
@@ -369,6 +385,7 @@ class _MainShellState extends ConsumerState<MainShell>
         '(hasSearchText=${trackState.hasSearchText}, hasContent=${trackState.hasContent})',
       );
       FocusManager.instance.primaryFocus?.unfocus();
+      ref.read(previewPlayerProvider.notifier).stop();
       ref.read(trackProvider.notifier).clear();
       _lastBackPress = null;
       return;
@@ -392,6 +409,7 @@ class _MainShellState extends ConsumerState<MainShell>
       // Unfocus BEFORE clear so _onTrackStateChanged can properly
       // clear _urlController (it checks !_searchFocusNode.hasFocus)
       FocusManager.instance.primaryFocus?.unfocus();
+      ref.read(previewPlayerProvider.notifier).stop();
       ref.read(trackProvider.notifier).clear();
       _lastBackPress = null;
       return;
@@ -461,17 +479,20 @@ class _MainShellState extends ConsumerState<MainShell>
       _TabNavigator(
         key: const ValueKey('tab-home'),
         navigatorKey: _homeTabNavigatorKey,
+        observers: [_homePreviewStopObserver],
         child: const HomeTab(),
       ),
       _TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
+        observers: [_libraryPreviewStopObserver],
         child: _LibraryTabRoot(parentPageController: _pageController),
       ),
       if (showStore)
         _TabNavigator(
           key: const ValueKey('tab-repo'),
           navigatorKey: _repoTabNavigatorKey,
+          observers: [_repoPreviewStopObserver],
           child: const RepoTab(),
         ),
       const SettingsTab(),
@@ -609,21 +630,44 @@ class _MainShellState extends ConsumerState<MainShell>
 class _TabNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
+  final List<NavigatorObserver> observers;
 
   const _TabNavigator({
     super.key,
     required this.navigatorKey,
     required this.child,
+    this.observers = const [],
   });
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
+      observers: observers,
       onGenerateInitialRoutes: (_, _) => [
         MaterialPageRoute<void>(builder: (_) => child),
       ],
     );
+  }
+}
+
+class _PreviewStopNavigatorObserver extends NavigatorObserver {
+  _PreviewStopNavigatorObserver(this._onNavigate);
+
+  final VoidCallback _onNavigate;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    if (previousRoute != null) {
+      _onNavigate();
+    }
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    _onNavigate();
   }
 }
 

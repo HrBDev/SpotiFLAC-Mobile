@@ -621,6 +621,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dialogDownload => 'Télécharger';
 
   @override
+  String get previewPlay => 'Play preview';
+
+  @override
+  String get previewStop => 'Stop preview';
+
+  @override
+  String get previewUnavailable => 'Preview unavailable';
+
+  @override
   String get dialogDiscard => 'Ignorer';
 
   @override

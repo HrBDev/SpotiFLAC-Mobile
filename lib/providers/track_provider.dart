@@ -23,6 +23,7 @@ class TrackState {
   final String? artistName;
   final String? coverUrl;
   final String? headerImageUrl;
+  final String? headerVideoUrl;
   final int? monthlyListeners;
   final List<ArtistAlbum>? artistAlbums;
   final List<Track>? artistTopTracks;
@@ -46,6 +47,7 @@ class TrackState {
     this.artistName,
     this.coverUrl,
     this.headerImageUrl,
+    this.headerVideoUrl,
     this.monthlyListeners,
     this.artistAlbums,
     this.artistTopTracks,
@@ -77,6 +79,7 @@ class TrackState {
     String? artistName,
     String? coverUrl,
     String? headerImageUrl,
+    String? headerVideoUrl,
     int? monthlyListeners,
     List<ArtistAlbum>? artistAlbums,
     List<Track>? artistTopTracks,
@@ -102,6 +105,7 @@ class TrackState {
       artistName: artistName ?? this.artistName,
       coverUrl: coverUrl ?? this.coverUrl,
       headerImageUrl: headerImageUrl ?? this.headerImageUrl,
+      headerVideoUrl: headerVideoUrl ?? this.headerVideoUrl,
       monthlyListeners: monthlyListeners ?? this.monthlyListeners,
       artistAlbums: artistAlbums ?? this.artistAlbums,
       artistTopTracks: artistTopTracks ?? this.artistTopTracks,
@@ -198,20 +202,9 @@ class SearchPlaylist {
 
 class TrackNotifier extends Notifier<TrackState> {
   int _currentRequestId = 0;
-  StreamSubscription<ExtensionSessionGrantEvent>? _sessionGrantSub;
-  _PendingVerificationSearch? _pendingVerificationSearch;
-  bool _retryingPendingVerificationSearch = false;
 
   @override
   TrackState build() {
-    _sessionGrantSub ??= PlatformBridge.extensionSessionGrantEvents().listen(
-      _handleExtensionSessionGrantCompleted,
-    );
-    ref.onDispose(() {
-      _sessionGrantSub?.cancel();
-      _sessionGrantSub = null;
-      _pendingVerificationSearch = null;
-    });
     return const TrackState();
   }
 
@@ -318,6 +311,9 @@ class TrackNotifier extends Notifier<TrackState> {
                 (result['album'] as Map<String, dynamic>?)?['name'] as String?,
             playlistName: type == 'playlist' ? result['name'] as String? : null,
             coverUrl: normalizeCoverReference(result['cover_url']?.toString()),
+            headerVideoUrl: normalizeRemoteHttpUrl(
+              result['header_video']?.toString(),
+            ),
             searchExtensionId: extensionId,
           );
           return;
@@ -349,6 +345,9 @@ class TrackNotifier extends Notifier<TrackState> {
             ),
             headerImageUrl: normalizeRemoteHttpUrl(
               artistData['header_image']?.toString(),
+            ),
+            headerVideoUrl: normalizeRemoteHttpUrl(
+              artistData['header_video']?.toString(),
             ),
             monthlyListeners: artistData['listeners'] as int?,
             artistAlbums: albums,
@@ -572,6 +571,7 @@ class TrackNotifier extends Notifier<TrackState> {
     String query, {
     Map<String, dynamic>? options,
     String? selectedFilter,
+    bool allowVerificationRetry = true,
   }) async {
     final requestId = ++_currentRequestId;
     final currentFilter = selectedFilter ?? state.selectedSearchFilter;
@@ -613,7 +613,12 @@ class TrackNotifier extends Notifier<TrackState> {
       _log.i(
         'Custom search complete: ${tracks.length} tracks parsed (source=$extensionId)',
       );
-      _clearPendingVerificationSearch(extensionId, query, currentFilter);
+
+      final previewCount = tracks.where((t) => t.hasPreview).length;
+      _log.d(
+        'Custom search preview availability: $previewCount/${tracks.length} tracks have preview_url'
+        '${results.isNotEmpty ? '; first raw keys=${(results.first).keys.toList()}' : ''}',
+      );
 
       state = TrackState(
         tracks: tracks,
@@ -627,17 +632,32 @@ class TrackNotifier extends Notifier<TrackState> {
     } catch (e, stackTrace) {
       if (!_isRequestValid(requestId)) return;
       _log.e('Custom search failed: $e', e, stackTrace);
-      if (isExtensionVerificationRequired(e)) {
-        _pendingVerificationSearch = _PendingVerificationSearch(
-          extensionId: extensionId,
-          query: query,
-          options: Map<String, dynamic>.from(
-            options ?? const <String, dynamic>{},
-          ),
-          selectedFilter: currentFilter,
-          createdAt: DateTime.now(),
+      if (allowVerificationRetry && isExtensionVerificationRequired(e)) {
+        _log.i(
+          'Custom search requires verification; waiting for $extensionId grant',
         );
-        await openPendingExtensionVerification(extensionId);
+        state = TrackState(
+          isLoading: true,
+          hasSearchText: state.hasSearchText,
+          isShowingRecentAccess: state.isShowingRecentAccess,
+          searchExtensionId: extensionId,
+          selectedSearchFilter: currentFilter,
+        );
+        final verified = await _openVerificationAndWait(extensionId);
+        if (!_isRequestValid(requestId)) return;
+        if (verified) {
+          _log.i(
+            'Verification complete for $extensionId; retrying custom search',
+          );
+          await customSearch(
+            extensionId,
+            query,
+            options: options,
+            selectedFilter: currentFilter,
+            allowVerificationRetry: false,
+          );
+          return;
+        }
       }
       state = TrackState(
         isLoading: false,
@@ -649,47 +669,38 @@ class TrackNotifier extends Notifier<TrackState> {
     }
   }
 
-  void _clearPendingVerificationSearch(
-    String extensionId,
-    String query,
-    String? selectedFilter,
-  ) {
-    final pending = _pendingVerificationSearch;
-    if (pending == null) return;
-    if (pending.extensionId == extensionId &&
-        pending.query == query &&
-        pending.selectedFilter == selectedFilter) {
-      _pendingVerificationSearch = null;
-    }
-  }
+  Future<bool> _openVerificationAndWait(String extensionId) async {
+    final normalizedExtensionId = extensionId.trim();
+    if (normalizedExtensionId.isEmpty) return false;
 
-  void _handleExtensionSessionGrantCompleted(ExtensionSessionGrantEvent event) {
-    if (!event.success || _retryingPendingVerificationSearch) return;
-    final pending = _pendingVerificationSearch;
-    if (pending == null || pending.extensionId != event.extensionId) return;
-    if (DateTime.now().difference(pending.createdAt) >
-        const Duration(minutes: 10)) {
-      _pendingVerificationSearch = null;
-      return;
-    }
+    final grantCompleter = Completer<ExtensionSessionGrantEvent>();
+    late final StreamSubscription<ExtensionSessionGrantEvent> grantSub;
+    grantSub = PlatformBridge.extensionSessionGrantEvents()
+        .where((event) => event.extensionId.trim() == normalizedExtensionId)
+        .listen((event) {
+          if (!grantCompleter.isCompleted) {
+            grantCompleter.complete(event);
+          }
+        });
 
-    _pendingVerificationSearch = null;
-    _retryingPendingVerificationSearch = true;
-    Future<void>.delayed(const Duration(milliseconds: 300), () async {
-      try {
-        _log.i(
-          'Retrying custom search after verification: extension=${pending.extensionId}',
-        );
-        await customSearch(
-          pending.extensionId,
-          pending.query,
-          options: pending.options,
-          selectedFilter: pending.selectedFilter,
-        );
-      } finally {
-        _retryingPendingVerificationSearch = false;
-      }
-    });
+    try {
+      final opened = await openPendingExtensionVerification(
+        normalizedExtensionId,
+      );
+      if (!opened) return false;
+
+      final event = await grantCompleter.future.timeout(
+        const Duration(minutes: 5),
+      );
+      return event.success;
+    } on TimeoutException {
+      _log.w(
+        'Timed out waiting for verification grant: $normalizedExtensionId',
+      );
+      return false;
+    } finally {
+      await grantSub.cancel();
+    }
   }
 
   Future<void> checkAvailability(int index) async {
@@ -819,6 +830,7 @@ class TrackNotifier extends Notifier<TrackState> {
       itemType: itemType,
       audioQuality: data['audio_quality']?.toString(),
       audioModes: data['audio_modes']?.toString(),
+      previewUrl: data['preview_url']?.toString(),
     );
   }
 
@@ -894,22 +906,6 @@ class TrackNotifier extends Notifier<TrackState> {
       totalTracks: data['total_tracks'] as int? ?? 0,
     );
   }
-}
-
-class _PendingVerificationSearch {
-  final String extensionId;
-  final String query;
-  final Map<String, dynamic> options;
-  final String? selectedFilter;
-  final DateTime createdAt;
-
-  const _PendingVerificationSearch({
-    required this.extensionId,
-    required this.query,
-    required this.options,
-    required this.selectedFilter,
-    required this.createdAt,
-  });
 }
 
 final trackProvider = NotifierProvider<TrackNotifier, TrackState>(

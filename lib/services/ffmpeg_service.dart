@@ -11,6 +11,7 @@ import 'package:ffmpeg_kit_flutter_new_full/session_state.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/utils/artist_utils.dart';
+import 'package:spotiflac_android/utils/audio_conversion_utils.dart';
 import 'package:spotiflac_android/utils/logger.dart';
 
 final _log = AppLogger('FFmpeg');
@@ -109,6 +110,16 @@ class DownloadDecryptionDescriptor {
     if (trimmed.isEmpty) return null;
     return trimmed.startsWith('.') ? trimmed : '.$trimmed';
   }
+}
+
+class _ResolvedLosslessConversionQuality {
+  final int? targetBitDepth;
+  final int? targetSampleRate;
+
+  const _ResolvedLosslessConversionQuality({
+    this.targetBitDepth,
+    this.targetSampleRate,
+  });
 }
 
 class FFmpegService {
@@ -306,6 +317,24 @@ class FFmpegService {
     return null;
   }
 
+  static Future<int?> probeSampleRate(String filePath) async {
+    try {
+      final session = await FFprobeKit.getMediaInformation(filePath);
+      final info = session.getMediaInformation();
+      if (info == null) return null;
+      for (final stream in info.getStreams()) {
+        final props = stream.getAllProperties() ?? const <String, dynamic>{};
+        if (props['codec_type']?.toString() != 'audio') continue;
+        final value = int.tryParse(props['sample_rate']?.toString() ?? '');
+        if (value != null && value > 0) return value;
+        return null;
+      }
+    } catch (e) {
+      _log.w('Sample rate probe failed for $filePath: $e');
+    }
+    return null;
+  }
+
   /// Returns `true` when [filePath] starts with the native FLAC magic bytes
   /// (`fLaC`). Useful to distinguish a real FLAC file from a FLAC-in-MP4
   /// container that carries a `.flac` extension or claims codec=flac.
@@ -325,6 +354,80 @@ class FFmpegService {
     } catch (e) {
       _log.w('Native FLAC magic probe failed for $filePath: $e');
       return false;
+    }
+  }
+
+  static Future<_ResolvedLosslessConversionQuality> _resolveLosslessQuality({
+    required String inputPath,
+    required LosslessConversionQuality quality,
+    int? sourceBitDepth,
+  }) async {
+    final probedBitDepth =
+        sourceBitDepth ??
+        (quality.maxBitDepth != null ? await probeBitDepth(inputPath) : null);
+    final probedSampleRate = quality.maxSampleRate != null
+        ? await probeSampleRate(inputPath)
+        : null;
+
+    int? targetBitDepth;
+    if (quality.maxBitDepth != null &&
+        (probedBitDepth == null || probedBitDepth > quality.maxBitDepth!)) {
+      targetBitDepth = quality.maxBitDepth;
+    }
+
+    int? targetSampleRate;
+    if (quality.maxSampleRate != null &&
+        (probedSampleRate == null ||
+            probedSampleRate > quality.maxSampleRate!)) {
+      targetSampleRate = quality.maxSampleRate;
+    }
+
+    return _ResolvedLosslessConversionQuality(
+      targetBitDepth: targetBitDepth,
+      targetSampleRate: targetSampleRate,
+    );
+  }
+
+  static void _appendLosslessCodecQualityArguments(
+    List<String> arguments, {
+    required String codec,
+    int? targetBitDepth,
+    int? targetSampleRate,
+  }) {
+    if (targetSampleRate != null && targetSampleRate > 0) {
+      arguments
+        ..add('-ar')
+        ..add(targetSampleRate.toString());
+    }
+    if (targetBitDepth == null || targetBitDepth <= 0) return;
+
+    if (codec == 'flac') {
+      if (targetBitDepth <= 16) {
+        arguments
+          ..add('-sample_fmt')
+          ..add('s16');
+      } else if (targetBitDepth <= 24) {
+        arguments
+          ..add('-sample_fmt')
+          ..add('s32')
+          ..add('-bits_per_raw_sample')
+          ..add('24');
+      }
+      return;
+    }
+
+    if (codec == 'alac') {
+      if (targetBitDepth <= 16) {
+        arguments
+          ..add('-sample_fmt')
+          ..add('s16p');
+      } else if (targetBitDepth <= 24) {
+        arguments
+          ..add('-sample_fmt')
+          ..add('s32p')
+          ..add('-bits_per_raw_sample')
+          ..add('24');
+      }
     }
   }
 
@@ -2048,7 +2151,10 @@ class FFmpegService {
       }
 
       if (metadata != null) {
-        _appendMappedMetadataToArguments(arguments, _convertToM4aTags(metadata));
+        _appendMappedMetadataToArguments(
+          arguments,
+          _convertToM4aTags(metadata),
+        );
       }
 
       // MOV muxer accepts codecs the MP4 muxer rejects (e.g. AC-4). The default
@@ -2228,8 +2334,10 @@ class FFmpegService {
 
   /// Unified audio format conversion with full metadata + cover preservation.
   /// Supports: FLAC/M4A/MP3/Opus -> AAC/M4A/MP3/Opus/ALAC/FLAC/WAV/AIFF.
-  /// ALAC, FLAC, WAV and AIFF targets are lossless (bitrate parameter is ignored).
-  /// [sourceBitDepth] (when known) preserves 24-bit resolution for WAV/AIFF.
+  /// ALAC, FLAC, WAV and AIFF targets are lossless codecs (bitrate parameter
+  /// is ignored). [losslessQuality] can cap bit depth/sample rate, and caps are
+  /// only applied when they reduce the source quality.
+  /// [sourceBitDepth] (when known) avoids an extra probe.
   static Future<String?> convertAudioFormat({
     required String inputPath,
     required String targetFormat,
@@ -2239,6 +2347,8 @@ class FFmpegService {
     String artistTagMode = artistTagModeJoined,
     bool deleteOriginal = true,
     int? sourceBitDepth,
+    LosslessConversionQuality losslessQuality =
+        const LosslessConversionQuality(),
   }) async {
     final format = targetFormat.toLowerCase();
     if (!const {
@@ -2255,11 +2365,21 @@ class FFmpegService {
       return null;
     }
 
+    final resolvedLosslessQuality = isLosslessConversionTarget(format)
+        ? await _resolveLosslessQuality(
+            inputPath: inputPath,
+            quality: losslessQuality,
+            sourceBitDepth: sourceBitDepth,
+          )
+        : const _ResolvedLosslessConversionQuality();
+
     if (format == 'alac') {
       return _convertToAlac(
         inputPath: inputPath,
         metadata: metadata,
         coverPath: coverPath,
+        targetBitDepth: resolvedLosslessQuality.targetBitDepth,
+        targetSampleRate: resolvedLosslessQuality.targetSampleRate,
         deleteOriginal: deleteOriginal,
       );
     }
@@ -2269,6 +2389,8 @@ class FFmpegService {
         metadata: metadata,
         coverPath: coverPath,
         artistTagMode: artistTagMode,
+        targetBitDepth: resolvedLosslessQuality.targetBitDepth,
+        targetSampleRate: resolvedLosslessQuality.targetSampleRate,
         deleteOriginal: deleteOriginal,
       );
     }
@@ -2279,6 +2401,8 @@ class FFmpegService {
         coverPath: coverPath,
         container: format == 'wav' ? 'wav' : 'aiff',
         sourceBitDepth: sourceBitDepth,
+        targetBitDepth: resolvedLosslessQuality.targetBitDepth,
+        targetSampleRate: resolvedLosslessQuality.targetSampleRate,
         deleteOriginal: deleteOriginal,
       );
     }
@@ -2374,6 +2498,8 @@ class FFmpegService {
     required String inputPath,
     required Map<String, String> metadata,
     String? coverPath,
+    int? targetBitDepth,
+    int? targetSampleRate,
     bool deleteOriginal = true,
   }) async {
     final outputPath = _buildOutputPath(inputPath, '.m4a');
@@ -2407,7 +2533,14 @@ class FFmpegService {
     }
     arguments
       ..add('-c:a')
-      ..add('alac')
+      ..add('alac');
+    _appendLosslessCodecQualityArguments(
+      arguments,
+      codec: 'alac',
+      targetBitDepth: targetBitDepth,
+      targetSampleRate: targetSampleRate,
+    );
+    arguments
       ..add('-map_metadata')
       ..add('-1');
 
@@ -2418,7 +2551,9 @@ class FFmpegService {
       ..add('-y');
 
     _log.i(
-      'Converting ${inputPath.split(Platform.pathSeparator).last} to ALAC',
+      'Converting ${inputPath.split(Platform.pathSeparator).last} to ALAC'
+      '${targetBitDepth != null ? ' $targetBitDepth-bit' : ''}'
+      '${targetSampleRate != null ? ' @ ${targetSampleRate}Hz' : ''}',
     );
     final result = await _executeWithArguments(arguments);
 
@@ -2446,6 +2581,8 @@ class FFmpegService {
     required Map<String, String> metadata,
     String? coverPath,
     String artistTagMode = artistTagModeJoined,
+    int? targetBitDepth,
+    int? targetSampleRate,
     bool deleteOriginal = true,
   }) async {
     final outputPath = _buildOutputPath(inputPath, '.flac');
@@ -2481,7 +2618,14 @@ class FFmpegService {
       ..add('-c:a')
       ..add('flac')
       ..add('-compression_level')
-      ..add('8')
+      ..add('8');
+    _appendLosslessCodecQualityArguments(
+      arguments,
+      codec: 'flac',
+      targetBitDepth: targetBitDepth,
+      targetSampleRate: targetSampleRate,
+    );
+    arguments
       ..add('-map_metadata')
       ..add('0');
 
@@ -2496,7 +2640,9 @@ class FFmpegService {
       ..add('-y');
 
     _log.i(
-      'Converting ${inputPath.split(Platform.pathSeparator).last} to FLAC',
+      'Converting ${inputPath.split(Platform.pathSeparator).last} to FLAC'
+      '${targetBitDepth != null ? ' $targetBitDepth-bit' : ''}'
+      '${targetSampleRate != null ? ' @ ${targetSampleRate}Hz' : ''}',
     );
     final result = await _executeWithArguments(arguments);
 
@@ -2528,11 +2674,13 @@ class FFmpegService {
     required String container, // 'wav' or 'aiff'
     String? coverPath,
     int? sourceBitDepth,
+    int? targetBitDepth,
+    int? targetSampleRate,
     bool deleteOriginal = true,
   }) async {
     final isAiff = container == 'aiff';
     final outputPath = _buildOutputPath(inputPath, isAiff ? '.aiff' : '.wav');
-    var depth = sourceBitDepth;
+    var depth = targetBitDepth ?? sourceBitDepth;
     if (depth == null || depth <= 0) {
       depth = await probeBitDepth(inputPath);
     }
@@ -2542,18 +2690,29 @@ class FFmpegService {
         : (use24 ? 'pcm_s24le' : 'pcm_s16le');
 
     final arguments = <String>[
-      '-v', 'error', '-hide_banner',
-      '-i', inputPath,
-      '-map', '0:a',
-      '-c:a', codec,
-      '-map_metadata', '-1',
+      '-v',
+      'error',
+      '-hide_banner',
+      '-i',
+      inputPath,
+      '-map',
+      '0:a',
+      '-c:a',
+      codec,
+      if (targetSampleRate != null && targetSampleRate > 0) ...[
+        '-ar',
+        targetSampleRate.toString(),
+      ],
+      '-map_metadata',
+      '-1',
       outputPath,
       '-y',
     ];
 
     _log.i(
       'Converting ${inputPath.split(Platform.pathSeparator).last} to '
-      '${container.toUpperCase()} (${use24 ? 24 : 16}-bit)',
+      '${container.toUpperCase()} (${use24 ? 24 : 16}-bit'
+      '${targetSampleRate != null ? ', ${targetSampleRate}Hz' : ''})',
     );
     final result = await _executeWithArguments(arguments);
     if (!result.success) {

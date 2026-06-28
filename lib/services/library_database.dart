@@ -1735,6 +1735,8 @@ class LibraryDatabase {
     required String newFilePath,
     required String targetFormat,
     required String bitrate,
+    int? bitDepth,
+    int? sampleRate,
   }) async {
     final db = await database;
     final stat = await fileStat(newFilePath);
@@ -1755,6 +1757,10 @@ class LibraryDatabase {
         normalizedFormat == 'opus' ||
         normalizedFormat == 'aac') {
       updated['bitDepth'] = null;
+      updated['sampleRate'] = null;
+    } else {
+      updated['bitDepth'] = bitDepth ?? item.bitDepth;
+      updated['sampleRate'] = sampleRate ?? item.sampleRate;
     }
 
     await db.transaction((txn) async {

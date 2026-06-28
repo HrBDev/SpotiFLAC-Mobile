@@ -10,7 +10,14 @@ class BatchConvertSheet extends StatefulWidget {
   final String title;
   final String? subtitle;
   final String confirmLabel;
-  final void Function(String format, String bitrate) onConvert;
+  final int? sourceBitDepth;
+  final int? sourceSampleRate;
+  final void Function(
+    String format,
+    String bitrate,
+    LosslessConversionQuality losslessQuality,
+  )
+  onConvert;
 
   const BatchConvertSheet({
     super.key,
@@ -19,6 +26,8 @@ class BatchConvertSheet extends StatefulWidget {
     required this.confirmLabel,
     required this.onConvert,
     this.subtitle,
+    this.sourceBitDepth,
+    this.sourceSampleRate,
   });
 
   @override
@@ -31,6 +40,8 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
   late String _selectedFormat;
   late bool _isLosslessTarget;
   late String _selectedBitrate;
+  int? _selectedMaxBitDepth;
+  int? _selectedMaxSampleRate;
 
   String _defaultBitrateForFormat(String format) {
     if (format == 'Opus') return '128k';
@@ -51,6 +62,12 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final bitDepthOptions = availableLosslessBitDepthOptions(
+      widget.sourceBitDepth,
+    );
+    final sampleRateOptions = availableLosslessSampleRateOptions(
+      widget.sourceSampleRate,
+    );
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -111,6 +128,9 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                               _selectedBitrate = _defaultBitrateForFormat(
                                 format,
                               );
+                            } else {
+                              _selectedMaxBitDepth = null;
+                              _selectedMaxSampleRate = null;
                             }
                           });
                         },
@@ -144,6 +164,72 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                 ),
               ),
 
+            if (_isLosslessTarget && bitDepthOptions.isNotEmpty)
+              _card(
+                cs,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionLabel(cs, 'Bit depth'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _choice(
+                          cs,
+                          label: losslessBitDepthLabel(null),
+                          selected: _selectedMaxBitDepth == null,
+                          onTap: () =>
+                              setState(() => _selectedMaxBitDepth = null),
+                        ),
+                        ...bitDepthOptions.map((depth) {
+                          return _choice(
+                            cs,
+                            label: losslessBitDepthLabel(depth),
+                            selected: depth == _selectedMaxBitDepth,
+                            onTap: () =>
+                                setState(() => _selectedMaxBitDepth = depth),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+            if (_isLosslessTarget && sampleRateOptions.isNotEmpty)
+              _card(
+                cs,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _sectionLabel(cs, 'Sample rate'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _choice(
+                          cs,
+                          label: losslessSampleRateLabel(null),
+                          selected: _selectedMaxSampleRate == null,
+                          onTap: () =>
+                              setState(() => _selectedMaxSampleRate = null),
+                        ),
+                        ...sampleRateOptions.map((rate) {
+                          return _choice(
+                            cs,
+                            label: losslessSampleRateLabel(rate),
+                            selected: rate == _selectedMaxSampleRate,
+                            onTap: () =>
+                                setState(() => _selectedMaxSampleRate = rate),
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
             if (_isLosslessTarget)
               Container(
                 width: double.infinity,
@@ -162,7 +248,10 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        context.l10n.trackConvertLosslessHint,
+                        _selectedMaxBitDepth == null &&
+                                _selectedMaxSampleRate == null
+                            ? context.l10n.trackConvertLosslessHint
+                            : 'Lossless output with ${losslessQualityLabel(LosslessConversionQuality(maxBitDepth: _selectedMaxBitDepth, maxSampleRate: _selectedMaxSampleRate))} cap',
                         style: Theme.of(
                           context,
                         ).textTheme.bodySmall?.copyWith(color: cs.primary),
@@ -176,8 +265,14 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () =>
-                    widget.onConvert(_selectedFormat, _selectedBitrate),
+                onPressed: () => widget.onConvert(
+                  _selectedFormat,
+                  _selectedBitrate,
+                  LosslessConversionQuality(
+                    maxBitDepth: _selectedMaxBitDepth,
+                    maxSampleRate: _selectedMaxSampleRate,
+                  ),
+                ),
                 icon: const Icon(Icons.swap_horiz),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),

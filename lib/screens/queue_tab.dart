@@ -5499,6 +5499,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   ) async {
     final itemsById = {for (final item in allItems) item.id: item};
     final sourceFormats = <String>{};
+    final sourceBitDepths = <int?>[];
+    final sourceSampleRates = <int?>[];
     for (final id in _selectedIds) {
       final item = itemsById[id];
       if (item == null) continue;
@@ -5508,6 +5510,12 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         fileName: item.historyItem?.safFileName,
       );
       if (sourceFormat != null) sourceFormats.add(sourceFormat);
+      sourceBitDepths.add(
+        item.historyItem?.bitDepth ?? item.localItem?.bitDepth,
+      );
+      sourceSampleRates.add(
+        item.historyItem?.sampleRate ?? item.localItem?.sampleRate,
+      );
     }
 
     final formats = audioConversionTargetFormats
@@ -5546,13 +5554,16 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         formats: formats,
         title: sheetTitle,
         confirmLabel: sheetConfirmLabel,
-        onConvert: (format, bitrate) {
+        sourceBitDepth: lowestKnownPositiveInt(sourceBitDepths),
+        sourceSampleRate: lowestKnownPositiveInt(sourceSampleRates),
+        onConvert: (format, bitrate, losslessQuality) {
           didStartConversion = true;
           Navigator.pop(sheetContext);
           _performBatchConversion(
             allItems: allItems,
             targetFormat: format,
             bitrate: bitrate,
+            losslessQuality: losslessQuality,
           );
         },
       ),
@@ -5585,6 +5596,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     required List<UnifiedLibraryItem> allItems,
     required String targetFormat,
     required String bitrate,
+    LosslessConversionQuality losslessQuality =
+        const LosslessConversionQuality(),
   }) async {
     final itemsById = {for (final item in allItems) item.id: item};
     final selectedItems = <UnifiedLibraryItem>[];
@@ -5621,7 +5634,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
       builder: (ctx) => AlertDialog(
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
-          isLossless
+          isLossless && losslessQuality.hasCaps
+              ? 'Convert ${selectedItems.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selectedItems.length,
                   targetFormat,
@@ -5650,9 +5665,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     int successCount = 0;
     final total = selectedItems.length;
     final historyDb = HistoryDatabase.instance;
-    final newQuality = isLosslessConversionTarget(targetFormat)
-        ? '${targetFormat.toUpperCase()} Lossless'
-        : '${targetFormat.toUpperCase()} ${bitrate.trim().toLowerCase()}';
     final settings = ref.read(settingsProvider);
     final shouldEmbedLyrics =
         settings.embedLyrics && settings.lyricsMode != 'external';
@@ -5733,6 +5745,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
           coverPath: coverPath,
           artistTagMode: settings.artistTagMode,
           deleteOriginal: !isSaf,
+          sourceBitDepth:
+              item.historyItem?.bitDepth ?? item.localItem?.bitDepth,
+          losslessQuality: losslessQuality,
         );
 
         if (coverPath != null) {
@@ -5749,6 +5764,42 @@ class _QueueTabState extends ConsumerState<QueueTab> {
           }
           continue;
         }
+
+        final sourceBitDepth =
+            item.historyItem?.bitDepth ?? item.localItem?.bitDepth;
+        final sourceSampleRate =
+            item.historyItem?.sampleRate ?? item.localItem?.sampleRate;
+        final isLosslessOutput = isLosslessConversionTarget(targetFormat);
+        int? convertedBitDepth;
+        int? convertedSampleRate;
+        if (isLosslessOutput) {
+          try {
+            final convertedMetadata = await PlatformBridge.readFileMetadata(
+              newPath,
+            );
+            if (convertedMetadata['error'] == null) {
+              convertedBitDepth = readPositiveAudioInt(
+                convertedMetadata['bit_depth'],
+              );
+              convertedSampleRate = readPositiveAudioInt(
+                convertedMetadata['sample_rate'],
+              );
+            }
+          } catch (_) {}
+          convertedBitDepth ??= losslessQuality.effectiveBitDepth(
+            sourceBitDepth,
+          );
+          convertedSampleRate ??= losslessQuality.effectiveSampleRate(
+            sourceSampleRate,
+          );
+        }
+        final newQuality = convertedAudioQualityLabel(
+          targetFormat: targetFormat,
+          bitrate: bitrate,
+          losslessQuality: losslessQuality,
+          actualBitDepth: convertedBitDepth,
+          actualSampleRate: convertedSampleRate,
+        );
 
         if (isSaf && item.historyItem != null) {
           final hi = item.historyItem!;
@@ -5801,7 +5852,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                 targetFormat: targetFormat,
                 bitrate: bitrate,
               ),
-              clearAudioSpecs: true,
+              newBitDepth: convertedBitDepth,
+              newSampleRate: convertedSampleRate,
+              clearAudioSpecs: !isLosslessOutput,
             );
           }
           try {
@@ -5890,6 +5943,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
               newFilePath: safUri,
               targetFormat: targetFormat,
               bitrate: bitrate,
+              bitDepth: convertedBitDepth,
+              sampleRate: convertedSampleRate,
             );
           }
 
@@ -5911,7 +5966,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
               targetFormat: targetFormat,
               bitrate: bitrate,
             ),
-            clearAudioSpecs: true,
+            newBitDepth: convertedBitDepth,
+            newSampleRate: convertedSampleRate,
+            clearAudioSpecs: !isLosslessOutput,
           );
         } else if (item.localItem != null) {
           await LibraryDatabase.instance.replaceWithConvertedItem(
@@ -5919,6 +5976,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
             newFilePath: newPath,
             targetFormat: targetFormat,
             bitrate: bitrate,
+            bitDepth: convertedBitDepth,
+            sampleRate: convertedSampleRate,
           );
         }
 

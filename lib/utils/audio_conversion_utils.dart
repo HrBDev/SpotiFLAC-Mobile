@@ -8,6 +8,67 @@ const List<String> audioConversionTargetFormats = [
   'Opus',
 ];
 
+const List<int> losslessConversionSampleRateOptions = [
+  192000,
+  96000,
+  48000,
+  44100,
+];
+
+const List<int> losslessConversionBitDepthOptions = [16, 24];
+
+List<int> availableLosslessBitDepthOptions(int? sourceBitDepth) {
+  if (sourceBitDepth == null || sourceBitDepth <= 0) {
+    return losslessConversionBitDepthOptions;
+  }
+  return losslessConversionBitDepthOptions
+      .where((depth) => depth < sourceBitDepth)
+      .toList();
+}
+
+List<int> availableLosslessSampleRateOptions(int? sourceSampleRate) {
+  if (sourceSampleRate == null || sourceSampleRate <= 0) {
+    return losslessConversionSampleRateOptions;
+  }
+  return losslessConversionSampleRateOptions
+      .where((rate) => rate < sourceSampleRate)
+      .toList();
+}
+
+int? lowestKnownPositiveInt(Iterable<int?> values) {
+  int? lowest;
+  for (final value in values) {
+    if (value == null || value <= 0) continue;
+    if (lowest == null || value < lowest) {
+      lowest = value;
+    }
+  }
+  return lowest;
+}
+
+class LosslessConversionQuality {
+  final int? maxBitDepth;
+  final int? maxSampleRate;
+
+  const LosslessConversionQuality({this.maxBitDepth, this.maxSampleRate});
+
+  bool get hasCaps => maxBitDepth != null || maxSampleRate != null;
+
+  int? effectiveBitDepth(int? sourceBitDepth) {
+    if (maxBitDepth == null) return sourceBitDepth;
+    if (sourceBitDepth == null || sourceBitDepth <= 0) return maxBitDepth;
+    return sourceBitDepth > maxBitDepth! ? maxBitDepth : sourceBitDepth;
+  }
+
+  int? effectiveSampleRate(int? sourceSampleRate) {
+    if (maxSampleRate == null) return sourceSampleRate;
+    if (sourceSampleRate == null || sourceSampleRate <= 0) {
+      return maxSampleRate;
+    }
+    return sourceSampleRate > maxSampleRate! ? maxSampleRate : sourceSampleRate;
+  }
+}
+
 bool isLosslessConversionTarget(String targetFormat) {
   final normalized = targetFormat.trim().toLowerCase();
   return normalized == 'alac' ||
@@ -105,6 +166,60 @@ String? _convertibleAudioFormatLabel(String? rawFormat) {
     default:
       return null;
   }
+}
+
+String losslessBitDepthLabel(int? bitDepth) {
+  return bitDepth == null ? 'Original' : '$bitDepth-bit';
+}
+
+String losslessSampleRateLabel(int? sampleRate) {
+  if (sampleRate == null) return 'Original';
+  final khz = sampleRate / 1000;
+  final precision = sampleRate % 1000 == 0 ? 0 : 1;
+  return '${khz.toStringAsFixed(precision)} kHz';
+}
+
+String losslessQualityLabel(LosslessConversionQuality quality) {
+  final parts = <String>[];
+  if (quality.maxBitDepth != null) {
+    parts.add(losslessBitDepthLabel(quality.maxBitDepth));
+  }
+  if (quality.maxSampleRate != null) {
+    parts.add(losslessSampleRateLabel(quality.maxSampleRate));
+  }
+  return parts.isEmpty ? 'Original quality' : parts.join(' / ');
+}
+
+String convertedAudioQualityLabel({
+  required String targetFormat,
+  required String bitrate,
+  LosslessConversionQuality losslessQuality = const LosslessConversionQuality(),
+  int? actualBitDepth,
+  int? actualSampleRate,
+}) {
+  final upper = targetFormat.toUpperCase();
+  if (isLosslessConversionTarget(targetFormat)) {
+    if (actualBitDepth != null &&
+        actualBitDepth > 0 &&
+        actualSampleRate != null &&
+        actualSampleRate > 0) {
+      return '$upper ${losslessBitDepthLabel(actualBitDepth)}/${losslessSampleRateLabel(actualSampleRate)}';
+    }
+    if (losslessQuality.hasCaps) {
+      return '$upper ${losslessQualityLabel(losslessQuality)}';
+    }
+    return '$upper Lossless';
+  }
+  return '$upper ${bitrate.trim().toLowerCase()}';
+}
+
+int? readPositiveAudioInt(Object? value) {
+  if (value is num) {
+    final intValue = value.toInt();
+    return intValue > 0 ? intValue : null;
+  }
+  final parsed = int.tryParse(value?.toString() ?? '');
+  return parsed != null && parsed > 0 ? parsed : null;
 }
 
 String normalizedConvertedAudioFormat(String targetFormat) {

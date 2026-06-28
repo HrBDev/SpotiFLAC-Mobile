@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,7 @@ import 'package:spotiflac_android/providers/download_queue_provider.dart';
 import 'package:spotiflac_android/widgets/batch_progress_dialog.dart';
 import 'package:spotiflac_android/widgets/batch_convert_sheet.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
+import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/providers/settings_provider.dart';
 import 'package:spotiflac_android/screens/track_metadata_screen.dart';
 import 'package:spotiflac_android/services/downloaded_embedded_cover_resolver.dart';
@@ -97,7 +100,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
 
   double _calculateExpandedHeight(BuildContext context) {
     final mediaSize = MediaQuery.of(context).size;
-    return (mediaSize.height * 0.55).clamp(360.0, 520.0);
+    return (mediaSize.height * 0.6).clamp(400.0, 580.0);
   }
 
   String? _highResCoverUrl(String? url) {
@@ -269,16 +272,14 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
     }
   }
 
-  Future<void> _openFile(DownloadHistoryItem track) async {
+  Future<void> _openFile(
+    DownloadHistoryItem track, {
+    List<DownloadHistoryItem> queueItems = const [],
+  }) async {
     try {
-      await ref
-          .read(playbackProvider.notifier)
-          .playLocalPath(
-            path: track.filePath,
-            title: track.trackName,
-            artist: track.artistName,
-            album: track.albumName,
-            coverUrl: track.coverUrl ?? '',
+      await ref.read(playbackProvider.notifier).playHistoryQueue(
+            queueItems.isNotEmpty ? queueItems : [track],
+            startItem: track,
           );
     } catch (e) {
       if (mounted) {
@@ -502,26 +503,32 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
               fit: StackFit.expand,
               children: [
                 if (embeddedCoverPath != null)
-                  Image.file(
-                    File(embeddedCoverPath),
-                    fit: BoxFit.cover,
-                    cacheWidth: cacheWidth,
-                    gaplessPlayback: true,
-                    filterQuality: FilterQuality.low,
-                    errorBuilder: (_, _, _) =>
-                        Container(color: colorScheme.surface),
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+                    child: Image.file(
+                      File(embeddedCoverPath),
+                      fit: BoxFit.cover,
+                      cacheWidth: cacheWidth,
+                      gaplessPlayback: true,
+                      filterQuality: FilterQuality.low,
+                      errorBuilder: (_, _, _) =>
+                          Container(color: colorScheme.surface),
+                    ),
                   )
                 else if (widget.coverUrl != null)
-                  CachedNetworkImage(
-                    imageUrl:
-                        _highResCoverUrl(widget.coverUrl) ?? widget.coverUrl!,
-                    fit: BoxFit.cover,
-                    memCacheWidth: cacheWidth,
-                    cacheManager: CoverCacheManager.instance,
-                    placeholder: (_, _) =>
-                        Container(color: colorScheme.surface),
-                    errorWidget: (_, _, _) =>
-                        Container(color: colorScheme.surface),
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          _highResCoverUrl(widget.coverUrl) ?? widget.coverUrl!,
+                      fit: BoxFit.cover,
+                      memCacheWidth: cacheWidth,
+                      cacheManager: CoverCacheManager.instance,
+                      placeholder: (_, _) =>
+                          Container(color: colorScheme.surface),
+                      errorWidget: (_, _, _) =>
+                          Container(color: colorScheme.surface),
+                    ),
                   )
                 else
                   Container(
@@ -532,6 +539,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
+                if (embeddedCoverPath != null || widget.coverUrl != null)
+                  Container(color: Colors.black.withValues(alpha: 0.35)),
                 Positioned(
                   left: 0,
                   right: 0,
@@ -561,11 +570,43 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Builder(
+                          builder: (context) {
+                            final coverSize = (constraints.maxWidth * 0.5)
+                                .clamp(150.0, 210.0)
+                                .toDouble();
+                            return Container(
+                              width: coverSize,
+                              height: coverSize,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.45),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: _buildSquareCover(
+                                  context,
+                                  colorScheme,
+                                  embeddedCoverPath,
+                                  coverSize,
+                                  cacheWidth,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
                         Text(
                           widget.albumName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: _albumTitleFontSize(),
                             fontWeight: FontWeight.bold,
                             height: 1.2,
                           ),
@@ -587,62 +628,49 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
                         ),
                         if (tracks.isNotEmpty) ...[
                           const SizedBox(height: 12),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 8,
-                            runSpacing: 8,
+                          _buildDownloadedHeaderMeta(
+                            context,
+                            tracks,
+                            commonQuality,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.download_done,
-                                      size: 14,
-                                      color: Colors.white,
+                              Flexible(
+                                child: FilledButton.icon(
+                                  onPressed: () => _playAll(tracks),
+                                  icon: const Icon(Icons.play_arrow, size: 20),
+                                  label: Text(
+                                    context.l10n.tooltipPlay,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black87,
+                                    minimumSize: const Size(0, 48),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24),
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      context.l10n
-                                          .downloadedAlbumDownloadedCount(
-                                            tracks.length,
-                                          ),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              if (commonQuality != null)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    commonQuality,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    ),
+                              const SizedBox(width: 12),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  tooltip: 'Shuffle',
+                                  onPressed: () => _shuffleAll(tracks),
+                                  icon: const Icon(
+                                    Icons.shuffle,
+                                    color: Colors.white,
                                   ),
                                 ),
+                              ),
                             ],
                           ),
                         ],
@@ -668,6 +696,136 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
         ),
         onPressed: () => Navigator.pop(context),
       ),
+    );
+  }
+
+  Widget _buildSquareCover(
+    BuildContext context,
+    ColorScheme colorScheme,
+    String? embeddedCoverPath,
+    double coverSize,
+    int cacheWidth,
+  ) {
+    Widget placeholder() => Container(
+      color: colorScheme.surfaceContainerHighest,
+      child: Icon(
+        Icons.album,
+        size: 48,
+        color: colorScheme.onSurfaceVariant,
+      ),
+    );
+
+    if (embeddedCoverPath != null) {
+      return Image.file(
+        File(embeddedCoverPath),
+        fit: BoxFit.cover,
+        width: coverSize,
+        height: coverSize,
+        cacheWidth: cacheWidth,
+        gaplessPlayback: true,
+        errorBuilder: (_, _, _) => placeholder(),
+      );
+    }
+
+    final coverUrl = widget.coverUrl;
+    if (coverUrl != null && coverUrl.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: _highResCoverUrl(coverUrl) ?? coverUrl,
+        fit: BoxFit.cover,
+        width: coverSize,
+        height: coverSize,
+        memCacheWidth: cacheWidth,
+        cacheManager: CoverCacheManager.instance,
+        placeholder: (_, _) => placeholder(),
+        errorWidget: (_, _, _) => placeholder(),
+      );
+    }
+
+    return placeholder();
+  }
+
+  double _albumTitleFontSize() {
+    final length = widget.albumName.trim().length;
+    if (length > 45) return 18;
+    if (length > 30) return 21;
+    return 24;
+  }
+
+  Widget _metaWhiteItem(IconData? icon, String label) {
+    const textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+    );
+    if (icon == null) return Text(label, style: textStyle);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 15, color: Colors.white),
+        const SizedBox(width: 4),
+        Text(label, style: textStyle),
+      ],
+    );
+  }
+
+  Widget _buildDownloadedHeaderMeta(
+    BuildContext context,
+    List<DownloadHistoryItem> tracks,
+    String? commonQuality,
+  ) {
+    final totalSeconds = tracks.fold<int>(
+      0,
+      (sum, t) => sum + ((t.duration ?? 0) > 0 ? t.duration! : 0),
+    );
+    final totalMinutes = (totalSeconds / 60).round();
+
+    final parts = <Widget>[];
+    void add(Widget w) {
+      if (parts.isNotEmpty) {
+        parts.add(
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              '•',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ),
+        );
+      }
+      parts.add(w);
+    }
+
+    add(
+      _metaWhiteItem(
+        null,
+        context.l10n.downloadedAlbumDownloadedCount(tracks.length),
+      ),
+    );
+    if (totalMinutes > 0) add(_metaWhiteItem(null, '$totalMinutes min'));
+    if (commonQuality != null && commonQuality.isNotEmpty) {
+      add(_metaWhiteItem(Icons.graphic_eq, commonQuality));
+    }
+
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      runSpacing: 4,
+      children: parts,
+    );
+  }
+
+  Future<void> _playAll(List<DownloadHistoryItem> tracks) async {
+    if (tracks.isEmpty) return;
+    await ref.read(musicPlayerControllerProvider).setShuffle(false);
+    await _openFile(tracks.first, queueItems: tracks);
+  }
+
+  Future<void> _shuffleAll(List<DownloadHistoryItem> tracks) async {
+    if (tracks.isEmpty) return;
+    await ref.read(musicPlayerControllerProvider).setShuffle(true);
+    await _openFile(
+      tracks[Random().nextInt(tracks.length)],
+      queueItems: tracks,
     );
   }
 
@@ -888,7 +1046,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
               ? null
               : IconButton(
                   tooltip: context.l10n.tooltipPlay,
-                  onPressed: () => _openFile(track),
+                  onPressed: () =>
+                      _openFile(track, queueItems: navigationItems),
                   icon: Icon(Icons.play_arrow, color: colorScheme.primary),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.primaryContainer.withValues(

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +25,7 @@ import 'package:spotiflac_android/widgets/re_enrich_field_dialog.dart';
 import 'package:spotiflac_android/services/platform_bridge.dart';
 import 'package:spotiflac_android/providers/local_library_provider.dart';
 import 'package:spotiflac_android/providers/playback_provider.dart';
+import 'package:spotiflac_android/providers/music_player_provider.dart';
 import 'package:spotiflac_android/widgets/animation_utils.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
@@ -95,7 +98,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
 
   double _calculateExpandedHeight(BuildContext context) {
     final mediaSize = MediaQuery.of(context).size;
-    return (mediaSize.height * 0.55).clamp(360.0, 520.0);
+    return (mediaSize.height * 0.6).clamp(400.0, 580.0);
   }
 
   List<LocalLibraryItem> _buildSortedTracks() {
@@ -231,13 +234,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
     try {
       await ref
           .read(playbackProvider.notifier)
-          .playLocalPath(
-            path: track.filePath,
-            title: track.trackName,
-            artist: track.artistName,
-            album: track.albumName,
-            coverUrl: track.coverPath ?? '',
-          );
+          .playLocalLibraryQueue(_sortedTracksCache, startItem: track);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -315,7 +312,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
 
   Widget _buildAppBar(BuildContext context, ColorScheme colorScheme) {
     final expandedHeight = _calculateExpandedHeight(context);
-    final commonQuality = _commonQualityCache;
 
     return SliverAppBar(
       expandedHeight: expandedHeight,
@@ -351,14 +347,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
               fit: StackFit.expand,
               children: [
                 if (widget.coverPath != null)
-                  Image.file(
-                    File(widget.coverPath!),
-                    fit: BoxFit.cover,
-                    cacheWidth: cacheWidth,
-                    gaplessPlayback: true,
-                    filterQuality: FilterQuality.low,
-                    errorBuilder: (_, _, _) =>
-                        Container(color: colorScheme.surface),
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+                    child: Image.file(
+                      File(widget.coverPath!),
+                      fit: BoxFit.cover,
+                      cacheWidth: cacheWidth,
+                      gaplessPlayback: true,
+                      filterQuality: FilterQuality.low,
+                      errorBuilder: (_, _, _) =>
+                          Container(color: colorScheme.surface),
+                    ),
                   )
                 else
                   Container(
@@ -369,6 +368,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
+                if (widget.coverPath != null)
+                  Container(color: Colors.black.withValues(alpha: 0.35)),
                 Positioned(
                   left: 0,
                   right: 0,
@@ -398,11 +399,63 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Builder(
+                          builder: (context) {
+                            final coverSize = (constraints.maxWidth * 0.5)
+                                .clamp(150.0, 210.0)
+                                .toDouble();
+                            return Container(
+                              width: coverSize,
+                              height: coverSize,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.45),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: widget.coverPath != null
+                                    ? Image.file(
+                                        File(widget.coverPath!),
+                                        fit: BoxFit.cover,
+                                        width: coverSize,
+                                        height: coverSize,
+                                        cacheWidth: cacheWidth,
+                                        gaplessPlayback: true,
+                                        errorBuilder: (_, _, _) => Container(
+                                          color:
+                                              colorScheme.surfaceContainerHighest,
+                                          child: Icon(
+                                            Icons.album,
+                                            size: 48,
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        color:
+                                            colorScheme.surfaceContainerHighest,
+                                        child: Icon(
+                                          Icons.album,
+                                          size: 48,
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
                         Text(
                           widget.albumName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: _albumTitleFontSize(),
                             fontWeight: FontWeight.bold,
                             height: 1.2,
                           ),
@@ -423,90 +476,45 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 12),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
+                        _buildLocalHeaderMeta(context),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.folder,
-                                    size: 14,
-                                    color: Colors.white,
+                            Flexible(
+                              child: FilledButton.icon(
+                                onPressed: _playAll,
+                                icon: const Icon(Icons.play_arrow, size: 20),
+                                label: Text(
+                                  context.l10n.tooltipPlay,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black87,
+                                  minimumSize: const Size(0, 48),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    context.l10n.librarySourceLocal,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 12),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
+                                shape: BoxShape.circle,
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.music_note,
-                                    size: 14,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    context.l10n.queueTrackCount(
-                                      _sortedTracksCache.length,
-                                    ),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                              child: IconButton(
+                                tooltip: 'Shuffle',
+                                onPressed: _shuffleAll,
+                                icon: const Icon(
+                                  Icons.shuffle,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            if (commonQuality != null)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  commonQuality,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ],
@@ -540,6 +548,85 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
     List<LocalLibraryItem> tracks,
   ) {
     return const SliverToBoxAdapter(child: SizedBox.shrink());
+  }
+
+  double _albumTitleFontSize() {
+    final length = widget.albumName.trim().length;
+    if (length > 45) return 18;
+    if (length > 30) return 21;
+    return 24;
+  }
+
+  Widget _metaWhiteItem(IconData? icon, String label) {
+    const textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+    );
+    if (icon == null) return Text(label, style: textStyle);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 15, color: Colors.white),
+        const SizedBox(width: 4),
+        Text(label, style: textStyle),
+      ],
+    );
+  }
+
+  Widget _buildLocalHeaderMeta(BuildContext context) {
+    final tracks = _sortedTracksCache;
+    final totalSeconds = tracks.fold<int>(
+      0,
+      (sum, t) => sum + ((t.duration ?? 0) > 0 ? t.duration! : 0),
+    );
+    final totalMinutes = (totalSeconds / 60).round();
+
+    final parts = <Widget>[];
+    void add(Widget w) {
+      if (parts.isNotEmpty) {
+        parts.add(
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              '•',
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ),
+        );
+      }
+      parts.add(w);
+    }
+
+    add(_metaWhiteItem(null, context.l10n.queueTrackCount(tracks.length)));
+    if (totalMinutes > 0) add(_metaWhiteItem(null, '$totalMinutes min'));
+    final quality = _commonQualityCache;
+    if (quality != null && quality.isNotEmpty) {
+      add(_metaWhiteItem(Icons.graphic_eq, quality));
+    }
+
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      runSpacing: 4,
+      children: parts,
+    );
+  }
+
+  Future<void> _playAll() async {
+    final tracks = _sortedTracksCache;
+    if (tracks.isEmpty) return;
+    await ref.read(musicPlayerControllerProvider).setShuffle(false);
+    await _openFile(tracks.first);
+  }
+
+  Future<void> _shuffleAll() async {
+    final tracks = _sortedTracksCache
+        .where((t) => !isCueVirtualPath(t.filePath))
+        .toList();
+    if (tracks.isEmpty) return;
+    await ref.read(musicPlayerControllerProvider).setShuffle(true);
+    await _openFile(tracks[Random().nextInt(tracks.length)]);
   }
 
   String? _computeCommonQuality(List<LocalLibraryItem> tracks) {

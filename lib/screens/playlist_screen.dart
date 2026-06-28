@@ -240,7 +240,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen> {
 
   double _calculateExpandedHeight(BuildContext context) {
     final mediaSize = MediaQuery.of(context).size;
-    return (mediaSize.height * 0.55).clamp(360.0, 520.0);
+    return (mediaSize.height * 0.6).clamp(400.0, 580.0);
   }
 
   String? _highResCoverUrl(String? url) {

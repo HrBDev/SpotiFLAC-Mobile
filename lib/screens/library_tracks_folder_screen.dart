@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' show ImageFilter;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -68,7 +69,14 @@ class _LibraryTracksFolderScreenState
 
   double _calculateExpandedHeight(BuildContext context) {
     final mediaSize = MediaQuery.of(context).size;
-    return (mediaSize.height * 0.45).clamp(300.0, 420.0);
+    return (mediaSize.height * 0.6).clamp(400.0, 580.0);
+  }
+
+  double _folderTitleFontSize(String title) {
+    final length = title.trim().length;
+    if (length > 45) return 18;
+    if (length > 30) return 21;
+    return 24;
   }
 
   IconData _modeIcon() {
@@ -702,48 +710,67 @@ class _LibraryTracksFolderScreenState
               fit: StackFit.expand,
               children: [
                 if (hasCustomCover)
-                  Image.file(
-                    File(customCoverPath),
-                    fit: BoxFit.cover,
-                    cacheWidth: cacheWidth,
-                    filterQuality: FilterQuality.low,
-                    gaplessPlayback: true,
-                    frameBuilder: (_, child, frame, wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded || frame != null) return child;
-                      return coverFallback;
-                    },
-                    errorBuilder: (_, _, _) => coverFallback,
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+                    child: Image.file(
+                      File(customCoverPath),
+                      fit: BoxFit.cover,
+                      cacheWidth: cacheWidth,
+                      filterQuality: FilterQuality.low,
+                      gaplessPlayback: true,
+                      frameBuilder: (_, child, frame, wasSynchronouslyLoaded) {
+                        if (wasSynchronouslyLoaded || frame != null) {
+                          return child;
+                        }
+                        return coverFallback;
+                      },
+                      errorBuilder: (_, _, _) => coverFallback,
+                    ),
                   )
                 else if (hasCoverUrl)
                   _isCoverLocalPath(coverUrl)
-                      ? Image.file(
-                          File(coverUrl),
-                          fit: BoxFit.cover,
-                          cacheWidth: cacheWidth,
-                          filterQuality: FilterQuality.low,
-                          gaplessPlayback: true,
-                          frameBuilder:
-                              (_, child, frame, wasSynchronouslyLoaded) {
-                                if (wasSynchronouslyLoaded || frame != null) {
-                                  return child;
-                                }
-                                return Container(color: colorScheme.surface);
-                              },
-                          errorBuilder: (_, _, _) =>
-                              Container(color: colorScheme.surface),
+                      ? ImageFiltered(
+                          imageFilter: ImageFilter.blur(
+                            sigmaX: 32,
+                            sigmaY: 32,
+                          ),
+                          child: Image.file(
+                            File(coverUrl),
+                            fit: BoxFit.cover,
+                            cacheWidth: cacheWidth,
+                            filterQuality: FilterQuality.low,
+                            gaplessPlayback: true,
+                            frameBuilder:
+                                (_, child, frame, wasSynchronouslyLoaded) {
+                                  if (wasSynchronouslyLoaded || frame != null) {
+                                    return child;
+                                  }
+                                  return Container(color: colorScheme.surface);
+                                },
+                            errorBuilder: (_, _, _) =>
+                                Container(color: colorScheme.surface),
+                          ),
                         )
-                      : CachedNetworkImage(
-                          imageUrl: _highResCoverUrl(coverUrl) ?? coverUrl,
-                          fit: BoxFit.cover,
-                          memCacheWidth: cacheWidth,
-                          cacheManager: CoverCacheManager.instance,
-                          placeholder: (_, _) =>
-                              Container(color: colorScheme.surface),
-                          errorWidget: (_, _, _) =>
-                              Container(color: colorScheme.surface),
+                      : ImageFiltered(
+                          imageFilter: ImageFilter.blur(
+                            sigmaX: 32,
+                            sigmaY: 32,
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: _highResCoverUrl(coverUrl) ?? coverUrl,
+                            fit: BoxFit.cover,
+                            memCacheWidth: cacheWidth,
+                            cacheManager: CoverCacheManager.instance,
+                            placeholder: (_, _) =>
+                                Container(color: colorScheme.surface),
+                            errorWidget: (_, _, _) =>
+                                Container(color: colorScheme.surface),
+                          ),
                         )
                 else
                   coverFallback,
+                if (hasCustomCover || hasCoverUrl)
+                  Container(color: Colors.black.withValues(alpha: 0.35)),
                 Positioned(
                   left: 0,
                   right: 0,
@@ -773,11 +800,82 @@ class _LibraryTracksFolderScreenState
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Builder(
+                          builder: (context) {
+                            final coverSize = (constraints.maxWidth * 0.5)
+                                .clamp(150.0, 210.0)
+                                .toDouble();
+                            Widget squarePlaceholder() => Container(
+                              color: colorScheme.surfaceContainerHighest,
+                              child: Icon(
+                                _modeIcon(),
+                                size: 48,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            );
+                            Widget coverChild;
+                            if (hasCustomCover) {
+                              coverChild = Image.file(
+                                File(customCoverPath),
+                                fit: BoxFit.cover,
+                                width: coverSize,
+                                height: coverSize,
+                                cacheWidth: cacheWidth,
+                                gaplessPlayback: true,
+                                errorBuilder: (_, _, _) => squarePlaceholder(),
+                              );
+                            } else if (hasCoverUrl &&
+                                _isCoverLocalPath(coverUrl)) {
+                              coverChild = Image.file(
+                                File(coverUrl),
+                                fit: BoxFit.cover,
+                                width: coverSize,
+                                height: coverSize,
+                                cacheWidth: cacheWidth,
+                                gaplessPlayback: true,
+                                errorBuilder: (_, _, _) => squarePlaceholder(),
+                              );
+                            } else if (hasCoverUrl) {
+                              coverChild = CachedNetworkImage(
+                                imageUrl:
+                                    _highResCoverUrl(coverUrl) ?? coverUrl,
+                                fit: BoxFit.cover,
+                                width: coverSize,
+                                height: coverSize,
+                                memCacheWidth: cacheWidth,
+                                cacheManager: CoverCacheManager.instance,
+                                placeholder: (_, _) => squarePlaceholder(),
+                                errorWidget: (_, _, _) => squarePlaceholder(),
+                              );
+                            } else {
+                              coverChild = squarePlaceholder();
+                            }
+                            return Container(
+                              width: coverSize,
+                              height: coverSize,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.45),
+                                    blurRadius: 24,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: coverChild,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
                         Text(
                           title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: _folderTitleFontSize(title),
                             fontWeight: FontWeight.bold,
                             height: 1.2,
                           ),

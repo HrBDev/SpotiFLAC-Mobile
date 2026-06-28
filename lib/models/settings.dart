@@ -94,6 +94,8 @@ class AppSettings {
   deduplicateDownloads;
   final bool saveDownloadHistory;
 
+  final String playerMode;
+
   const AppSettings({
     this.defaultService = '',
     this.audioQuality = 'LOSSLESS',
@@ -155,6 +157,7 @@ class AppSettings {
     this.lastSeenVersion = '',
     this.deduplicateDownloads = true,
     this.saveDownloadHistory = true,
+    this.playerMode = 'external',
   });
 
   AppSettings copyWith({
@@ -221,6 +224,7 @@ class AppSettings {
     String? lastSeenVersion,
     bool? deduplicateDownloads,
     bool? saveDownloadHistory,
+    String? playerMode,
   }) {
     return AppSettings(
       defaultService: defaultService ?? this.defaultService,
@@ -305,6 +309,7 @@ class AppSettings {
       lastSeenVersion: lastSeenVersion ?? this.lastSeenVersion,
       deduplicateDownloads: deduplicateDownloads ?? this.deduplicateDownloads,
       saveDownloadHistory: saveDownloadHistory ?? this.saveDownloadHistory,
+      playerMode: playerMode ?? this.playerMode,
     );
   }
 

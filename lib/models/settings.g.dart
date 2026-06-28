@@ -83,6 +83,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   lastSeenVersion: json['lastSeenVersion'] as String? ?? '',
   deduplicateDownloads: json['deduplicateDownloads'] as bool? ?? true,
   saveDownloadHistory: json['saveDownloadHistory'] as bool? ?? true,
+  playerMode: json['playerMode'] as String? ?? 'external',
 );
 
 Map<String, dynamic> _$AppSettingsToJson(
@@ -149,4 +150,5 @@ Map<String, dynamic> _$AppSettingsToJson(
   'lastSeenVersion': instance.lastSeenVersion,
   'deduplicateDownloads': instance.deduplicateDownloads,
   'saveDownloadHistory': instance.saveDownloadHistory,
+  'playerMode': instance.playerMode,
 };

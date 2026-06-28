@@ -1,6 +1,7 @@
 package com.zarz.spotiflac
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -17,6 +18,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterShellArgs
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import com.ryanheise.audioservice.AudioServicePlugin
 import gobackend.Gobackend
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +38,10 @@ import java.security.MessageDigest
 import java.util.Locale
 
 class MainActivity: FlutterFragmentActivity() {
+    override fun provideFlutterEngine(context: Context): FlutterEngine {
+        return AudioServicePlugin.getFlutterEngine(context)
+    }
+
     private val CHANNEL = "com.zarz.spotiflac/backend"
     private val DOWNLOAD_PROGRESS_STREAM_CHANNEL =
         "com.zarz.spotiflac/download_progress_stream"

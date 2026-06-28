@@ -645,6 +645,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
     state = state.copyWith(saveDownloadHistory: enabled);
     _saveSettings();
   }
+
+  void setPlayerMode(String mode) {
+    final normalized = mode == 'internal' ? 'internal' : 'external';
+    state = state.copyWith(playerMode: normalized);
+    _saveSettings();
+  }
 }
 
 final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(

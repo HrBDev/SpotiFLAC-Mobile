@@ -277,7 +277,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
     List<DownloadHistoryItem> queueItems = const [],
   }) async {
     try {
-      await ref.read(playbackProvider.notifier).playHistoryQueue(
+      await ref
+          .read(playbackProvider.notifier)
+          .playHistoryQueue(
             queueItems.isNotEmpty ? queueItems : [track],
             startItem: track,
           );
@@ -708,11 +710,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
   ) {
     Widget placeholder() => Container(
       color: colorScheme.surfaceContainerHighest,
-      child: Icon(
-        Icons.album,
-        size: 48,
-        color: colorScheme.onSurfaceVariant,
-      ),
+      child: Icon(Icons.album, size: 48, color: colorScheme.onSurfaceVariant),
     );
 
     if (embeddedCoverPath != null) {
@@ -1106,6 +1104,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
   ) {
     final tracksById = {for (final t in allTracks) t.id: t};
     final sourceFormats = <String>{};
+    final sourceBitDepths = <int?>[];
+    final sourceSampleRates = <int?>[];
     for (final id in _selectedIds) {
       final item = tracksById[id];
       if (item == null) continue;
@@ -1115,6 +1115,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
         fileName: item.safFileName,
       );
       if (sourceFormat != null) sourceFormats.add(sourceFormat);
+      sourceBitDepths.add(item.bitDepth);
+      sourceSampleRates.add(item.sampleRate);
     }
 
     final formats = audioConversionTargetFormats
@@ -1145,12 +1147,15 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
         formats: formats,
         title: sheetTitle,
         confirmLabel: sheetConfirmLabel,
-        onConvert: (format, bitrate) {
+        sourceBitDepth: lowestKnownPositiveInt(sourceBitDepths),
+        sourceSampleRate: lowestKnownPositiveInt(sourceSampleRates),
+        onConvert: (format, bitrate, losslessQuality) {
           Navigator.pop(sheetContext);
           _performBatchConversion(
             allTracks: allTracks,
             targetFormat: format,
             bitrate: bitrate,
+            losslessQuality: losslessQuality,
           );
         },
       ),
@@ -1161,6 +1166,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
     required List<DownloadHistoryItem> allTracks,
     required String targetFormat,
     required String bitrate,
+    LosslessConversionQuality losslessQuality =
+        const LosslessConversionQuality(),
   }) async {
     final tracksById = {for (final t in allTracks) t.id: t};
     final selected = <DownloadHistoryItem>[];
@@ -1197,7 +1204,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
-          isLossless
+          isLossless && losslessQuality.hasCaps
+              ? 'Convert ${selected.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selected.length,
                   targetFormat,
@@ -1226,10 +1235,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
     int successCount = 0;
     final total = selected.length;
     final historyDb = HistoryDatabase.instance;
-    final newQuality =
-        isLosslessConversionTarget(targetFormat)
-        ? '${targetFormat.toUpperCase()} Lossless'
-        : '${targetFormat.toUpperCase()} ${bitrate.trim().toLowerCase()}';
     final settings = ref.read(settingsProvider);
     final shouldEmbedLyrics =
         settings.embedLyrics && settings.lyricsMode != 'external';
@@ -1306,6 +1311,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
           coverPath: coverPath,
           artistTagMode: settings.artistTagMode,
           deleteOriginal: !isSaf,
+          sourceBitDepth: item.bitDepth,
+          losslessQuality: losslessQuality,
         );
 
         if (coverPath != null) {
@@ -1322,6 +1329,38 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
           }
           continue;
         }
+
+        final isLosslessOutput = isLosslessConversionTarget(targetFormat);
+        int? convertedBitDepth;
+        int? convertedSampleRate;
+        if (isLosslessOutput) {
+          try {
+            final convertedMetadata = await PlatformBridge.readFileMetadata(
+              newPath,
+            );
+            if (convertedMetadata['error'] == null) {
+              convertedBitDepth = readPositiveAudioInt(
+                convertedMetadata['bit_depth'],
+              );
+              convertedSampleRate = readPositiveAudioInt(
+                convertedMetadata['sample_rate'],
+              );
+            }
+          } catch (_) {}
+          convertedBitDepth ??= losslessQuality.effectiveBitDepth(
+            item.bitDepth,
+          );
+          convertedSampleRate ??= losslessQuality.effectiveSampleRate(
+            item.sampleRate,
+          );
+        }
+        final newQuality = convertedAudioQualityLabel(
+          targetFormat: targetFormat,
+          bitrate: bitrate,
+          losslessQuality: losslessQuality,
+          actualBitDepth: convertedBitDepth,
+          actualSampleRate: convertedSampleRate,
+        );
 
         if (isSaf) {
           final treeUri = item.downloadTreeUri;
@@ -1372,7 +1411,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
                 targetFormat: targetFormat,
                 bitrate: bitrate,
               ),
-              clearAudioSpecs: true,
+              newBitDepth: convertedBitDepth,
+              newSampleRate: convertedSampleRate,
+              clearAudioSpecs: !isLosslessOutput,
             );
           }
           try {
@@ -1393,7 +1434,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
               targetFormat: targetFormat,
               bitrate: bitrate,
             ),
-            clearAudioSpecs: true,
+            newBitDepth: convertedBitDepth,
+            newSampleRate: convertedSampleRate,
+            clearAudioSpecs: !isLosslessOutput,
           );
         }
 
@@ -1438,9 +1481,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(ctx.l10n.replayGainBatchConfirmTitle),
-        content: Text(
-          ctx.l10n.replayGainBatchConfirmMessage(selected.length),
-        ),
+        content: Text(ctx.l10n.replayGainBatchConfirmMessage(selected.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -1490,9 +1531,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          context.l10n.replayGainBatchSuccess(successCount, total),
-        ),
+        content: Text(context.l10n.replayGainBatchSuccess(successCount, total)),
       ),
     );
   }

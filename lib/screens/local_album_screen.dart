@@ -428,8 +428,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
                                         cacheWidth: cacheWidth,
                                         gaplessPlayback: true,
                                         errorBuilder: (_, _, _) => Container(
-                                          color:
-                                              colorScheme.surfaceContainerHighest,
+                                          color: colorScheme
+                                              .surfaceContainerHighest,
                                           child: Icon(
                                             Icons.album,
                                             size: 48,
@@ -1283,6 +1283,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
   ) {
     final tracksById = {for (final t in allTracks) t.id: t};
     final sourceFormats = <String>{};
+    final sourceBitDepths = <int?>[];
+    final sourceSampleRates = <int?>[];
     for (final id in _selectedIds) {
       final item = tracksById[id];
       if (item == null) continue;
@@ -1291,6 +1293,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
         filePath: item.filePath,
       );
       if (sourceFormat != null) sourceFormats.add(sourceFormat);
+      sourceBitDepths.add(item.bitDepth);
+      sourceSampleRates.add(item.sampleRate);
     }
 
     final formats = audioConversionTargetFormats
@@ -1321,12 +1325,15 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
         formats: formats,
         title: sheetTitle,
         confirmLabel: sheetConfirmLabel,
-        onConvert: (format, bitrate) {
+        sourceBitDepth: lowestKnownPositiveInt(sourceBitDepths),
+        sourceSampleRate: lowestKnownPositiveInt(sourceSampleRates),
+        onConvert: (format, bitrate, losslessQuality) {
           Navigator.pop(sheetContext);
           _performBatchConversion(
             allTracks: allTracks,
             targetFormat: format,
             bitrate: bitrate,
+            losslessQuality: losslessQuality,
           );
         },
       ),
@@ -1337,6 +1344,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
     required List<LocalLibraryItem> allTracks,
     required String targetFormat,
     required String bitrate,
+    LosslessConversionQuality losslessQuality =
+        const LosslessConversionQuality(),
   }) async {
     final tracksById = {for (final t in allTracks) t.id: t};
     final selected = <LocalLibraryItem>[];
@@ -1372,7 +1381,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
       builder: (ctx) => AlertDialog(
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
-          isLossless
+          isLossless && losslessQuality.hasCaps
+              ? 'Convert ${selected.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selected.length,
                   targetFormat,
@@ -1476,6 +1487,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
           coverPath: coverPath,
           artistTagMode: settings.artistTagMode,
           deleteOriginal: !isSaf,
+          sourceBitDepth: item.bitDepth,
+          losslessQuality: losslessQuality,
         );
 
         if (coverPath != null) {
@@ -1491,6 +1504,31 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
             } catch (_) {}
           }
           continue;
+        }
+
+        final isLosslessOutput = isLosslessConversionTarget(targetFormat);
+        int? convertedBitDepth;
+        int? convertedSampleRate;
+        if (isLosslessOutput) {
+          try {
+            final convertedMetadata = await PlatformBridge.readFileMetadata(
+              newPath,
+            );
+            if (convertedMetadata['error'] == null) {
+              convertedBitDepth = readPositiveAudioInt(
+                convertedMetadata['bit_depth'],
+              );
+              convertedSampleRate = readPositiveAudioInt(
+                convertedMetadata['sample_rate'],
+              );
+            }
+          } catch (_) {}
+          convertedBitDepth ??= losslessQuality.effectiveBitDepth(
+            item.bitDepth,
+          );
+          convertedSampleRate ??= losslessQuality.effectiveSampleRate(
+            item.sampleRate,
+          );
         }
 
         if (isSaf) {
@@ -1575,6 +1613,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
               newFilePath: safUri,
               targetFormat: targetFormat,
               bitrate: bitrate,
+              bitDepth: convertedBitDepth,
+              sampleRate: convertedSampleRate,
             );
           }
 
@@ -1592,6 +1632,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
             newFilePath: newPath,
             targetFormat: targetFormat,
             bitrate: bitrate,
+            bitDepth: convertedBitDepth,
+            sampleRate: convertedSampleRate,
           );
         }
 
@@ -1636,9 +1678,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(ctx.l10n.replayGainBatchConfirmTitle),
-        content: Text(
-          ctx.l10n.replayGainBatchConfirmMessage(selected.length),
-        ),
+        content: Text(ctx.l10n.replayGainBatchConfirmMessage(selected.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -1688,9 +1728,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          context.l10n.replayGainBatchSuccess(successCount, total),
-        ),
+        content: Text(context.l10n.replayGainBatchSuccess(successCount, total)),
       ),
     );
   }

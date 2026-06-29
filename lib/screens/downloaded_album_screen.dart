@@ -665,7 +665,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: IconButton(
-                                  tooltip: 'Shuffle',
+                                  tooltip: context.l10n.actionShuffle,
                                   onPressed: () => _shuffleAll(tracks),
                                   icon: const Icon(
                                     Icons.shuffle,
@@ -1205,7 +1205,17 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
           isLossless && losslessQuality.hasCaps
-              ? 'Convert ${selected.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              ? context.l10n.selectionBatchConvertConfirmMessageLosslessCapped(
+                  selected.length,
+                  targetFormat,
+                  losslessQualityLabel(
+                    losslessQuality,
+                    originalLabel:
+                        context.l10n.losslessConversionLabels.original,
+                    originalQualityLabel:
+                        context.l10n.losslessConversionLabels.originalQuality,
+                  ),
+                )
               : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selected.length,
@@ -1357,6 +1367,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen> {
         final newQuality = convertedAudioQualityLabel(
           targetFormat: targetFormat,
           bitrate: bitrate,
+          labels: context.l10n.losslessConversionLabels,
           losslessQuality: losslessQuality,
           actualBitDepth: convertedBitDepth,
           actualSampleRate: convertedSampleRate,

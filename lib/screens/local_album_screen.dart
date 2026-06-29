@@ -507,7 +507,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
                                 shape: BoxShape.circle,
                               ),
                               child: IconButton(
-                                tooltip: 'Shuffle',
+                                tooltip: context.l10n.actionShuffle,
                                 onPressed: _shuffleAll,
                                 icon: const Icon(
                                   Icons.shuffle,
@@ -1382,7 +1382,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen> {
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
           isLossless && losslessQuality.hasCaps
-              ? 'Convert ${selected.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              ? context.l10n.selectionBatchConvertConfirmMessageLosslessCapped(
+                  selected.length,
+                  targetFormat,
+                  losslessQualityLabel(
+                    losslessQuality,
+                    originalLabel:
+                        context.l10n.losslessConversionLabels.original,
+                    originalQualityLabel:
+                        context.l10n.losslessConversionLabels.originalQuality,
+                  ),
+                )
               : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selected.length,

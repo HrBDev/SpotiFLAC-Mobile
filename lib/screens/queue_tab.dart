@@ -1363,7 +1363,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                   icon: const Icon(Icons.delete_outline),
                   label: Text(
                     selectedCount > 0
-                        ? 'Delete $selectedCount ${selectedCount == 1 ? 'playlist' : 'playlists'}'
+                        ? context.l10n.selectionDeletePlaylistsCount(
+                            selectedCount,
+                          )
                         : context.l10n.selectionSelectPlaylistsToDelete,
                   ),
                   style: FilledButton.styleFrom(
@@ -5635,7 +5637,17 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         title: Text(context.l10n.selectionBatchConvertConfirmTitle),
         content: Text(
           isLossless && losslessQuality.hasCaps
-              ? 'Convert ${selectedItems.length} tracks to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original files will be deleted after conversion.'
+              ? context.l10n.selectionBatchConvertConfirmMessageLosslessCapped(
+                  selectedItems.length,
+                  targetFormat,
+                  losslessQualityLabel(
+                    losslessQuality,
+                    originalLabel:
+                        context.l10n.losslessConversionLabels.original,
+                    originalQualityLabel:
+                        context.l10n.losslessConversionLabels.originalQuality,
+                  ),
+                )
               : isLossless
               ? context.l10n.selectionBatchConvertConfirmMessageLossless(
                   selectedItems.length,
@@ -5796,6 +5808,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         final newQuality = convertedAudioQualityLabel(
           targetFormat: targetFormat,
           bitrate: bitrate,
+          labels: context.l10n.losslessConversionLabels,
           losslessQuality: losslessQuality,
           actualBitDepth: convertedBitDepth,
           actualSampleRate: convertedSampleRate,

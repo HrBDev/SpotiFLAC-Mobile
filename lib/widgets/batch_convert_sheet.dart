@@ -62,6 +62,7 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final labels = context.l10n.losslessConversionLabels;
     final bitDepthOptions = availableLosslessBitDepthOptions(
       widget.sourceBitDepth,
     );
@@ -170,14 +171,17 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _sectionLabel(cs, 'Bit depth'),
+                    _sectionLabel(cs, context.l10n.audioAnalysisBitDepth),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: [
                         _choice(
                           cs,
-                          label: losslessBitDepthLabel(null),
+                          label: losslessBitDepthLabel(
+                            null,
+                            originalLabel: labels.original,
+                          ),
                           selected: _selectedMaxBitDepth == null,
                           onTap: () =>
                               setState(() => _selectedMaxBitDepth = null),
@@ -185,7 +189,10 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                         ...bitDepthOptions.map((depth) {
                           return _choice(
                             cs,
-                            label: losslessBitDepthLabel(depth),
+                            label: losslessBitDepthLabel(
+                              depth,
+                              originalLabel: labels.original,
+                            ),
                             selected: depth == _selectedMaxBitDepth,
                             onTap: () =>
                                 setState(() => _selectedMaxBitDepth = depth),
@@ -203,14 +210,17 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _sectionLabel(cs, 'Sample rate'),
+                    _sectionLabel(cs, context.l10n.audioAnalysisSampleRate),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: [
                         _choice(
                           cs,
-                          label: losslessSampleRateLabel(null),
+                          label: losslessSampleRateLabel(
+                            null,
+                            originalLabel: labels.original,
+                          ),
                           selected: _selectedMaxSampleRate == null,
                           onTap: () =>
                               setState(() => _selectedMaxSampleRate = null),
@@ -218,7 +228,10 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                         ...sampleRateOptions.map((rate) {
                           return _choice(
                             cs,
-                            label: losslessSampleRateLabel(rate),
+                            label: losslessSampleRateLabel(
+                              rate,
+                              originalLabel: labels.original,
+                            ),
                             selected: rate == _selectedMaxSampleRate,
                             onTap: () =>
                                 setState(() => _selectedMaxSampleRate = rate),
@@ -251,7 +264,16 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
                         _selectedMaxBitDepth == null &&
                                 _selectedMaxSampleRate == null
                             ? context.l10n.trackConvertLosslessHint
-                            : 'Lossless output with ${losslessQualityLabel(LosslessConversionQuality(maxBitDepth: _selectedMaxBitDepth, maxSampleRate: _selectedMaxSampleRate))} cap',
+                            : context.l10n.trackConvertLosslessOutputWithCap(
+                                losslessQualityLabel(
+                                  LosslessConversionQuality(
+                                    maxBitDepth: _selectedMaxBitDepth,
+                                    maxSampleRate: _selectedMaxSampleRate,
+                                  ),
+                                  originalLabel: labels.original,
+                                  originalQualityLabel: labels.originalQuality,
+                                ),
+                              ),
                         style: Theme.of(
                           context,
                         ).textTheme.bodySmall?.copyWith(color: cs.primary),

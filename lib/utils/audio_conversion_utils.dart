@@ -1,3 +1,5 @@
+import 'package:spotiflac_android/l10n/app_localizations.dart';
+
 const List<String> audioConversionTargetFormats = [
   'ALAC',
   'FLAC',
@@ -168,31 +170,73 @@ String? _convertibleAudioFormatLabel(String? rawFormat) {
   }
 }
 
-String losslessBitDepthLabel(int? bitDepth) {
-  return bitDepth == null ? 'Original' : '$bitDepth-bit';
+class LosslessConversionLabels {
+  final String original;
+  final String originalQuality;
+  final String lossless;
+
+  const LosslessConversionLabels({
+    required this.original,
+    required this.originalQuality,
+    required this.lossless,
+  });
 }
 
-String losslessSampleRateLabel(int? sampleRate) {
-  if (sampleRate == null) return 'Original';
+extension LosslessConversionLabelsL10n on AppLocalizations {
+  LosslessConversionLabels get losslessConversionLabels =>
+      LosslessConversionLabels(
+        original: trackConvertOriginal,
+        originalQuality: trackConvertOriginalQuality,
+        lossless: trackConvertLosslessSuffix,
+      );
+}
+
+String losslessBitDepthLabel(
+  int? bitDepth, {
+  required String originalLabel,
+}) {
+  return bitDepth == null ? originalLabel : '$bitDepth-bit';
+}
+
+String losslessSampleRateLabel(
+  int? sampleRate, {
+  required String originalLabel,
+}) {
+  if (sampleRate == null) return originalLabel;
   final khz = sampleRate / 1000;
   final precision = sampleRate % 1000 == 0 ? 0 : 1;
   return '${khz.toStringAsFixed(precision)} kHz';
 }
 
-String losslessQualityLabel(LosslessConversionQuality quality) {
+String losslessQualityLabel(
+  LosslessConversionQuality quality, {
+  required String originalLabel,
+  required String originalQualityLabel,
+}) {
   final parts = <String>[];
   if (quality.maxBitDepth != null) {
-    parts.add(losslessBitDepthLabel(quality.maxBitDepth));
+    parts.add(
+      losslessBitDepthLabel(
+        quality.maxBitDepth,
+        originalLabel: originalLabel,
+      ),
+    );
   }
   if (quality.maxSampleRate != null) {
-    parts.add(losslessSampleRateLabel(quality.maxSampleRate));
+    parts.add(
+      losslessSampleRateLabel(
+        quality.maxSampleRate,
+        originalLabel: originalLabel,
+      ),
+    );
   }
-  return parts.isEmpty ? 'Original quality' : parts.join(' / ');
+  return parts.isEmpty ? originalQualityLabel : parts.join(' / ');
 }
 
 String convertedAudioQualityLabel({
   required String targetFormat,
   required String bitrate,
+  required LosslessConversionLabels labels,
   LosslessConversionQuality losslessQuality = const LosslessConversionQuality(),
   int? actualBitDepth,
   int? actualSampleRate,
@@ -203,12 +247,16 @@ String convertedAudioQualityLabel({
         actualBitDepth > 0 &&
         actualSampleRate != null &&
         actualSampleRate > 0) {
-      return '$upper ${losslessBitDepthLabel(actualBitDepth)}/${losslessSampleRateLabel(actualSampleRate)}';
+      return '$upper ${losslessBitDepthLabel(actualBitDepth, originalLabel: labels.original)}/${losslessSampleRateLabel(actualSampleRate, originalLabel: labels.original)}';
     }
     if (losslessQuality.hasCaps) {
-      return '$upper ${losslessQualityLabel(losslessQuality)}';
+      return '$upper ${losslessQualityLabel(
+        losslessQuality,
+        originalLabel: labels.original,
+        originalQualityLabel: labels.originalQuality,
+      )}';
     }
-    return '$upper Lossless';
+    return '$upper ${labels.lossless}';
   }
   return '$upper ${bitrate.trim().toLowerCase()}';
 }

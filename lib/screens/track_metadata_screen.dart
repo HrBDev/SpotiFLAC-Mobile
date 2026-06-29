@@ -1220,7 +1220,13 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
     }
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(playNext ? 'Playing next' : 'Added to queue')),
+      SnackBar(
+        content: Text(
+          playNext
+              ? context.l10n.snackbarPlayingNext
+              : context.l10n.snackbarAddedToQueueGeneric,
+        ),
+      ),
     );
   }
 
@@ -3353,13 +3359,13 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
           if (_fileExists)
             _MetadataOption(
               icon: Icons.playlist_play,
-              label: 'Play next',
+              label: l10n.trackPlayNext,
               onTap: () => _enqueueThis(ref, playNext: true),
             ),
           if (_fileExists)
             _MetadataOption(
               icon: Icons.queue_music,
-              label: 'Add to queue',
+              label: l10n.trackAddToQueue,
               onTap: () => _enqueueThis(ref, playNext: false),
             ),
           _MetadataOption(
@@ -3825,6 +3831,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             final colorScheme = Theme.of(context).colorScheme;
+            final labels = context.l10n.losslessConversionLabels;
             final bitrates = ['128k', '192k', '256k', '320k'];
 
             Widget card({required Widget child}) {
@@ -3996,13 +4003,16 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            sectionLabel('Bit depth'),
+                            sectionLabel(context.l10n.audioAnalysisBitDepth),
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: [
                                 choice(
-                                  label: losslessBitDepthLabel(null),
+                                  label: losslessBitDepthLabel(
+                                    null,
+                                    originalLabel: labels.original,
+                                  ),
                                   selected: selectedMaxBitDepth == null,
                                   onTap: () => setSheetState(
                                     () => selectedMaxBitDepth = null,
@@ -4010,7 +4020,10 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                                 ),
                                 ...bitDepthOptions.map((depth) {
                                   return choice(
-                                    label: losslessBitDepthLabel(depth),
+                                    label: losslessBitDepthLabel(
+                                      depth,
+                                      originalLabel: labels.original,
+                                    ),
                                     selected: depth == selectedMaxBitDepth,
                                     onTap: () => setSheetState(
                                       () => selectedMaxBitDepth = depth,
@@ -4028,13 +4041,16 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            sectionLabel('Sample rate'),
+                            sectionLabel(context.l10n.audioAnalysisSampleRate),
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: [
                                 choice(
-                                  label: losslessSampleRateLabel(null),
+                                  label: losslessSampleRateLabel(
+                                    null,
+                                    originalLabel: labels.original,
+                                  ),
                                   selected: selectedMaxSampleRate == null,
                                   onTap: () => setSheetState(
                                     () => selectedMaxSampleRate = null,
@@ -4042,7 +4058,10 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                                 ),
                                 ...sampleRateOptions.map((rate) {
                                   return choice(
-                                    label: losslessSampleRateLabel(rate),
+                                    label: losslessSampleRateLabel(
+                                      rate,
+                                      originalLabel: labels.original,
+                                    ),
                                     selected: rate == selectedMaxSampleRate,
                                     onTap: () => setSheetState(
                                       () => selectedMaxSampleRate = rate,
@@ -4082,7 +4101,17 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                                 selectedMaxBitDepth == null &&
                                         selectedMaxSampleRate == null
                                     ? context.l10n.trackConvertLosslessHint
-                                    : 'Lossless output with ${losslessQualityLabel(LosslessConversionQuality(maxBitDepth: selectedMaxBitDepth, maxSampleRate: selectedMaxSampleRate))} cap',
+                                    : context.l10n.trackConvertLosslessOutputWithCap(
+                                        losslessQualityLabel(
+                                          LosslessConversionQuality(
+                                            maxBitDepth: selectedMaxBitDepth,
+                                            maxSampleRate: selectedMaxSampleRate,
+                                          ),
+                                          originalLabel: labels.original,
+                                          originalQualityLabel:
+                                              labels.originalQuality,
+                                        ),
+                                      ),
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(color: colorScheme.primary),
                               ),
@@ -4117,8 +4146,23 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
                         ),
                         label: Text(
                           isLosslessTarget
-                              ? '$currentFormat  →  $selectedFormat (${losslessQualityLabel(LosslessConversionQuality(maxBitDepth: selectedMaxBitDepth, maxSampleRate: selectedMaxSampleRate))})'
-                              : '$currentFormat  →  $selectedFormat @ $selectedBitrate',
+                              ? context.l10n.trackConvertActionLabelLossless(
+                                  currentFormat,
+                                  selectedFormat,
+                                  losslessQualityLabel(
+                                    LosslessConversionQuality(
+                                      maxBitDepth: selectedMaxBitDepth,
+                                      maxSampleRate: selectedMaxSampleRate,
+                                    ),
+                                    originalLabel: labels.original,
+                                    originalQualityLabel: labels.originalQuality,
+                                  ),
+                                )
+                              : context.l10n.trackConvertActionLabelLossy(
+                                  currentFormat,
+                                  selectedFormat,
+                                  selectedBitrate,
+                                ),
                         ),
                       ),
                     ),
@@ -4599,7 +4643,19 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
           title: Text(dialogContext.l10n.trackConvertConfirmTitle),
           content: Text(
             isLossless && losslessQuality.hasCaps
-                ? 'Convert $sourceFormat to $targetFormat (${losslessQualityLabel(losslessQuality)})?\n\nThe output stays in a lossless codec, but bit depth/sample rate will be capped. Original file will be deleted after conversion.'
+                ? dialogContext.l10n.trackConvertConfirmMessageLosslessCapped(
+                    sourceFormat,
+                    targetFormat,
+                    losslessQualityLabel(
+                      losslessQuality,
+                      originalLabel:
+                          dialogContext.l10n.losslessConversionLabels.original,
+                      originalQualityLabel: dialogContext
+                          .l10n
+                          .losslessConversionLabels
+                          .originalQuality,
+                    ),
+                  )
                 : isLossless
                 ? dialogContext.l10n.trackConvertConfirmMessageLossless(
                     sourceFormat,
@@ -4759,6 +4815,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
       final newQuality = convertedAudioQualityLabel(
         targetFormat: targetFormat,
         bitrate: bitrate,
+        labels: context.l10n.losslessConversionLabels,
         losslessQuality: losslessQuality,
         actualBitDepth: convertedBitDepth,
         actualSampleRate: convertedSampleRate,

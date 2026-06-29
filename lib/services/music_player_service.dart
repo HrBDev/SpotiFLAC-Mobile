@@ -152,6 +152,11 @@ class MusicPlayerHandler extends BaseAudioHandler
 
       _subscriptions.add(
         session.interruptionEventStream.listen((event) {
+          _log.d(
+            'Audio interruption ${event.begin ? 'began' : 'ended'} '
+            'type=${event.type} player=${_player.state} '
+            'playing=${playbackState.value.playing}',
+          );
           if (event.begin) {
             if (event.type == AudioInterruptionType.duck) {
               return;
@@ -162,7 +167,7 @@ class MusicPlayerHandler extends BaseAudioHandler
             _pausedByInterruption =
                 _player.state == PlayerState.playing ||
                 playbackState.value.playing;
-            unawaited(_pauseForFocusLoss());
+            unawaited(_pauseForFocusLoss(reason: 'audio interruption'));
           } else {
             if (event.type == AudioInterruptionType.duck) {
               return;
@@ -185,7 +190,7 @@ class MusicPlayerHandler extends BaseAudioHandler
       _subscriptions.add(
         session.becomingNoisyEventStream.listen((_) {
           // Headphones unplugged / output route lost.
-          unawaited(_pauseForFocusLoss());
+          unawaited(_pauseForFocusLoss(reason: 'becoming noisy'));
         }),
       );
     } catch (e) {
@@ -196,7 +201,8 @@ class MusicPlayerHandler extends BaseAudioHandler
   bool get _shouldIgnoreComplete =>
       _switchingTrack || _interruptionActive || _userPaused;
 
-  Future<void> _pauseForFocusLoss() async {
+  Future<void> _pauseForFocusLoss({required String reason}) async {
+    _log.i('Pausing internal player because of $reason');
     try {
       await _player.pause();
     } catch (e) {
@@ -545,6 +551,7 @@ class MusicPlayerHandler extends BaseAudioHandler
 
   @override
   Future<void> pause() async {
+    _log.i('Pausing internal player by user/control request');
     _userPaused = true;
     _pausedByInterruption = false;
     await _player.pause();

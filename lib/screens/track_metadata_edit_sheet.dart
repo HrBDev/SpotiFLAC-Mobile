@@ -664,6 +664,10 @@ class _EditMetadataSheetState extends State<_EditMetadataSheet> {
     }
 
     setState(() => _fetching = true);
+    final settingsNotifier = ProviderScope.containerOf(
+      context,
+      listen: false,
+    ).read(settingsProvider.notifier);
 
     try {
       final title = _titleCtrl.text.trim();
@@ -871,6 +875,10 @@ class _EditMetadataSheetState extends State<_EditMetadataSheet> {
       }
 
       if (shouldFetchLyrics) {
+        await settingsNotifier.syncLyricsSettingsToBackend();
+
+        if (!mounted) return;
+
         final lyricsTitle =
             ((selectedBest?['name'] ?? selectedBest?['title'] ?? title)
                     .toString())

@@ -3011,8 +3011,12 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen> {
     try {
       final settings = ref.read(settingsProvider);
       final artistTagMode = settings.artistTagMode;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.trackReEnrichSearching)),
+      final messenger = ScaffoldMessenger.of(context);
+      final l10n = context.l10n;
+      await ref.read(settingsProvider.notifier).syncLyricsSettingsToBackend();
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.trackReEnrichSearching)),
       );
 
       final durationMs = (duration ?? 0) * 1000;

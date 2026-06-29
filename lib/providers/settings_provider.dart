@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,23 +97,29 @@ class SettingsNotifier extends Notifier<AppSettings> {
   }
 
   void _syncLyricsSettingsToBackend() {
+    unawaited(syncLyricsSettingsToBackend());
+  }
+
+  Future<void> syncLyricsSettingsToBackend() async {
     if (!PlatformBridge.supportsCoreBackend) return;
 
-    PlatformBridge.setLyricsProviders(state.lyricsProviders).catchError((
-      Object e,
-    ) {
+    try {
+      await PlatformBridge.setLyricsProviders(state.lyricsProviders);
+    } catch (e) {
       _log.w('Failed to sync lyrics providers to backend: $e');
-    });
+    }
 
-    PlatformBridge.setLyricsFetchOptions({
-      'include_translation_netease': state.lyricsIncludeTranslationNetease,
-      'include_romanization_netease': state.lyricsIncludeRomanizationNetease,
-      'multi_person_word_by_word': state.lyricsMultiPersonWordByWord,
-      'apple_elrc_word_sync': state.lyricsAppleElrcWordSync,
-      'musixmatch_language': state.musixmatchLanguage,
-    }).catchError((Object e) {
+    try {
+      await PlatformBridge.setLyricsFetchOptions({
+        'include_translation_netease': state.lyricsIncludeTranslationNetease,
+        'include_romanization_netease': state.lyricsIncludeRomanizationNetease,
+        'multi_person_word_by_word': state.lyricsMultiPersonWordByWord,
+        'apple_elrc_word_sync': state.lyricsAppleElrcWordSync,
+        'musixmatch_language': state.musixmatchLanguage,
+      });
+    } catch (e) {
       _log.w('Failed to sync lyrics fetch options to backend: $e');
-    });
+    }
   }
 
   void _syncNetworkCompatibilitySettingsToBackend() {

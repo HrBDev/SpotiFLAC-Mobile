@@ -5155,6 +5155,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     final durationMs = (item.duration ?? 0) * 1000;
     final settings = ref.read(settingsProvider);
     final artistTagMode = settings.artistTagMode;
+    await ref.read(settingsProvider.notifier).syncLyricsSettingsToBackend();
     final request = <String, dynamic>{
       'file_path': item.filePath,
       'cover_url': '',

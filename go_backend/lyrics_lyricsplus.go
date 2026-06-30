@@ -24,12 +24,8 @@ import (
 // Public LyricsPlus / KPOE servers (mirrors). Tried in order with failover.
 // Sourced from the upstream YouLy+ client server list.
 var lyricsPlusServers = []string{
-	"https://lyricsplus.binimum.org",
-	"https://lyricsplus.prjktla.my.id",
-	"https://lyricsplus.atomix.one",
 	"https://lyricsplus.prjktla.workers.dev",
-	"https://lyricsplus-seven.vercel.app",
-	"https://lyrics-plus-backend.vercel.app",
+	"https://lyricsplus.binimum.org",
 }
 
 type LyricsPlusClient struct {

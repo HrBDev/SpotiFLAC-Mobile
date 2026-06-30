@@ -251,7 +251,7 @@ func TestConcurrentLyricsProvidersPreferEarlierProviderWithinGrace(t *testing.T)
 func TestExternalLyricsProvidersWithFakeHTTP(t *testing.T) {
 	clearAppleMusicToken()
 	defer clearAppleMusicToken()
-	if len(lyricsPlusServers) == 0 || lyricsPlusServers[0] != "https://lyricsplus.binimum.org" {
+	if len(lyricsPlusServers) == 0 || lyricsPlusServers[0] != "https://lyricsplus.prjktla.workers.dev" {
 		t.Fatalf("unexpected LyricsPlus server order = %#v", lyricsPlusServers)
 	}
 

@@ -44,6 +44,31 @@ func TestDownloadErrorClassificationDetectsVerificationRequired(t *testing.T) {
 	}
 }
 
+func TestGetProviderMetadataPrefersEnabledDeezerExtension(t *testing.T) {
+	dir := t.TempDir()
+	if err := InitExtensionSystem(filepath.Join(dir, "extensions"), filepath.Join(dir, "data")); err != nil {
+		t.Fatalf("InitExtensionSystem: %v", err)
+	}
+	CleanupExtensions()
+	defer CleanupExtensions()
+
+	ext := newTestLoadedExtension(t, ExtensionTypeMetadataProvider)
+	ext.ID = "deezer"
+	ext.Manifest.Name = "deezer"
+	manager := getExtensionManager()
+	manager.mu.Lock()
+	manager.extensions = map[string]*loadedExtension{ext.ID: ext}
+	manager.mu.Unlock()
+
+	jsonText, err := GetProviderMetadataJSON("deezer", "album", "201")
+	if err != nil {
+		t.Fatalf("GetProviderMetadataJSON deezer album: %v", err)
+	}
+	if !strings.Contains(jsonText, "album-track") {
+		t.Fatalf("expected enabled deezer extension metadata, got %s", jsonText)
+	}
+}
+
 func TestExportsJSONWrappersAndExtensionManagerSurface(t *testing.T) {
 	dir := t.TempDir()
 	dataDir := filepath.Join(dir, "data")

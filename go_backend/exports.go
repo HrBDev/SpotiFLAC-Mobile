@@ -2281,6 +2281,16 @@ func GetProviderMetadataJSON(providerID, resourceType, resourceID string) (strin
 
 	switch strings.ToLower(trimmedProviderID) {
 	case "deezer":
+		if response, ok, err := getEnabledExtensionProviderMetadataResponse(trimmedProviderID, resourceType, resourceID); ok || err != nil {
+			if err != nil {
+				return "", err
+			}
+			jsonBytes, err := json.Marshal(response)
+			if err != nil {
+				return "", err
+			}
+			return string(jsonBytes), nil
+		}
 		return GetDeezerMetadata(resourceType, resourceID)
 	default:
 		response, err := getExtensionProviderMetadataResponse(trimmedProviderID, resourceType, resourceID)
@@ -2294,6 +2304,19 @@ func GetProviderMetadataJSON(providerID, resourceType, resourceID string) (strin
 		}
 		return string(jsonBytes), nil
 	}
+}
+
+func getEnabledExtensionProviderMetadataResponse(providerID, resourceType, resourceID string) (map[string]interface{}, bool, error) {
+	manager := getExtensionManager()
+	ext, err := manager.GetExtension(providerID)
+	if err != nil || ext == nil || !ext.Enabled || !ext.Manifest.IsMetadataProvider() {
+		return nil, false, nil
+	}
+	response, err := getExtensionProviderMetadataResponse(providerID, resourceType, resourceID)
+	if err != nil {
+		return nil, true, err
+	}
+	return response, true, nil
 }
 
 func GetDeezerExtendedMetadata(trackID string) (string, error) {

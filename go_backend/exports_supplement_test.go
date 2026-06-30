@@ -428,10 +428,25 @@ func TestExportsJSONWrappersAndExtensionManagerSurface(t *testing.T) {
 	if catsJSON, err := GetStoreCategoriesJSON(); err != nil || !strings.Contains(catsJSON, "metadata") {
 		t.Fatalf("GetStoreCategoriesJSON = %q/%v", catsJSON, err)
 	}
-	if dest, err := buildStoreExtensionDestPath(dir, "coverage/ext"); err != nil || !strings.HasSuffix(dest, ".spotiflac-ext") {
+	if dest, err := buildStoreExtensionDestPath(
+		dir,
+		"coverage/ext",
+		"https://registry.example.com/coverage.spotiflac-ext",
+	); err != nil || !strings.HasSuffix(dest, ".spotiflac-ext") {
 		t.Fatalf("buildStoreExtensionDestPath = %q/%v", dest, err)
 	}
-	if _, err := buildStoreExtensionDestPath(dir, " "); err == nil {
+	if dest, err := buildStoreExtensionDestPath(
+		dir,
+		"coverage/ext",
+		"https://registry.example.com/coverage.sflx",
+	); err != nil || !strings.HasSuffix(dest, ".sflx") {
+		t.Fatalf("buildStoreExtensionDestPath sflx = %q/%v", dest, err)
+	}
+	if _, err := buildStoreExtensionDestPath(
+		dir,
+		" ",
+		"https://registry.example.com/coverage.sflx",
+	); err == nil {
 		t.Fatal("expected invalid extension id")
 	}
 	if err := ClearStoreCacheJSON(); err != nil {

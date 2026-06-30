@@ -3916,13 +3916,29 @@ func GetStoreCategoriesJSON() (string, error) {
 	return string(jsonBytes), nil
 }
 
-func buildStoreExtensionDestPath(destDir, extensionID string) (string, error) {
+func storeExtensionPackageSuffix(downloadURL string) string {
+	rawPath := downloadURL
+	if parsed, err := url.Parse(downloadURL); err == nil {
+		rawPath = parsed.Path
+	}
+
+	lowerPath := strings.ToLower(rawPath)
+	if strings.HasSuffix(lowerPath, ".sflx") {
+		return ".sflx"
+	}
+	if strings.HasSuffix(lowerPath, ".spotiflac-ext") {
+		return ".spotiflac-ext"
+	}
+	return ".spotiflac-ext"
+}
+
+func buildStoreExtensionDestPath(destDir, extensionID, downloadURL string) (string, error) {
 	if strings.TrimSpace(extensionID) == "" {
 		return "", fmt.Errorf("invalid extension id")
 	}
 
 	safeExtensionID := sanitizeFilename(extensionID)
-	return filepath.Join(destDir, safeExtensionID+".spotiflac-ext"), nil
+	return filepath.Join(destDir, safeExtensionID+storeExtensionPackageSuffix(downloadURL)), nil
 }
 
 func DownloadStoreExtensionJSON(extensionID, destDir string) (string, error) {
@@ -3931,7 +3947,12 @@ func DownloadStoreExtensionJSON(extensionID, destDir string) (string, error) {
 		return "", fmt.Errorf("extension store not initialized")
 	}
 
-	destPath, err := buildStoreExtensionDestPath(destDir, extensionID)
+	ext, err := store.findExtension(extensionID)
+	if err != nil {
+		return "", err
+	}
+
+	destPath, err := buildStoreExtensionDestPath(destDir, extensionID, ext.getDownloadURL())
 	if err != nil {
 		return "", err
 	}

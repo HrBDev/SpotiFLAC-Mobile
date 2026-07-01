@@ -4610,6 +4610,27 @@ class AppLocalizationsId extends AppLocalizations {
   String get trackConvertLosslessSuffix => 'Lossless';
 
   @override
+  String get trackConvertDithering => 'Dithering';
+
+  @override
+  String get trackConvertResampler => 'Resampler';
+
+  @override
+  String get trackConvertDitherNone => 'Tidak ada';
+
+  @override
+  String get trackConvertDitherTriangular => 'TPDF';
+
+  @override
+  String get trackConvertDitherTriangularHp => 'Triangular HP';
+
+  @override
+  String get trackConvertResamplerSwr => 'SWR';
+
+  @override
+  String get trackConvertResamplerSoxr => 'SoXr';
+
+  @override
   String get updateSeeReleaseNotes => 'Lihat catatan rilis untuk detail.';
 
   @override
@@ -4688,4 +4709,49 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get regionCountryXK => 'Kosovo';
+
+  @override
+  String get extensionVerificationBrowserTitle => 'Browser verifikasi';
+
+  @override
+  String get extensionVerificationBrowserSubtitleExternal =>
+      'Buka tantangan di browser default terlebih dahulu';
+
+  @override
+  String get extensionVerificationBrowserSubtitleInApp =>
+      'Buka tantangan di browser dalam aplikasi terlebih dahulu';
+
+  @override
+  String get extensionVerificationBrowserExternal => 'Eksternal';
+
+  @override
+  String get extensionVerificationBrowserInApp => 'Dalam aplikasi';
+
+  @override
+  String get extensionVerificationHelpTitleManual =>
+      'Buka verifikasi secara manual';
+
+  @override
+  String get extensionVerificationHelpTitleWaiting =>
+      'Verifikasi masih menunggu';
+
+  @override
+  String get extensionVerificationHelpMessageManual =>
+      'SpotiFLAC Mobile tidak dapat membuka browser secara otomatis. Buka tautan ini di browser Anda, atau salin secara manual.';
+
+  @override
+  String get extensionVerificationHelpMessageWaiting =>
+      'Jika browser tidak terbuka, atau verifikasi selesai tetapi tidak kembali ke SpotiFLAC Mobile, buka tautan ini lagi atau salin secara manual.';
+
+  @override
+  String get extensionVerificationClose => 'Tutup';
+
+  @override
+  String get extensionVerificationCopyLink => 'Salin tautan';
+
+  @override
+  String get extensionVerificationLinkCopied => 'Tautan verifikasi disalin';
+
+  @override
+  String get extensionVerificationOpenBrowser => 'Buka browser';
 }

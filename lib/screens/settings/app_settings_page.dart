@@ -417,14 +417,18 @@ class _VerificationBrowserModeSelector extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Verification browser',
+                          context.l10n.extensionVerificationBrowserTitle,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           normalizedMode == 'external_first'
-                              ? 'Open challenges in the default browser first'
-                              : 'Open challenges in the in-app browser first',
+                              ? context
+                                    .l10n
+                                    .extensionVerificationBrowserSubtitleExternal
+                              : context
+                                    .l10n
+                                    .extensionVerificationBrowserSubtitleInApp,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: colorScheme.onSurfaceVariant),
                         ),
@@ -437,13 +441,13 @@ class _VerificationBrowserModeSelector extends StatelessWidget {
               Row(
                 children: [
                   _ChannelChip(
-                    label: 'External',
+                    label: context.l10n.extensionVerificationBrowserExternal,
                     isSelected: normalizedMode == 'external_first',
                     onTap: () => onChanged('external_first'),
                   ),
                   const SizedBox(width: 8),
                   _ChannelChip(
-                    label: 'In-app',
+                    label: context.l10n.extensionVerificationBrowserInApp,
                     isSelected: normalizedMode == 'in_app_first',
                     onTap: () => onChanged('in_app_first'),
                   ),

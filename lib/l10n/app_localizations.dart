@@ -7607,6 +7607,48 @@ abstract class AppLocalizations {
   /// **'Lossless'**
   String get trackConvertLosslessSuffix;
 
+  /// Section label for lossless conversion dithering options
+  ///
+  /// In en, this message translates to:
+  /// **'Dithering'**
+  String get trackConvertDithering;
+
+  /// Section label for lossless conversion resampler options
+  ///
+  /// In en, this message translates to:
+  /// **'Resampler'**
+  String get trackConvertResampler;
+
+  /// Lossless conversion dither option with no dithering applied
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get trackConvertDitherNone;
+
+  /// Lossless conversion triangular probability density function dither option
+  ///
+  /// In en, this message translates to:
+  /// **'TPDF'**
+  String get trackConvertDitherTriangular;
+
+  /// Lossless conversion high-pass triangular dither option
+  ///
+  /// In en, this message translates to:
+  /// **'Triangular HP'**
+  String get trackConvertDitherTriangularHp;
+
+  /// Lossless conversion default FFmpeg swresample resampler option
+  ///
+  /// In en, this message translates to:
+  /// **'SWR'**
+  String get trackConvertResamplerSwr;
+
+  /// Lossless conversion SoX resampler option
+  ///
+  /// In en, this message translates to:
+  /// **'SoXr'**
+  String get trackConvertResamplerSoxr;
+
   /// Fallback changelog text when release notes cannot be parsed
   ///
   /// In en, this message translates to:
@@ -7750,6 +7792,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kosovo'**
   String get regionCountryXK;
+
+  /// Settings option title for extension verification browser preference
+  ///
+  /// In en, this message translates to:
+  /// **'Verification browser'**
+  String get extensionVerificationBrowserTitle;
+
+  /// Subtitle when external browser is preferred for extension verification
+  ///
+  /// In en, this message translates to:
+  /// **'Open challenges in the default browser first'**
+  String get extensionVerificationBrowserSubtitleExternal;
+
+  /// Subtitle when in-app browser is preferred for extension verification
+  ///
+  /// In en, this message translates to:
+  /// **'Open challenges in the in-app browser first'**
+  String get extensionVerificationBrowserSubtitleInApp;
+
+  /// Chip label for external browser verification mode
+  ///
+  /// In en, this message translates to:
+  /// **'External'**
+  String get extensionVerificationBrowserExternal;
+
+  /// Chip label for in-app browser verification mode
+  ///
+  /// In en, this message translates to:
+  /// **'In-app'**
+  String get extensionVerificationBrowserInApp;
+
+  /// Dialog title when automatic browser launch for verification fails
+  ///
+  /// In en, this message translates to:
+  /// **'Open verification manually'**
+  String get extensionVerificationHelpTitleManual;
+
+  /// Dialog title when verification is taking longer than expected
+  ///
+  /// In en, this message translates to:
+  /// **'Verification still waiting'**
+  String get extensionVerificationHelpTitleWaiting;
+
+  /// Dialog message when automatic browser launch for verification fails
+  ///
+  /// In en, this message translates to:
+  /// **'SpotiFLAC Mobile could not open the browser automatically. Open this link in your browser, or copy it manually.'**
+  String get extensionVerificationHelpMessageManual;
+
+  /// Dialog message when verification may need manual browser help
+  ///
+  /// In en, this message translates to:
+  /// **'If the browser did not open, or verification finished but did not return to SpotiFLAC Mobile, open this link again or copy it manually.'**
+  String get extensionVerificationHelpMessageWaiting;
+
+  /// Button to dismiss the extension verification help dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get extensionVerificationClose;
+
+  /// Button to copy the extension verification URL
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get extensionVerificationCopyLink;
+
+  /// Snackbar after copying the extension verification URL
+  ///
+  /// In en, this message translates to:
+  /// **'Verification link copied'**
+  String get extensionVerificationLinkCopied;
+
+  /// Button to open the extension verification URL in a browser
+  ///
+  /// In en, this message translates to:
+  /// **'Open browser'**
+  String get extensionVerificationOpenBrowser;
 }
 
 class _AppLocalizationsDelegate

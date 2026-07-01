@@ -5850,6 +5850,34 @@
   "@trackConvertLosslessSuffix": {
     "description": "Suffix used in converted lossless quality labels"
   },
+  "trackConvertDithering": "Dithering",
+  "@trackConvertDithering": {
+    "description": "Section label for lossless conversion dithering options"
+  },
+  "trackConvertResampler": "Resampler",
+  "@trackConvertResampler": {
+    "description": "Section label for lossless conversion resampler options"
+  },
+  "trackConvertDitherNone": "Tidak ada",
+  "@trackConvertDitherNone": {
+    "description": "Lossless conversion dither option with no dithering applied"
+  },
+  "trackConvertDitherTriangular": "TPDF",
+  "@trackConvertDitherTriangular": {
+    "description": "Lossless conversion triangular probability density function dither option"
+  },
+  "trackConvertDitherTriangularHp": "Triangular HP",
+  "@trackConvertDitherTriangularHp": {
+    "description": "Lossless conversion high-pass triangular dither option"
+  },
+  "trackConvertResamplerSwr": "SWR",
+  "@trackConvertResamplerSwr": {
+    "description": "Lossless conversion default FFmpeg swresample resampler option"
+  },
+  "trackConvertResamplerSoxr": "SoXr",
+  "@trackConvertResamplerSoxr": {
+    "description": "Lossless conversion SoX resampler option"
+  },
   "updateSeeReleaseNotes": "Lihat catatan rilis untuk detail.",
   "@updateSeeReleaseNotes": {
     "description": "Fallback changelog text when release notes cannot be parsed"
@@ -5968,5 +5996,57 @@
   "regionCountryXK": "Kosovo",
   "@regionCountryXK": {
     "description": "Country name for SongLink region picker"
+  },
+  "extensionVerificationBrowserTitle": "Browser verifikasi",
+  "@extensionVerificationBrowserTitle": {
+    "description": "Settings option title for extension verification browser preference"
+  },
+  "extensionVerificationBrowserSubtitleExternal": "Buka tantangan di browser default terlebih dahulu",
+  "@extensionVerificationBrowserSubtitleExternal": {
+    "description": "Subtitle when external browser is preferred for extension verification"
+  },
+  "extensionVerificationBrowserSubtitleInApp": "Buka tantangan di browser dalam aplikasi terlebih dahulu",
+  "@extensionVerificationBrowserSubtitleInApp": {
+    "description": "Subtitle when in-app browser is preferred for extension verification"
+  },
+  "extensionVerificationBrowserExternal": "Eksternal",
+  "@extensionVerificationBrowserExternal": {
+    "description": "Chip label for external browser verification mode"
+  },
+  "extensionVerificationBrowserInApp": "Dalam aplikasi",
+  "@extensionVerificationBrowserInApp": {
+    "description": "Chip label for in-app browser verification mode"
+  },
+  "extensionVerificationHelpTitleManual": "Buka verifikasi secara manual",
+  "@extensionVerificationHelpTitleManual": {
+    "description": "Dialog title when automatic browser launch for verification fails"
+  },
+  "extensionVerificationHelpTitleWaiting": "Verifikasi masih menunggu",
+  "@extensionVerificationHelpTitleWaiting": {
+    "description": "Dialog title when verification is taking longer than expected"
+  },
+  "extensionVerificationHelpMessageManual": "SpotiFLAC Mobile tidak dapat membuka browser secara otomatis. Buka tautan ini di browser Anda, atau salin secara manual.",
+  "@extensionVerificationHelpMessageManual": {
+    "description": "Dialog message when automatic browser launch for verification fails"
+  },
+  "extensionVerificationHelpMessageWaiting": "Jika browser tidak terbuka, atau verifikasi selesai tetapi tidak kembali ke SpotiFLAC Mobile, buka tautan ini lagi atau salin secara manual.",
+  "@extensionVerificationHelpMessageWaiting": {
+    "description": "Dialog message when verification may need manual browser help"
+  },
+  "extensionVerificationClose": "Tutup",
+  "@extensionVerificationClose": {
+    "description": "Button to dismiss the extension verification help dialog"
+  },
+  "extensionVerificationCopyLink": "Salin tautan",
+  "@extensionVerificationCopyLink": {
+    "description": "Button to copy the extension verification URL"
+  },
+  "extensionVerificationLinkCopied": "Tautan verifikasi disalin",
+  "@extensionVerificationLinkCopied": {
+    "description": "Snackbar after copying the extension verification URL"
+  },
+  "extensionVerificationOpenBrowser": "Buka browser",
+  "@extensionVerificationOpenBrowser": {
+    "description": "Button to open the extension verification URL in a browser"
   }
 }

@@ -4620,6 +4620,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get trackConvertLosslessSuffix => 'Lossless';
 
   @override
+  String get trackConvertDithering => 'Dithering';
+
+  @override
+  String get trackConvertResampler => 'Resampler';
+
+  @override
+  String get trackConvertDitherNone => 'None';
+
+  @override
+  String get trackConvertDitherTriangular => 'TPDF';
+
+  @override
+  String get trackConvertDitherTriangularHp => 'Triangular HP';
+
+  @override
+  String get trackConvertResamplerSwr => 'SWR';
+
+  @override
+  String get trackConvertResamplerSoxr => 'SoXr';
+
+  @override
   String get updateSeeReleaseNotes => 'See release notes for details.';
 
   @override
@@ -4698,6 +4719,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get regionCountryXK => 'Kosovo';
+
+  @override
+  String get extensionVerificationBrowserTitle => 'Verification browser';
+
+  @override
+  String get extensionVerificationBrowserSubtitleExternal =>
+      'Open challenges in the default browser first';
+
+  @override
+  String get extensionVerificationBrowserSubtitleInApp =>
+      'Open challenges in the in-app browser first';
+
+  @override
+  String get extensionVerificationBrowserExternal => 'External';
+
+  @override
+  String get extensionVerificationBrowserInApp => 'In-app';
+
+  @override
+  String get extensionVerificationHelpTitleManual =>
+      'Open verification manually';
+
+  @override
+  String get extensionVerificationHelpTitleWaiting =>
+      'Verification still waiting';
+
+  @override
+  String get extensionVerificationHelpMessageManual =>
+      'SpotiFLAC Mobile could not open the browser automatically. Open this link in your browser, or copy it manually.';
+
+  @override
+  String get extensionVerificationHelpMessageWaiting =>
+      'If the browser did not open, or verification finished but did not return to SpotiFLAC Mobile, open this link again or copy it manually.';
+
+  @override
+  String get extensionVerificationClose => 'Close';
+
+  @override
+  String get extensionVerificationCopyLink => 'Copy link';
+
+  @override
+  String get extensionVerificationLinkCopied => 'Verification link copied';
+
+  @override
+  String get extensionVerificationOpenBrowser => 'Open browser';
 }
 
 /// The translations for Spanish Castilian, as used in Spain (`es_ES`).
